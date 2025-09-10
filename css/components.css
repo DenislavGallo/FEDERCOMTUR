@@ -1,0 +1,532 @@
+/* FederComTur - Components Styles */
+/* ================================= */
+
+/* ========================== */
+/* MODERN NEWS CARDS */
+/* ========================== */
+
+.news-card {
+    background: var(--white);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-xl);
+    padding: var(--space-6);
+    transition: var(--transition-fast);
+    position: relative;
+    opacity: 0;
+    transform: translateY(20px);
+    text-align: left;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.news-card.animate-in {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.news-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--border-medium);
+}
+
+.news-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--space-4);
+}
+
+.news-badge {
+    display: inline-flex;
+    align-items: center;
+    font-size: var(--text-xs);
+    font-weight: var(--font-semibold);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: var(--space-1) var(--space-3);
+    border-radius: var(--radius-full);
+    position: relative;
+}
+
+.news-badge.normative {
+    background: #fef2f2;
+    color: #dc2626;
+}
+
+.news-badge.bandi {
+    background: #f0fdf4;
+    color: #16a34a;
+}
+
+.news-badge.eventi {
+    background: #faf5ff;
+    color: #7c3aed;
+}
+
+.news-badge.mercato {
+    background: #fff7ed;
+    color: #ea580c;
+}
+
+.news-date {
+    font-size: var(--text-xs);
+    color: var(--text-muted);
+    font-weight: var(--font-medium);
+}
+
+.news-title {
+    font-size: var(--text-lg);
+    font-weight: var(--font-semibold);
+    color: var(--text-titles);
+    line-height: 1.4;
+    margin-bottom: var(--space-3);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.news-excerpt {
+    font-size: var(--text-sm);
+    color: var(--text-cream);
+    line-height: 1.5;
+    margin-bottom: var(--space-4);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    flex-grow: 1;
+}
+
+.news-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--border-light);
+}
+
+.news-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--secondary-emerald);
+    text-decoration: none;
+    font-size: var(--text-sm);
+    font-weight: var(--font-semibold);
+    transition: var(--transition-fast);
+}
+
+.news-link:hover {
+    color: var(--primary-navy);
+    gap: var(--space-3);
+}
+
+.news-link .btn-icon {
+    width: 14px;
+    height: 14px;
+}
+
+.news-meta {
+    font-size: var(--text-xs);
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+.read-time::before {
+    content: '⏱';
+    margin-right: var(--space-1);
+}
+
+.view-all-link {
+    display: block;
+    text-align: center;
+    color: var(--primary-blue);
+    text-decoration: none;
+    font-weight: var(--font-weight-medium);
+    padding: var(--spacing-lg) 0;
+    margin-top: var(--spacing-lg);
+    border-top: 1px solid var(--gray-border);
+    transition: var(--transition-fast);
+}
+
+.view-all-link:hover {
+    color: var(--aqua-cta);
+}
+
+/* ========================== */
+/* FOOTER STYLES */
+/* ========================== */
+
+.footer {
+    background: var(--bg-footer);
+    color: var(--text-primary);
+    padding: var(--space-20) 0 var(--space-12);
+    margin-top: var(--space-20);
+    border-top: 1px solid var(--border-light);
+}
+
+.footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--space-6);
+}
+
+.footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1.5fr;
+    gap: var(--space-16);
+    margin-bottom: var(--space-12);
+}
+
+.footer-column h3.footer-title {
+    font-size: var(--text-2xl);
+    font-weight: var(--font-bold);
+    color: #00b4d8;
+    margin-bottom: var(--space-4);
+}
+
+.footer-column h4.footer-heading {
+    font-size: var(--text-lg);
+    font-weight: var(--font-semibold);
+    color: #00b4d8;
+    margin-bottom: var(--space-4);
+}
+
+.footer-description {
+    color: var(--primary-navy);
+    line-height: 1.6;
+    margin-bottom: var(--space-6);
+    font-size: var(--text-sm);
+}
+
+.footer-text {
+    color: var(--primary-navy);
+    font-size: var(--text-sm);
+    margin-bottom: var(--space-4);
+    line-height: 1.5;
+}
+
+.social-links {
+    display: flex;
+    gap: var(--space-3);
+}
+
+.social-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    background: var(--white);
+    color: var(--text-cream);
+    text-decoration: none;
+    border-radius: var(--radius-lg);
+    transition: var(--transition-fast);
+    border: 1px solid var(--border-light);
+}
+
+.social-link:hover {
+    background: var(--secondary-emerald);
+    color: var(--white);
+    transform: translateY(-2px);
+    border-color: var(--secondary-emerald);
+}
+
+.social-link svg {
+    width: 20px;
+    height: 20px;
+}
+
+.footer-links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.footer-links li {
+    margin-bottom: var(--space-2);
+}
+
+.footer-links a {
+    color: var(--primary-navy);
+    text-decoration: none;
+    font-size: var(--text-sm);
+    transition: var(--transition-fast);
+    display: block;
+    padding: var(--space-1) 0;
+}
+
+.footer-links a:hover {
+    color: var(--secondary-emerald);
+    padding-left: var(--space-2);
+}
+
+/* Footer Newsletter Form */
+.footer-newsletter {
+    display: flex;
+    gap: var(--space-3);
+    margin-top: var(--space-4);
+}
+
+.footer-newsletter input {
+    flex: 1;
+    padding: var(--space-3) var(--space-4);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-md);
+    background: var(--white);
+    color: var(--text-primary);
+    font-size: var(--text-sm);
+    transition: var(--transition-fast);
+}
+
+.footer-newsletter input::placeholder {
+    color: var(--text-cream);
+}
+
+.footer-newsletter input:focus {
+    outline: none;
+    border-color: var(--secondary-emerald);
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+.btn-footer {
+    background: var(--secondary-emerald);
+    color: var(--white);
+    border: none;
+    padding: var(--space-3) var(--space-5);
+    border-radius: var(--radius-md);
+    font-size: var(--text-sm);
+    font-weight: var(--font-semibold);
+    cursor: pointer;
+    transition: var(--transition-fast);
+    white-space: nowrap;
+}
+
+.btn-footer:hover {
+    background: #059669;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+}
+
+/* Footer Bottom */
+.footer-bottom {
+    border-top: 1px solid var(--border-light);
+    padding-top: var(--space-6);
+}
+
+.footer-legal {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--primary-navy);
+    font-size: var(--text-sm);
+}
+
+.legal-links {
+    display: flex;
+    gap: var(--space-6);
+}
+
+.legal-links a {
+    color: var(--primary-navy);
+    text-decoration: none;
+    transition: var(--transition-fast);
+}
+
+.legal-links a:hover {
+    color: var(--secondary-emerald);
+}
+
+/* ========================== */
+/* CARD ANIMATIONS */
+/* ========================== */
+
+.card-stagger {
+    opacity: 0;
+    transform: translateY(50px);
+}
+
+.card-stagger.animate {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.card-fade-in {
+    animation: fadeInUp 0.6s ease-out forwards;
+}
+
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ========================== */
+/* HOVER EFFECTS */
+/* ========================== */
+
+.hover-lift {
+    transition: var(--transition-fast);
+}
+
+.hover-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+}
+
+.hover-scale {
+    transition: var(--transition-fast);
+}
+
+.hover-scale:hover {
+    transform: scale(1.02);
+}
+
+.hover-glow {
+    position: relative;
+    transition: var(--transition-fast);
+}
+
+.hover-glow::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    background: linear-gradient(45deg, var(--primary-blue), var(--aqua-cta));
+    border-radius: inherit;
+    z-index: -1;
+    opacity: 0;
+    transition: var(--transition-fast);
+}
+
+.hover-glow:hover::before {
+    opacity: 0.7;
+    filter: blur(8px);
+}
+
+/* ========================== */
+/* LOADING STATES */
+/* ========================== */
+
+.skeleton {
+    background: linear-gradient(90deg, 
+        rgba(255, 255, 255, 0.1) 25%, 
+        rgba(255, 255, 255, 0.2) 50%, 
+        rgba(255, 255, 255, 0.1) 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite;
+    border-radius: 8px;
+}
+
+@keyframes skeleton-loading {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+.skeleton-text {
+    height: 1em;
+    margin-bottom: 0.5em;
+}
+
+.skeleton-title {
+    height: 1.5em;
+    width: 70%;
+    margin-bottom: 1em;
+}
+
+.skeleton-paragraph {
+    height: 0.8em;
+    margin-bottom: 0.5em;
+}
+
+.skeleton-paragraph:last-child {
+    width: 60%;
+}
+
+/* ========================== */
+/* ACCESSIBILITY ENHANCEMENTS */
+/* ========================== */
+
+.focus-visible {
+    outline: 2px solid var(--aqua-cta);
+    outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .news-card {
+        transition: none;
+    }
+    
+    .card-stagger,
+    .card-fade-in {
+        animation: none;
+        opacity: 1;
+        transform: none;
+    }
+    
+    .hover-lift:hover,
+    .hover-scale:hover {
+        transform: none;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .news-badge {
+        border-width: 2px;
+    }
+    
+    .news-card {
+        border-width: 2px;
+    }
+    
+    .footer-newsletter input {
+        border-width: 2px;
+    }
+}
+
+/* ========================== */
+/* PRINT STYLES */
+/* ========================== */
+
+@media print {
+    .navbar,
+    .footer,
+    .newsletter-section,
+    .hero-visual {
+        display: none;
+    }
+    
+    .main-grid {
+        display: block;
+        margin-top: 0;
+    }
+    
+    .news-card {
+        break-inside: avoid;
+        box-shadow: none;
+        border: 1px solid #ccc;
+    }
+    
+    .hero-title {
+        font-size: 2rem;
+    }
+    
+    body {
+        font-size: 12pt;
+        line-height: 1.4;
+    }
+}

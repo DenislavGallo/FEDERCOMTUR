@@ -1,0 +1,114 @@
+{
+  "news": [
+    {
+      "id": 1,
+      "title": "Decreto Credito d'Imposta: Nuove Opportunità per PMI del Turismo",
+      "category": "normative",
+      "date": "2024-12-18",
+      "dateFormatted": "18 Dicembre 2024",
+      "excerpt": "Il Ministero del Turismo ha pubblicato i dettagli operativi per il credito d'imposta del 65% per investimenti in digitalizzazione e sostenibilità. Risorse per 200 milioni nel biennio 2025-2026.",
+      "content": "Con la Circolare n. 47/E dell'Agenzia delle Entrate sono state definite le modalità operative per accedere al credito d'imposta turismo...",
+      "author": "Ufficio Legislativo FederComTur",
+      "tags": ["credito-imposta", "digitalizzazione", "turismo", "ministero"],
+      "featured": true,
+      "readTime": "6 min"
+    },
+    {
+      "id": 2,
+      "title": "Bando PNRR Competitività PMI: 850 Milioni per Commercio e Servizi",
+      "category": "bandi",
+      "date": "2024-12-15",
+      "dateFormatted": "15 Dicembre 2024",
+      "excerpt": "Aperto il bando del MiSE per progetti di innovazione e competitività. Contributi a fondo perduto fino a 500.000 euro per impresa. Scadenza presentazione domande: 28 febbraio 2025.",
+      "content": "Il Ministero delle Imprese e del Made in Italy ha pubblicato l'attesissimo bando PNRR dedicato alla competitività delle PMI...",
+      "author": "Area Finanziamenti",
+      "tags": ["pnrr", "mise", "competitività", "finanziamenti"],
+      "featured": true,
+      "readTime": "8 min",
+      "deadline": "2025-02-28"
+    },
+    {
+      "id": 3,
+      "title": "Forum Nazionale PMI 2025: 'Innovazione e Crescita Sostenibile'",
+      "category": "eventi",
+      "date": "2024-12-12",
+      "dateFormatted": "12 Dicembre 2024",
+      "excerpt": "Il 20-21 marzo 2025 a Milano si terrà il Forum Nazionale PMI organizzato da FederComTur. Attesi 500 imprenditori e 50 relatori internazionali. Early bird fino al 31 gennaio.",
+      "content": "FieraMilanoCity ospiterà la quinta edizione del Forum Nazionale PMI, l'evento di riferimento per piccole e medie imprese...",
+      "author": "Segreteria Organizzativa",
+      "tags": ["forum", "milano", "networking", "innovazione"],
+      "featured": false,
+      "readTime": "5 min",
+      "eventDate": "2025-03-20",
+      "location": "Milano, FieraMilanoCity"
+    },
+    {
+      "id": 4,
+      "title": "Osservatorio Mercato: Commercio +7,2% nel 2024, Turismo +15,8%",
+      "category": "mercato",
+      "date": "2024-12-10",
+      "dateFormatted": "10 Dicembre 2024",
+      "excerpt": "I dati dell'Osservatorio FederComTur confermano la crescita sostenuta dei settori rappresentati. Il turismo traina la ripresa con performance superiori al periodo pre-pandemia.",
+      "content": "L'Osservatorio Economico FederComTur presenta i dati definitivi sull'andamento dei settori commercio, turismo e servizi per l'anno 2024...",
+      "author": "Centro Studi Economici",
+      "tags": ["osservatorio", "crescita", "dati", "economia"],
+      "featured": false,
+      "readTime": "7 min"
+    },
+    {
+      "id": 5,
+      "title": "Accordo Quadro Confturismo-FederComTur per Rappresentanza Unitaria",
+      "category": "normative",
+      "date": "2024-12-08",
+      "dateFormatted": "8 Dicembre 2024",
+      "excerpt": "Siglato accordo strategico per rafforzare la rappresentanza delle imprese turistiche presso le istituzioni nazionali ed europee. Focus su sostenibilità e competitività internazionale.",
+      "content": "I presidenti di Confturismo e FederComTur hanno sottoscritto un accordo quadro che punta a unificare la voce del settore turistico...",
+      "author": "Presidenza",
+      "tags": ["confturismo", "accordo", "rappresentanza", "turismo"],
+      "featured": false,
+      "readTime": "4 min"
+    },
+    {
+      "id": 6,
+      "title": "Webinar Gratuito: 'Export Digitale per PMI del Made in Italy'",
+      "category": "eventi",
+      "date": "2024-12-05",
+      "dateFormatted": "5 Dicembre 2024",
+      "excerpt": "Il 16 gennaio 2025 webinar gratuito con ICE-Agenzia e Google per scoprire strumenti e strategie per l'internazionalizzazione digitale delle PMI italiane.",
+      "content": "In collaborazione con ICE-Agenzia per la promozione all'estero e l'internazionalizzazione delle imprese italiane e Google Italia...",
+      "author": "Ufficio Internazionalizzazione",
+      "tags": ["export", "digitale", "ice", "made-in-italy"],
+      "featured": false,
+      "readTime": "3 min",
+      "eventDate": "2025-01-16",
+      "type": "webinar"
+    }
+  ],
+  "categories": {
+    "normative": {
+      "label": "Normative",
+      "color": "#dc2626",
+      "description": "Aggiornamenti normativi e legislativi"
+    },
+    "bandi": {
+      "label": "Bandi",
+      "color": "#16a34a",
+      "description": "Opportunità di finanziamento e bandi"
+    },
+    "eventi": {
+      "label": "Eventi",
+      "color": "#7c3aed",
+      "description": "Eventi, convegni e workshop"
+    },
+    "mercato": {
+      "label": "Mercato",
+      "color": "#ea580c",
+      "description": "Analisi e trend di mercato"
+    }
+  },
+  "metadata": {
+    "lastUpdate": "2024-12-15T10:00:00Z",
+    "totalNews": 6,
+    "featuredCount": 2
+  }
+}
