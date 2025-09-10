@@ -96,16 +96,19 @@ const FederAnimations = {
                         background: 'rgba(255, 255, 255, 0)',
                         backdropFilter: 'none',
                         boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
-                        border: 'none'
+                        border: 'none',
+                        clearProps: "left,top,width,maxWidth,height,borderRadius,transform,background,backdropFilter,boxShadow,border"
                     });
                     gsap.set('.navbar-container', {
                         paddingLeft: 'var(--space-6)',
                         paddingRight: 'var(--space-6)',
                         maxWidth: '1440px',
-                        margin: '0 auto'
+                        margin: '0 auto',
+                        clearProps: "paddingLeft,paddingRight,maxWidth,margin"
                     });
                     gsap.set('.navbar-menu', {
-                        gap: 'var(--space-6)'
+                        gap: 'var(--space-6)',
+                        clearProps: "gap"
                     });
                 }, this.settings.duration * 1000);
             }
