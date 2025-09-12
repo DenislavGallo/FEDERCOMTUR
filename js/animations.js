@@ -24,11 +24,10 @@ const FederAnimations = {
             return;
         }
         
-        // Register GSAP plugins
-        gsap.registerPlugin(ScrollTrigger, TextPlugin);
+        // Register GSAP plugins - ScrollTrigger DISABILITATO per prevenire comportamenti di navbar sticky
+        gsap.registerPlugin(TextPlugin); // ScrollTrigger rimosso
         
         // Initialize animations
-        this.initNavbarAnimations();
         this.initHeroAnimations();
         this.initNewsletterAnimations();
         this.initScrollAnimations();
@@ -36,85 +35,6 @@ const FederAnimations = {
         
         console.log('✅ GSAP animations initialized');
     },
-    
-    // Navbar transformation animations
-    initNavbarAnimations() {
-        const navbar = document.getElementById('navbar');
-        if (!navbar) return;
-        
-        // Create timeline for navbar transformation
-        const navbarTl = gsap.timeline({ paused: true });
-        
-        // Navbar transformation to pill shape
-        navbarTl
-            .to(navbar, {
-                duration: this.settings.duration,
-                ease: this.settings.ease,
-                css: {
-                    top: '20px',
-                    left: '50%',
-                    width: '100%',
-                    maxWidth: '1200px',
-                    height: '60px',
-                    borderRadius: '50px',
-                    transform: 'translateX(-50%)',
-                    background: 'rgba(255, 255, 255, 0.85)',
-                    backdropFilter: 'blur(20px)',
-                    boxShadow: '0 10px 30px rgba(0,0,0,0.1)',
-                    border: '1px solid rgba(255, 255, 255, 0.3)'
-                }
-            })
-            .to('.navbar-container', {
-                duration: this.settings.duration,
-                ease: this.settings.ease,
-                paddingLeft: '3rem',
-                paddingRight: '3rem'
-            }, 0);
-        
-        // ScrollTrigger for navbar
-        ScrollTrigger.create({
-            start: "100px top",
-            end: "bottom top",
-            onEnter: () => {
-                navbar.classList.add('scrolled');
-                navbarTl.play();
-            },
-            onLeaveBack: () => {
-                navbar.classList.remove('scrolled');
-                navbarTl.reverse();
-                
-                // Reset to original state after animation
-                setTimeout(() => {
-                    gsap.set(navbar, {
-                        top: 0,
-                        left: 0,
-                        width: '100%',
-                        maxWidth: 'none',
-                        height: '72px',
-                        borderRadius: 0,
-                        transform: 'none',
-                        background: 'rgba(255, 255, 255, 0)',
-                        backdropFilter: 'none',
-                        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
-                        border: 'none',
-                        clearProps: "left,top,width,maxWidth,height,borderRadius,transform,background,backdropFilter,boxShadow,border"
-                    });
-                    gsap.set('.navbar-container', {
-                        paddingLeft: 'var(--space-6)',
-                        paddingRight: 'var(--space-6)',
-                        maxWidth: '1440px',
-                        margin: '0 auto',
-                        clearProps: "paddingLeft,paddingRight,maxWidth,margin"
-                    });
-                    gsap.set('.navbar-menu', {
-                        gap: 'var(--space-6)',
-                        clearProps: "gap"
-                    });
-                }, this.settings.duration * 1000);
-            }
-        });
-    },
-    
     // Hero section animations
     initHeroAnimations() {
         const heroTitle = document.getElementById('hero-title');
@@ -180,72 +100,10 @@ const FederAnimations = {
             );
         }
         
-        // Geometric shapes animation
+        // Figure geometriche rimosse - animazioni eliminate
         if (heroIllustration) {
-            const shapes = heroIllustration.querySelectorAll('.geometric-shape');
-            
-            gsap.fromTo(shapes,
-                {
-                    opacity: 0,
-                    scale: 0,
-                    rotation: -180
-                },
-                {
-                    opacity: 0.8,
-                    scale: 1,
-                    rotation: 0,
-                    duration: 1.5,
-                    ease: "elastic.out(1, 0.5)",
-                    stagger: 0.3,
-                    delay: 0.5
-                }
-            );
-            
-            // Continuous floating animation + special infinite rotation for orange square (.shape-3)
-            shapes.forEach((shape, index) => {
-                if (shape.classList.contains('shape-3')) {
-                    // Float up/down - smooth continuous movement
-                    gsap.to(shape, {
-                        y: -25,
-                        duration: 4,
-                        ease: "sine.inOut",
-                        repeat: -1,
-                        yoyo: true,
-                        delay: index * 0.8
-                    });
-                    // Infinite rotation - smooth continuous rotation
-                    gsap.to(shape, {
-                        rotation: "+=360",
-                        duration: 8,
-                        ease: "none",
-                        repeat: -1,
-                        transformOrigin: "50% 50%"
-                    });
-                } else if (shape.classList.contains('shape-1')) {
-                    // Shape-1: gentle floating with subtle rotation
-                    gsap.to(shape, {
-                        y: -15,
-                        rotation: 3,
-                        duration: 5,
-                        ease: "sine.inOut",
-                        repeat: -1,
-                        yoyo: true,
-                        delay: index * 0.6
-                    });
-                } else if (shape.classList.contains('shape-2')) {
-                    // Shape-2: circular floating motion
-                    gsap.to(shape, {
-                        y: -20,
-                        x: 10,
-                        rotation: -2,
-                        duration: 6,
-                        ease: "sine.inOut",
-                        repeat: -1,
-                        yoyo: true,
-                        delay: index * 0.4
-                    });
-                }
-            });
+            // Le figure geometriche sono state rimosse dall'HTML
+            // Manteniamo solo il contenitore hero-illustration
         }
         
         // Optimized parallax effect for hero illustration (desktop only)
@@ -258,10 +116,11 @@ const FederAnimations = {
         
         let parallaxTrigger = null;
         
-        const createParallax = () => {
+        const  createParallax = () => {
             if (window.innerWidth > 1024 && !parallaxTrigger) {
                 console.log('🖥️ Desktop detected - Enabling optimized parallax effect');
-                parallaxTrigger = ScrollTrigger.create({
+                // ScrollTrigger disabilitato - comportamento parallax rimosso
+                /* parallaxTrigger = ScrollTrigger.create({
                     trigger: element,
                     start: "top bottom",
                     end: "bottom top",
@@ -275,10 +134,10 @@ const FederAnimations = {
                             ease: "none"
                         });
                     }
-                });
+                }); */
             } else if (window.innerWidth <= 1024 && parallaxTrigger) {
                 console.log('📱 Mobile/Tablet detected - Disabling parallax effect');
-                parallaxTrigger.kill();
+                // parallaxTrigger.kill(); - disabilitato
                 parallaxTrigger = null;
                 gsap.set(element, { clearProps: "y" }); // Reset position
             }
@@ -313,8 +172,8 @@ const FederAnimations = {
         const newsletterSection = document.getElementById('newsletter-section');
         if (!newsletterSection) return;
         
-        // Background color morphing
-        ScrollTrigger.create({
+        // Background color morphing - ScrollTrigger disabilitato
+        /* ScrollTrigger.create({
             trigger: newsletterSection,
             start: "top 70%",
             end: "bottom 30%",
@@ -349,14 +208,15 @@ const FederAnimations = {
                     ease: this.settings.ease
                 });
             }
-        });
+        }); */
         
         // Newsletter form animation
         const newsletterForm = document.getElementById('newsletter-form');
         if (newsletterForm) {
             const formElements = newsletterForm.querySelectorAll('.form-group, .gdpr-consent');
             
-            ScrollTrigger.create({
+            // ScrollTrigger disabilitato
+            /* ScrollTrigger.create({
                 trigger: newsletterForm,
                 start: "top 80%",
                 once: true,
@@ -375,16 +235,18 @@ const FederAnimations = {
                         }
                     );
                 }
-            });
+            }); */
         }
     },
     
     // Scroll-triggered animations
     initScrollAnimations() {
-        // News cards stagger animation
+        // News cards stagger animation - ScrollTrigger disabilitato
         const newsCards = document.querySelectorAll('.news-card');
         if (newsCards.length > 0) {
-            ScrollTrigger.create({
+            // Imposta direttamente le card come visibili senza animazione scroll
+            gsap.set(newsCards, { opacity: 1, y: 0, scale: 1 });
+            /* ScrollTrigger.create({
                 trigger: '#news-cards',
                 start: "top 80%",
                 once: true,
@@ -405,13 +267,15 @@ const FederAnimations = {
                         }
                     );
                 }
-            });
+            }); */
         }
         
-        // Sidebar widgets animation
+        // Sidebar widgets animation - ScrollTrigger disabilitato
         const widgets = document.querySelectorAll('.widget');
         widgets.forEach((widget, index) => {
-            ScrollTrigger.create({
+            // Imposta direttamente i widget come visibili senza animazione scroll
+            gsap.set(widget, { opacity: 1, x: 0, rotationY: 0 });
+            /* ScrollTrigger.create({
                 trigger: widget,
                 start: "top 85%",
                 once: true,
@@ -432,13 +296,15 @@ const FederAnimations = {
                         }
                     );
                 }
-            });
+            }); */
         });
         
-        // Footer animation
+        // Footer animation - ScrollTrigger disabilitato
         const footerColumns = document.querySelectorAll('.footer-column');
         if (footerColumns.length > 0) {
-            ScrollTrigger.create({
+            // Imposta direttamente le colonne del footer come visibili senza animazione scroll
+            gsap.set(footerColumns, { opacity: 1, y: 0 });
+            /* ScrollTrigger.create({
                 trigger: '.footer',
                 start: "top 90%",
                 once: true,
@@ -457,7 +323,7 @@ const FederAnimations = {
                         }
                     );
                 }
-            });
+            }); */
         }
     },
     
@@ -694,14 +560,14 @@ const FederAnimations = {
         });
     },
     
-    // Refresh animations (useful for dynamic content)
+    // Refresh animations (useful for dynamic content) - ScrollTrigger disabilitato
     refresh() {
-        ScrollTrigger.refresh();
+        // ScrollTrigger.refresh(); - disabilitato
     },
     
-    // Kill all animations (cleanup)
+    // Kill all animations (cleanup) - ScrollTrigger disabilitato
     kill() {
-        ScrollTrigger.killAll();
+        // ScrollTrigger.killAll(); - disabilitato
         gsap.killTweensOf("*");
     }
 };

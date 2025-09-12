@@ -6,7 +6,7 @@
 /* ========================== */
 
 .news-card {
-    background: var(--white);
+    background: var(--neutral-100); /* Colore chiaro per le card delle news */
     border: 1px solid var(--border-light);
     border-radius: var(--radius-xl);
     padding: var(--space-6);
@@ -79,7 +79,7 @@
 .news-title {
     font-size: var(--text-lg);
     font-weight: var(--font-semibold);
-    color: var(--text-titles);
+    color: var(--primary-navy); /* Blu navy per i titoli delle news */
     line-height: 1.4;
     margin-bottom: var(--space-3);
     display: -webkit-box;
@@ -90,7 +90,7 @@
 
 .news-excerpt {
     font-size: var(--text-sm);
-    color: var(--text-cream);
+    color: var(--primary-navy); /* Blu navy per l'excerpt delle news */
     line-height: 1.5;
     margin-bottom: var(--space-4);
     display: -webkit-box;
@@ -103,9 +103,8 @@
 .news-footer {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     padding-top: var(--space-4);
-    border-top: 1px solid var(--border-light);
 }
 
 .news-link {
@@ -150,7 +149,7 @@
     font-weight: var(--font-weight-medium);
     padding: var(--spacing-lg) 0;
     margin-top: var(--spacing-lg);
-    border-top: 1px solid var(--gray-border);
+    /* Rimossa la linea verde sopra */
     transition: var(--transition-fast);
 }
 
@@ -186,14 +185,14 @@
 .footer-column h3.footer-title {
     font-size: var(--text-2xl);
     font-weight: var(--font-bold);
-    color: #00b4d8;
+    color: var(--secondary-emerald);
     margin-bottom: var(--space-4);
 }
 
 .footer-column h4.footer-heading {
     font-size: var(--text-lg);
     font-weight: var(--font-semibold);
-    color: #00b4d8;
+    color: var(--secondary-emerald);
     margin-bottom: var(--space-4);
 }
 
@@ -227,14 +226,12 @@
     text-decoration: none;
     border-radius: var(--radius-lg);
     transition: var(--transition-fast);
-    border: 1px solid var(--border-light);
+    border: none; /* Rimosso il bordo */
 }
 
 .social-link:hover {
-    background: var(--secondary-emerald);
-    color: var(--white);
     transform: translateY(-2px);
-    border-color: var(--secondary-emerald);
+    /* Rimossi i cambi di colore - solo sollevamento */
 }
 
 .social-link svg {
@@ -278,8 +275,8 @@
     padding: var(--space-3) var(--space-4);
     border: 1px solid var(--border-light);
     border-radius: var(--radius-md);
-    background: var(--white);
-    color: var(--text-primary);
+    background: #c5c5c5; /* Sfondo grigio per distinguerli dai bottoni */
+    color: var(--text-cream);
     font-size: var(--text-sm);
     transition: var(--transition-fast);
 }
@@ -296,7 +293,7 @@
 
 .btn-footer {
     background: var(--secondary-emerald);
-    color: var(--white);
+    color: var(--text-cream);
     border: none;
     padding: var(--space-3) var(--space-5);
     border-radius: var(--radius-md);

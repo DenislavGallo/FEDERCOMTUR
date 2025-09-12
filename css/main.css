@@ -112,7 +112,7 @@ body {
     font-weight: var(--font-regular);
     font-size: var(--text-base);
     line-height: 1.65;
-    color: var(--text-primary);
+    color: var(--text-cream);
     background-color: var(--bg-primary);
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
@@ -171,9 +171,8 @@ body {
     width: 100%;
     height: 72px;
     z-index: 1000;
-    transition: var(--transition-smooth);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-    background: rgba(255, 255, 255, 0);
+    background: var(--primary-navy); /* Background blu navy invece di trasparente */
     max-width: none;
     border-radius: 0;
     transform: none;
@@ -198,33 +197,10 @@ body {
     gap: var(--space-6);
 }
 
-.navbar.scrolled {
-    height: 64px;
-    background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-    max-width: 1200px;
-}
-
-.navbar.scrolled .navbar-container {
-    padding: 0 3rem;
-}
-
-.navbar.scrolled .navbar-menu {
-    gap: 2.5rem;
-}
-
-
-.navbar-logo {
-    display: flex;
-    align-items: center;
-}
 
 .navbar-logo a {
     text-decoration: none;
-    color: var(--text-primary);
+    color: var(--text-cream);
     display: flex;
     align-items: center;
     gap: var(--space-3);
@@ -235,34 +211,15 @@ body {
     font-weight: var(--font-bold);
     color: var(--text-cream);
     letter-spacing: -0.02em;
-    transition: var(--transition-fast);
 }
 
-/* Logo nello stato scrolled */
-.navbar.scrolled .logo-text {
-    color: var(--primary-navy);
-    background: rgba(255, 255, 255, 0);
-}
 
 /* Ensure logo-text keeps intended color on hover */
 .navbar-logo a:hover .logo-text {
     color: var(--text-cream);
 }
 
-.navbar.scrolled .navbar-logo a:hover .logo-text {
-    color: var(--primary-navy);
-}
-
-/* Force base states: attached (not scrolled) stays cream before/after hover */
-.navbar:not(.scrolled) .logo-text {
-    color: var(--text-cream);
-}
-
-.navbar:not(.scrolled) .navbar-logo a:hover .logo-text,
-.navbar:not(.scrolled) .navbar-logo a:focus .logo-text,
-.navbar:not(.scrolled) .navbar-logo a:active .logo-text {
-    color: var(--text-cream);
-}
+/* Rimossi tutti i riferimenti alla classe scrolled */
 
 .logo-icon {
     width: 32px;
@@ -283,7 +240,6 @@ body {
     color: var(--text-cream);
     font-weight: var(--font-bold);
     font-size: var(--text-base);
-    transition: var(--transition-fast);
     padding: var(--space-3) var(--space-4);
     border-radius: var(--radius-md);
     position: relative;
@@ -291,20 +247,8 @@ body {
 }
 
 .navbar-menu a:hover{
-    color: var(--white);
+    color: var(--text-cream);
         background: rgba(16, 185, 129, 0.9);
-}
-
-/* Navbar scrolled state - testi blu navy */
-.navbar.scrolled .navbar-menu a {
-    color: var(--primary-navy);
-    font-weight: var(--font-bold);
-    font-size: var(--text-base);
-}
-
-.navbar.scrolled .navbar-menu a:hover{
-    color: var(--white);
-    background: rgba(16, 185, 129, 0.9);
 }
 
 /* Mobile Menu Toggle */
@@ -322,14 +266,10 @@ body {
     width: 24px;
     height: 2px;
     background: var(--text-cream);
-    transition: var(--transition-fast);
     border-radius: 1px;
 }
 
-/* Mobile menu scrolled state */
-.navbar.scrolled .hamburger-line {
-    background: var(--primary-navy);
-}
+
 
 /* ========================== */
 /* MODERN LAYOUT SYSTEM */
@@ -367,6 +307,87 @@ body {
     }
 }
 
+
+/* ========================== */
+/* POPOUT EFFECT CON DUE IMMAGINI */
+/* ========================== */
+
+
+
+.hero-visual {  /*container */
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    height: 600px;
+    width: 100%;
+}
+
+.popout-container::before{
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 400px;
+    height: 400px;
+    background: transparent;
+    border-radius: 50%;
+    z-index: 1;
+    box-shadow: 0 130px 0 50px #143D9D;
+    margin-bottom: 100px;   
+}
+
+.popout-container {  /*box*/
+    position: relative;
+    width: 400px;
+    height: 600px;
+    background: transparent;  
+    overflow: hidden;
+    margin: 0 auto;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.popout-container::after{
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 400px;
+    height: 400px;
+    box-sizing: border-box;
+    border: 8px solid transparent;
+    border-radius: 50%;
+    border: 8px solid transparent;
+}
+
+.popout-container .popout-circle{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 400px;
+    height: 400px;
+    background: var(--secondary-emerald);
+    overflow: hidden;
+    border-radius: 50%;
+    margin-bottom: 100px;
+}
+
+.popout-container .popout-circle img,
+.popout-container img{
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 530px;
+}
+
+.popout-image{
+    margin-bottom: 100px;
+}
+
 /* ========================== */
 /* MODERN HERO SECTION */
 /* ========================== */
@@ -377,7 +398,7 @@ body {
     display: flex;
     align-items: center;
     position: relative;
-    margin-top: 72px; /* Spazio per navbar fissa */
+    margin-top: 6vh; /* Spazio per navbar fissa */
     padding-top: var(--space-12);
 }
 
@@ -404,78 +425,21 @@ body {
     order: 2;
 }
 
+.hero-visual {
+    order: 1;
+}
+
 @media (min-width: 1024px) {
     .hero-text {
         order: 1;
     }
-}
-
-.hero-visual {
-    order: 1;
-    position: relative;
-    height: 400px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-@media (min-width: 1024px) {
+    
     .hero-visual {
         order: 2;
-        height: 500px;
     }
 }
 
-.hero-illustration {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.geometric-shape {
-    position: absolute;
-    border-radius: var(--radius-2xl);
-    background: var(--secondary-emerald);
-    opacity: 0.6; /* Opacità visibile */
-    will-change: transform;
-    transform: translateZ(0); /* GPU acceleration */
-    backface-visibility: hidden; /* Prevent ghosting */
-}
-
-.shape-1 {
-    width: 200px;
-    height: 200px;
-    top: 10%;
-    left: 10%;
-    animation-delay: 0s;
-    background: var(--secondary-emerald);
-}
-
-.shape-2 {
-    width: 120px;
-    height: 120px;
-    top: 50%;
-    right: 20%;
-    animation-delay: 2s;
-    background: var(--primary-navy);
-    border-radius: var(--radius-full);
-}
-
-.shape-3 {
-    width: 80px;
-    height: 80px;
-    bottom: 20%;
-    left: 50%;
-    animation-delay: 4s;
-    background: var(--accent-orange);
-}
-
-/* CSS float animation removed - now handled by GSAP for better control */
-
-/* Desktop-only optimizations to prevent ghosting */
+/* Desktop-only optimizations - figure geometriche rimosse */
 @media (min-width: 1024px) {
     .hero-illustration {
         will-change: transform;
@@ -483,19 +447,12 @@ body {
         contain: layout style paint; /* CSS containment for better performance */
     }
     
-    .geometric-shape {
-        transform: translate3d(0, 0, 0); /* Force hardware acceleration */
-        opacity: 0.5; /* Opacità ben visibile su desktop */
-    }
+    /* Regole per figure geometriche rimosse */
 }
 
-/* Mobile/Tablet optimizations */
+/* Mobile/Tablet optimizations - figure geometriche rimosse */
 @media (max-width: 1023px) {
-    .geometric-shape {
-        will-change: auto;
-        opacity: 0.45; /* Buona visibilità anche su mobile */
-        transform: none; /* No GPU acceleration on mobile */
-    }
+    /* Regole per figure geometriche rimosse */
 }
 
 .hero-title {
@@ -570,7 +527,7 @@ body {
 
 .stat-label {
     font-size: var(--text-sm);
-    color: var(--text-muted);
+    color: var(--text-cream);
     font-weight: var(--font-medium);
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -635,7 +592,7 @@ body {
 /* Button Variants */
 .btn-primary {
     background: var(--secondary-emerald);
-    color: var(--white);
+    color: var(--text-cream);
     box-shadow: var(--shadow-sm);
 }
 
@@ -666,6 +623,9 @@ body {
     background: transparent;
     color: var(--text-titles);
     border: 2px solid var(--secondary-emerald);
+    display: flex;
+    justify-content: center;
+    align-items: center; 
 }
 
 .btn-outline:hover {
@@ -681,7 +641,6 @@ body {
 
 .btn-ghost:hover {
     background: var(--gray-50);
-    color: var(--text-primary);
 }
 
 .btn-icon {
@@ -742,7 +701,7 @@ body {
 
 /* Newsletter header title and subtitle styling (color + perfect centering) */
 .newsletter-header .section-title {
-    color: #00b4d8;
+    color: var(--primary-navy);
 }
 
 .newsletter-header .section-subtitleBottom {
@@ -1083,7 +1042,7 @@ body {
 
 .stat-label {
     font-size: var(--text-sm);
-    color: var(--text-muted);
+    color: var(--text-cream);
     font-weight: var(--font-medium);
     line-height: 1.2;
 }
@@ -1215,8 +1174,9 @@ body {
     padding: var(--space-4) var(--space-5);
     border: 2px solid var(--border-light);
     border-radius: var(--radius-xl);
-    background: var(--white);
-    color: var(--text-primary);
+    background: #c5c5c5;
+    color: var(--text-cream
+    );
     font-size: var(--text-base);
     font-family: var(--font-primary);
     transition: var(--transition-fast);
@@ -1361,8 +1321,7 @@ body {
     height: 18px;
     border: 2px solid var(--border-medium);
     border-radius: var(--radius-sm);
-    background: var(--white);
-    transition: var(--transition-fast);
+    background: var(--text-cream);
     flex-shrink: 0;
     margin-top: 2px;
     position: relative;
@@ -1475,13 +1434,11 @@ html {
     scroll-padding-top: 100px;
 }
 
-/* Reduced motion preferences */
+/* Reduced motion preferences - figure geometriche rimosse */
 @media (prefers-reduced-motion: reduce) {
-    .geometric-shape {
-        animation: none !important;
-        will-change: auto !important;
-        transform: translateZ(0) !important; /* Keep GPU acceleration but no animation */
-    }
+    /* Regole per figure geometriche rimosse */
+    
+/* Popout reduced motion - tutte le animazioni rimosse */
     
     * {
         animation-duration: 0.01ms !important;

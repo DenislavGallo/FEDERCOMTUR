@@ -9,7 +9,6 @@
 const FederComTur = {
     // Configuration
     config: {
-        scrollThreshold: 100,
         animationDuration: 0.6,
         mobileBreakpoint: 768,
         newsApiUrl: '/api/news.json', // Placeholder for future API
@@ -18,7 +17,6 @@ const FederComTur = {
     
     // State management
     state: {
-        isScrolled: false,
         isMobileMenuOpen: false,
         isNewsletterDarkMode: false
     },
@@ -67,8 +65,7 @@ const FederComTur = {
     
     // Bind event listeners
     bindEvents() {
-        // Scroll events
-        window.addEventListener('scroll', this.throttle(this.handleScroll.bind(this), 16));
+        // Rimossi gli eventi di scroll per la navbar
         
         // Mobile menu toggle
         if (this.elements.mobileMenuToggle) {
@@ -107,49 +104,10 @@ const FederComTur = {
     
     // Initialize components
     initComponents() {
-        this.initNavbar();
+        // Rimossa l'inizializzazione della navbar sticky
         this.initNewsletterSection();
         this.initSmoothScrolling();
         this.initAccessibility();
-    },
-    
-    // Initialize navbar functionality
-    initNavbar() {
-        // Set initial state
-        this.updateNavbarState();
-        
-        // Add magnetic effect to interactive elements
-        this.initMagneticButtons();
-    },
-    
-    // Handle scroll events
-    handleScroll() {
-        const scrollY = window.pageYOffset;
-        const wasScrolled = this.state.isScrolled;
-        
-        // Update scroll state
-        this.state.isScrolled = scrollY > this.config.scrollThreshold;
-        
-        // Only update if state changed
-        if (wasScrolled !== this.state.isScrolled) {
-            this.updateNavbarState();
-        }
-        
-        // Newsletter section background transition
-        this.updateNewsletterSection();
-        
-        // Parallax effect removed to avoid conflict with GSAP ScrollTrigger
-    },
-    
-    // Update navbar state based on scroll
-    updateNavbarState() {
-        if (!this.elements.navbar) return;
-        
-        if (this.state.isScrolled) {
-            this.elements.navbar.classList.add('scrolled');
-        } else {
-            this.elements.navbar.classList.remove('scrolled');
-        }
     },
     
     // Toggle mobile menu

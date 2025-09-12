@@ -31,20 +31,11 @@
         background: rgba(255, 255, 255, 0);
     }
 
-    .navbar.scrolled {
-        top: 10px;
-        max-width: calc(100% - 20px);
-        height: 55px;
-        border-radius: 30px;
-    }
 
     .navbar-container {
         padding: 0 var(--spacing-md);
     }
 
-    .navbar.scrolled .navbar-container {
-        padding: 0 var(--spacing-lg);
-    }
 
     .navbar-menu {
         display: none;
@@ -104,29 +95,7 @@
         margin-bottom: var(--spacing-xl);
     }
 
-    .hero-visual {
-        height: 200px;
-        margin-bottom: var(--spacing-lg);
-    }
-
-    .geometric-shape {
-        border-radius: 15px;
-    }
-
-    .shape-1 {
-        width: 80px;
-        height: 80px;
-    }
-
-    .shape-2 {
-        width: 60px;
-        height: 60px;
-    }
-
-    .shape-3 {
-        width: 40px;
-        height: 40px;
-    }
+    /* Hero visual CSS rimosso */
 
     .hero-title {
         font-size: 2.5rem;
@@ -301,9 +270,7 @@
         padding: var(--spacing-2xl) 0;
     }
 
-    .hero-visual {
-        height: 250px;
-    }
+    /* Hero visual CSS rimosso */
 
     .hero-title {
         font-size: 3rem;
@@ -460,9 +427,7 @@
         min-height: 80vh;
     }
 
-    .hero-visual {
-        height: 180px;
-    }
+    /* Hero visual CSS rimosso */
 
     .hero-title {
         font-size: 2.25rem;
@@ -485,9 +450,7 @@
         border-width: 0.5px;
     }
 
-    .geometric-shape {
-        border-radius: 18px;
-    }
+    /* Figure geometriche rimosse */
 }
 
 /* ========================== */
@@ -499,9 +462,7 @@
         transition: none;
     }
 
-    .navbar.scrolled {
-        transition: none;
-    }
+    /* Rimossa la regola per navbar.scrolled */
 
     .news-card,
     .btn-primary,
@@ -511,9 +472,7 @@
         transition: none;
     }
 
-    .geometric-shape {
-        animation: none;
-    }
+    /* Figure geometriche rimosse - Popout reduced motion - tutte le animazioni rimosse */
 
     .spinner {
         animation: none;
@@ -543,7 +502,7 @@
 
     .news-card,
     .widget {
-        background: #0a1128;
+        background: #ffffff;
         border: 1px solid rgba(255, 255, 255, 0.1);
     }
 }
@@ -608,9 +567,7 @@
 
 @media (max-width: 768px) {
     /* Reduce animations on mobile for performance */
-    .geometric-shape {
-        animation-duration: 8s;
-    }
+    /* Figure geometriche rimosse */
     
     /* Services Carousel Mobile */
     .services-section {
