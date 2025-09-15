@@ -6,7 +6,7 @@
 /* ========================== */
 
 .news-card {
-    background: var(--neutral-100); /* Colore chiaro per le card delle news */
+    background: #F7F8FA; /* Colore chiaro per le card delle news */
     border: 1px solid var(--border-light);
     border-radius: var(--radius-xl);
     padding: var(--space-6);
@@ -18,16 +18,18 @@
     height: 100%;
     display: flex;
     flex-direction: column;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Shadow più scura e pronunciata */
 }
 
 .news-card.animate-in {
     opacity: 1;
     transform: translateY(0);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Shadow visibile quando animata */
 }
 
 .news-card:hover {
     transform: translateY(-4px);
-    box-shadow: var(--shadow-lg);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25); /* Shadow molto più scura e pronunciata */
     border-color: var(--border-medium);
 }
 
@@ -79,7 +81,7 @@
 .news-title {
     font-size: var(--text-lg);
     font-weight: var(--font-semibold);
-    color: var(--primary-navy); /* Blu navy per i titoli delle news */
+    color: var(--dark-blue); /* Blu scuro per i titoli delle news */
     line-height: 1.4;
     margin-bottom: var(--space-3);
     display: -webkit-box;
@@ -90,7 +92,7 @@
 
 .news-excerpt {
     font-size: var(--text-sm);
-    color: var(--primary-navy); /* Blu navy per l'excerpt delle news */
+    color: var(--dark-blue); /* Blu scuro per l'excerpt delle news */
     line-height: 1.5;
     margin-bottom: var(--space-4);
     display: -webkit-box;
@@ -178,7 +180,7 @@
 .footer-grid {
     display: grid;
     grid-template-columns: 2fr 1fr 1fr 1.5fr;
-    gap: var(--space-16);
+    gap: var(--space-20);
     margin-bottom: var(--space-12);
 }
 
@@ -221,17 +223,16 @@
     justify-content: center;
     width: 44px;
     height: 44px;
-    background: var(--white);
-    color: var(--text-cream);
+    background: var(--primary-navy);
+    color: var(--cream);
     text-decoration: none;
     border-radius: var(--radius-lg);
     transition: var(--transition-fast);
-    border: none; /* Rimosso il bordo */
+    border: none;
 }
 
 .social-link:hover {
-    transform: translateY(-2px);
-    /* Rimossi i cambi di colore - solo sollevamento */
+    transform: scale(1.1);
 }
 
 .social-link svg {
@@ -265,49 +266,37 @@
 
 /* Footer Newsletter Form */
 .footer-newsletter {
-    display: flex;
-    gap: var(--space-3);
     margin-top: var(--space-4);
 }
 
-.footer-newsletter input {
-    flex: 1;
-    padding: var(--space-3) var(--space-4);
-    border: 1px solid var(--border-light);
-    border-radius: var(--radius-md);
-    background: #c5c5c5; /* Sfondo grigio per distinguerli dai bottoni */
-    color: var(--text-cream);
+.footer-newsletter .input-wrapper {
+    max-width: 400px;
+    margin: 0;
+}
+
+.footer-newsletter .form-input {
+    height: 44px;
     font-size: var(--text-sm);
-    transition: var(--transition-fast);
 }
 
-.footer-newsletter input::placeholder {
-    color: var(--text-cream);
-}
-
-.footer-newsletter input:focus {
-    outline: none;
-    border-color: var(--secondary-emerald);
-    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
-}
-
-.btn-footer {
+.footer-newsletter .btn-footer {
     background: var(--secondary-emerald);
-    color: var(--text-cream);
+    color: #ffffff;
     border: none;
-    padding: var(--space-3) var(--space-5);
-    border-radius: var(--radius-md);
+    padding: 0 var(--space-4);
+    border-radius: 50px;
     font-size: var(--text-sm);
     font-weight: var(--font-semibold);
     cursor: pointer;
     transition: var(--transition-fast);
     white-space: nowrap;
+    height: 44px;
+    min-width: 100px;
 }
 
-.btn-footer:hover {
+.footer-newsletter .btn-footer:hover {
     background: #059669;
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-sm);
+    transform: none;
 }
 
 /* Footer Bottom */
@@ -527,3 +516,4 @@
         line-height: 1.4;
     }
 }
+

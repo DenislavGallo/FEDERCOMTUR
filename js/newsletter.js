@@ -538,7 +538,7 @@ document.addEventListener('visibilitychange', () => {
     if (document.hidden && FederNewsletter.state.isSubmitting) {
         console.log('⚠️ Page hidden during submission');
     }
-});
+}); 
 
 // Cleanup on page unload
 window.addEventListener('beforeunload', () => {

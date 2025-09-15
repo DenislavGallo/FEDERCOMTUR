@@ -557,132 +557,10 @@ const FederComTur = {
         }
     },
     
-    // Services Carousel functionality
+    // Services Carousel functionality - Spazio riservato per nuovo carousel
     initServicesCarousel() {
-        const carousel = document.querySelector('.services-carousel');
-        if (!carousel) return;
-        
-        const cards = carousel.querySelectorAll('.service-card');
-        const dots = carousel.querySelectorAll('.dot');
-        let currentIndex = 0;
-        
-        // Auto-rotation settings
-        const ROTATION_INTERVAL = 3000; // 3 seconds
-        const PAUSE_ON_HOVER = true;
-        
-        // Store interval reference
-        this.carouselInterval = null;
-        
-        // Initialize carousel
-        this.updateCarouselPosition(cards, dots, currentIndex);
-        this.startAutoRotation(cards, dots, ROTATION_INTERVAL);
-        
-        // Dot navigation
-        dots.forEach((dot, index) => {
-            dot.addEventListener('click', () => {
-                this.goToSlide(cards, dots, index);
-                this.resetAutoRotation(cards, dots, ROTATION_INTERVAL);
-            });
-        });
-        
-        // Card click navigation
-        cards.forEach((card, index) => {
-            card.addEventListener('click', () => {
-                this.goToSlide(cards, dots, index);
-                this.resetAutoRotation(cards, dots, ROTATION_INTERVAL);
-            });
-        });
-        
-        // Pause on hover
-        if (PAUSE_ON_HOVER) {
-            carousel.addEventListener('mouseenter', () => {
-                this.pauseAutoRotation();
-            });
-            
-            carousel.addEventListener('mouseleave', () => {
-                this.startAutoRotation(cards, dots, ROTATION_INTERVAL);
-            });
-        }
-        
-        // Store methods for external access
-        this.servicesCarousel = {
-            goToSlide: (index) => this.goToSlide(cards, dots, index),
-            nextSlide: () => this.nextSlide(cards, dots),
-            prevSlide: () => this.prevSlide(cards, dots),
-            pause: () => this.pauseAutoRotation(),
-            resume: () => this.startAutoRotation(cards, dots, ROTATION_INTERVAL)
-        };
-    },
-    
-    updateCarouselPosition(cards, dots, activeIndex) {
-        cards.forEach((card, index) => {
-            card.classList.remove('active', 'prev', 'next');
-            
-            if (index === activeIndex) {
-                card.classList.add('active');
-            } else if (index === (activeIndex - 1 + cards.length) % cards.length) {
-                card.classList.add('prev');
-            } else if (index === (activeIndex + 1) % cards.length) {
-                card.classList.add('next');
-            }
-        });
-        
-        dots.forEach((dot, index) => {
-            dot.classList.toggle('active', index === activeIndex);
-        });
-    },
-    
-    goToSlide(cards, dots, targetIndex) {
-        const totalCards = cards.length;
-        const currentIndex = Array.from(cards).findIndex(card => card.classList.contains('active'));
-        
-        if (targetIndex === currentIndex) return;
-        
-        // Update position
-        this.updateCarouselPosition(cards, dots, targetIndex);
-        
-        // Add transition effect
-        cards.forEach(card => {
-            card.style.transition = 'all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
-        });
-        
-        setTimeout(() => {
-            cards.forEach(card => {
-                card.style.transition = '';
-            });
-        }, 800);
-    },
-    
-    nextSlide(cards, dots) {
-        const currentIndex = Array.from(cards).findIndex(card => card.classList.contains('active'));
-        const nextIndex = (currentIndex + 1) % cards.length;
-        this.goToSlide(cards, dots, nextIndex);
-    },
-    
-    prevSlide(cards, dots) {
-        const currentIndex = Array.from(cards).findIndex(card => card.classList.contains('active'));
-        const prevIndex = (currentIndex - 1 + cards.length) % cards.length;
-        this.goToSlide(cards, dots, prevIndex);
-    },
-    
-    startAutoRotation(cards, dots, interval) {
-        this.pauseAutoRotation(); // Clear any existing interval
-        
-        this.carouselInterval = setInterval(() => {
-            this.nextSlide(cards, dots);
-        }, interval);
-    },
-    
-    pauseAutoRotation() {
-        if (this.carouselInterval) {
-            clearInterval(this.carouselInterval);
-            this.carouselInterval = null;
-        }
-    },
-    
-    resetAutoRotation(cards, dots, interval) {
-        this.pauseAutoRotation();
-        this.startAutoRotation(cards, dots, interval);
+        // Spazio riservato per nuovo carousel
+        console.log('Spazio riservato per nuovo carousel');
     },
 
     // Utility: Debounce function
@@ -700,8 +578,9 @@ const FederComTur = {
             timeout = setTimeout(later, wait);
             if (callNow) func.apply(context, args);
         };
-    }
-};
+    },
+    
+}; // Chiusura dell'oggetto FederComTur
 
 // Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {

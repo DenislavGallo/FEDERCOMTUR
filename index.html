@@ -15,7 +15,7 @@
     <!-- Preconnect for fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
     <!-- CSS -->
     <link rel="stylesheet" href="css/main.css">
@@ -114,7 +114,7 @@
             </div>
         </section>
 
-        <!-- Services Section - Modern Carousel -->
+        <!-- Services Section -->
         <section class="section services-section" id="servizi">
             <div class="main-container">
                 <!-- Header centrato -->
@@ -126,42 +126,7 @@
                     </p>
                 </div>
                 
-                <!-- Carousel Container -->
-                <div class="services-carousel">
-                    <div class="carousel-track">
-                        <div class="service-card active" data-index="0">
-                            <div class="service-icon">📋</div>
-                            <h3 class="service-title">Consulenza Specializzata</h3>
-                            <p class="service-description">Supporto fiscale, legale e amministrativo per navigare la complessità normativa e massimizzare le opportunità.</p>
-                        </div>
-                        
-                        <div class="service-card" data-index="1">
-                            <div class="service-icon">🎓</div>
-                            <h3 class="service-title">Formazione Professionale</h3>
-                            <p class="service-description">Corsi, workshop e webinar per aggiornare competenze e cogliere le nuove sfide del mercato.</p>
-                        </div>
-                        
-                        <div class="service-card" data-index="2">
-                            <div class="service-icon">🤝</div>
-                            <h3 class="service-title">Rappresentanza Istituzionale</h3>
-                            <p class="service-description">Voce unica e autorevole presso istituzioni, enti pubblici e organismi di categoria a livello nazionale ed europeo.</p>
-                        </div>
-                        
-                        <div class="service-card" data-index="3">
-                            <div class="service-icon">💼</div>
-                            <h3 class="service-title">Networking Business</h3>
-                            <p class="service-description">Connessioni strategiche, eventi esclusivi e opportunità di partnership per far crescere il tuo business.</p>
-                        </div>
-                    </div>
-                    
-                    <!-- Navigation Dots -->
-                    <div class="carousel-dots">
-                        <button class="dot active" data-index="0"></button>
-                        <button class="dot" data-index="1"></button>
-                        <button class="dot" data-index="2"></button>
-                        <button class="dot" data-index="3"></button>
-                    </div>
-                </div>
+                <!-- Services content will be added here -->
             </div>
         </section>
 
@@ -216,13 +181,13 @@
                                     type="email" 
                                     id="email" 
                                     name="email" 
-                                    placeholder="Il tuo indirizzo email" 
+                                    placeholder="Email" 
                                     required
                                     aria-describedby="email-error"
                                     class="form-input"
                                 >
-                                <button type="submit" class="btn btn-primary btn-lg newsletter-submit" id="newsletter-submit">
-                                    <span class="btn-text">Iscriviti Gratis</span>
+                                <button type="submit" class="newsletter-submit" id="newsletter-submit">
+                                    <span class="btn-text">Subscribe</span>
                                     <span class="btn-loading">
                                         <svg class="spinner" viewBox="0 0 24 24">
                                             <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none" stroke-dasharray="31.4" stroke-dashoffset="31.4"/>
@@ -246,11 +211,6 @@
                                         e di ricevere comunicazioni commerciali da FederComTur.
                                     </span>
                                 </label>
-                            </div>
-                            <div class="newsletter-info">
-                                <span class="newsletter-guarantee">
-                                    📧 Newsletter settimanale • 🔒 Zero spam • ✋ Cancellazione facile
-                                </span>
                             </div>
                         </div>
                     </form>
@@ -294,7 +254,17 @@
                     
                     <div class="about-stats">
                         <div class="stat-card">
-                            <div class="stat-icon">🏢</div>
+                            <div class="stat-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M3 21h18"/>
+                                    <path d="M5 21V7l8-4v18"/>
+                                    <path d="M19 21V11l-6-4"/>
+                                    <path d="M9 9v.01"/>
+                                    <path d="M9 12v.01"/>
+                                    <path d="M9 15v.01"/>
+                                    <path d="M9 18v.01"/>
+                                </svg>
+                            </div>
                             <div class="stat-content">
                                 <span class="stat-number">5.200+</span>
                                 <span class="stat-label">Imprese Associate</span>
@@ -302,7 +272,11 @@
                         </div>
                         
                         <div class="stat-card">
-                            <div class="stat-icon">📈</div>
+                            <div class="stat-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                                </svg>
+                            </div>
                             <div class="stat-content">
                                 <span class="stat-number">€2.8B</span>
                                 <span class="stat-label">Fatturato Aggregato</span>
@@ -310,7 +284,14 @@
                         </div>
                         
                         <div class="stat-card">
-                            <div class="stat-icon">👥</div>
+                            <div class="stat-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                                    <circle cx="9" cy="7" r="4"/>
+                                    <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+                                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                                </svg>
+                            </div>
                             <div class="stat-content">
                                 <span class="stat-number">45.000+</span>
                                 <span class="stat-label">Addetti Rappresentati</span>
@@ -318,7 +299,12 @@
                         </div>
                         
                         <div class="stat-card">
-                            <div class="stat-icon">🌍</div>
+                            <div class="stat-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                    <circle cx="12" cy="10" r="3"/>
+                                </svg>
+                            </div>
                             <div class="stat-content">
                                 <span class="stat-number">18</span>
                                 <span class="stat-label">Regioni Coperte</span>
@@ -378,8 +364,10 @@
                     <h4 class="footer-heading">Newsletter</h4>
                     <p class="footer-text">Iscriviti per ricevere aggiornamenti settimanali</p>
                     <form class="footer-newsletter">
-                        <input type="email" placeholder="La tua email">
-                        <button type="submit" class="btn-footer">Iscriviti</button>
+                        <div class="input-wrapper">
+                            <input type="email" placeholder="La tua email" class="form-input">
+                            <button type="submit" class="btn-footer">Iscriviti</button>
+                        </div>
                     </form>
                 </div>
             </div>
