@@ -30,7 +30,7 @@ class NewsManager {
     async loadNewsData() {
         try {
             // Carica le categorie dall'API
-            const categoriesResponse = await fetch('http://localhost:8000/api/news-data.php?action=categories');
+            const categoriesResponse = await fetch('/FEDERCOMTUR/api/news-data.php?action=categories');
             const categoriesData = await categoriesResponse.json();
             
             if (!categoriesData.success) {
@@ -48,11 +48,14 @@ class NewsManager {
             });
             
             // Carica tutte le notizie dall'API
-            const newsResponse = await fetch('http://localhost:8000/api/news-data.php?limit=100');
+            const newsResponse = await fetch('/FEDERCOMTUR/api/news-data.php?limit=100');
             const newsData = await newsResponse.json();
             
             if (!newsData.success) {
                 throw new Error(newsData.error || 'Errore nel caricamento notizie');
+            }
+            else{
+                console.log('GODO');
             }
             
             // Converte i dati nel formato atteso dal frontend
@@ -178,9 +181,9 @@ class NewsManager {
             return;
         }
         
-        // Display news cards
-        newsToDisplay.forEach(news => {
-            const newsCard = this.createNewsCard(news);
+        // Display news cards with staggered animation
+        newsToDisplay.forEach((news, index) => {
+            const newsCard = this.createNewsCard(news, index);
             newsGrid.appendChild(newsCard);
         });
         
@@ -188,10 +191,15 @@ class NewsManager {
         this.updateLoadMoreButton(newsToDisplay.length, this.filteredNews.length);
     }
     
-    createNewsCard(news) {
+    createNewsCard(news, index = 0) {
         const card = document.createElement('article');
         card.className = 'news-card';
         card.setAttribute('data-category', news.category);
+        
+        // Aggiungi animazione scaglionata
+        setTimeout(() => {
+            card.classList.add('animate-in');
+        }, 100 + (index * 50)); // Ritardo progressivo di 50ms per ogni card
         
         // Get category info
         const categoryInfo = this.categories[news.category] || {
