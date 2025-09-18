@@ -27,7 +27,7 @@
 
     /* Navbar Mobile */
     .navbar {
-        height: 70px;
+        height: 56px; /* Ridotto da 70px a 56px per mobile */
         background: var(--white);
     }
 
