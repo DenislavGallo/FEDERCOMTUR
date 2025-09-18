@@ -582,9 +582,9 @@
         }
             
             .news-header-content {
-                grid-template-columns: 1fr;
-                gap: 40px;
-                text-align: center;
+                grid-template-columns: 2fr 1fr; /* Mantieni layout originale anche su tablet */
+                gap: 30px;
+                text-align: left; /* Testo allineato a sinistra */
             }
             
             .news-header-text h1 {
@@ -602,17 +602,23 @@
                 padding: 100px 0 60px;
             }
             
+            .news-header-content {
+                grid-template-columns: 3fr 1fr; /* Layout adattato per mobile: più spazio al testo */
+                gap: 20px;
+                text-align: left; /* Mantieni allineamento a sinistra */
+            }
+            
             .news-header-text h1 {
                 font-size: 2rem;
             }
             
             .news-header-text p {
-                font-size: 1.1rem;
+                font-size: 1rem; /* Ridotto da 1.1rem per mobile */
             }
             
             .news-header-icon {
-                width: 200px;
-                height: 200px;
+                width: 150px; /* Ridotto da 200px */
+                height: 150px; /* Ridotto da 200px */
             }
             
             .news-header-icon svg {
