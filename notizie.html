@@ -377,41 +377,36 @@
             font-size: 1.1rem;
         }
         
-        /* Article Modal */
+        /* Article Full Page View */
         .article-modal {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.8);
+            background: white;
             z-index: 2000;
             display: none;
             overflow-y: auto;
-            padding: 20px;
+            transform: translateX(100%);
+            transition: transform 0.3s ease-in-out;
         }
         
         .article-modal.active {
-            display: flex;
-            align-items: flex-start;
-            justify-content: center;
+            display: block;
+            transform: translateX(0);
         }
         
         .article-modal-content {
-            background: white;
-            border-radius: var(--radius-xl);
-            max-width: 800px;
             width: 100%;
-            margin: 40px auto;
+            min-height: 100vh;
             position: relative;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
         }
         
         .article-modal-header {
             position: relative;
-            height: 300px;
+            height: 400px;
             background: linear-gradient(135deg, var(--primary-navy) 0%, #0369a1 100%);
-            border-radius: var(--radius-xl) var(--radius-xl) 0 0;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -420,30 +415,57 @@
         }
         
         .article-modal-close {
-            position: absolute;
+            position: fixed;
             top: 20px;
             right: 20px;
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(0, 0, 0, 0.8);
             border: none;
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             color: white;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             transition: var(--transition-fast);
-            z-index: 10;
+            z-index: 2001;
+            backdrop-filter: blur(10px);
         }
         
         .article-modal-close:hover {
-            background: rgba(255, 255, 255, 0.3);
+            background: rgba(0, 0, 0, 0.9);
+            transform: scale(1.1);
+        }
+        
+        .article-back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition-fast);
+            z-index: 2001;
+            backdrop-filter: blur(10px);
+        }
+        
+        .article-back-btn:hover {
+            background: rgba(0, 0, 0, 0.9);
             transform: scale(1.1);
         }
         
         .article-modal-body {
-            padding: 40px;
+            padding: 60px 40px;
+            max-width: 900px;
+            margin: 0 auto;
         }
         
         .article-category-badge {
@@ -459,10 +481,10 @@
         }
         
         .article-title {
-            font-size: 2.5rem;
+            font-size: 3rem;
             font-weight: 800;
-            line-height: 1.2;
-            margin-bottom: 16px;
+            line-height: 1.1;
+            margin-bottom: 24px;
             color: var(--text-primary);
         }
         
@@ -540,21 +562,24 @@
                 gap: 24px;
             }
             
-            .article-modal-content {
-                margin: 20px auto;
-            }
-            
             .article-modal-header {
-                height: 200px;
+                height: 300px;
             }
             
             .article-title {
-                font-size: 2rem;
+                font-size: 2.2rem;
             }
             
             .article-modal-body {
-                padding: 24px;
+                padding: 40px 24px;
             }
+            
+            .article-modal-close,
+            .article-back-btn {
+                width: 45px;
+                height: 45px;
+            }
+        }
             
             .news-header-content {
                 grid-template-columns: 1fr;
@@ -774,13 +799,18 @@
     <!-- Article Modal -->
     <div class="article-modal" id="article-modal">
         <div class="article-modal-content">
+            <button class="article-back-btn" id="article-back-btn">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="m15 18-6-6 6-6"/>
+                </svg>
+            </button>
+            <button class="article-modal-close" id="article-modal-close">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
             <div class="article-modal-header">
-                <button class="article-modal-close" id="article-modal-close">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <line x1="18" y1="6" x2="6" y2="18"></line>
-                        <line x1="6" y1="6" x2="18" y2="18"></line>
-                    </svg>
-                </button>
                 <div class="article-header-icon" id="article-header-icon">
                     <!-- Category icon will be inserted here -->
                 </div>

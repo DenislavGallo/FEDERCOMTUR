@@ -132,6 +132,12 @@ class NewsManager {
             closeBtn.addEventListener('click', () => this.closeArticleModal());
         }
         
+        // Back button
+        const backBtn = document.getElementById('article-back-btn');
+        if (backBtn) {
+            backBtn.addEventListener('click', () => this.closeArticleModal());
+        }
+        
         // Close modal when clicking outside
         const modal = document.getElementById('article-modal');
         if (modal) {
@@ -770,9 +776,15 @@ class NewsManager {
             tags.style.display = 'none';
         }
         
-        // Show modal
-        modal.classList.add('active');
+        // Show modal with slide animation
+        modal.style.display = 'block';
         document.body.style.overflow = 'hidden';
+        
+        // Trigger reflow to ensure display:block is applied
+        modal.offsetHeight;
+        
+        // Add active class for slide animation
+        modal.classList.add('active');
         
         // Scroll to top of modal
         modal.scrollTop = 0;
@@ -782,6 +794,13 @@ class NewsManager {
         const modal = document.getElementById('article-modal');
         modal.classList.remove('active');
         document.body.style.overflow = '';
+        
+        // Hide modal after animation completes
+        setTimeout(() => {
+            if (!modal.classList.contains('active')) {
+                modal.style.display = 'none';
+            }
+        }, 300);
     }
     
     getFullArticlesContent() {
