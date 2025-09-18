@@ -182,6 +182,26 @@ class NewsManager {
         }
         
         this.displayNews();
+        
+        // Scroll automatico al top della sezione notizie
+        this.scrollToNewsSection();
+    }
+    
+    scrollToNewsSection() {
+        const newsGrid = document.getElementById('news-grid');
+        if (newsGrid) {
+            // Calcola la posizione tenendo conto della navbar fissa e dei filtri
+            const navbarHeight = 72; // Altezza navbar
+            const filtersHeight = 80; // Altezza approssimativa sezione filtri
+            const offset = navbarHeight + filtersHeight + 20; // 20px di margine aggiuntivo
+            
+            const newsGridTop = newsGrid.offsetTop - offset;
+            
+            window.scrollTo({
+                top: newsGridTop,
+                behavior: 'smooth'
+            });
+        }
     }
     
     updateActiveFilter(activeButton) {
