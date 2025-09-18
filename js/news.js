@@ -1,6 +1,6 @@
 /**
- * News Page JavaScript
- * Handles news display, filtering, and pagination
+ * News Page JavaScript - Versione Pulita
+ * Gestisce caricamento dati, visualizzazione card e modal articoli
  */
 
 class NewsManager {
@@ -12,7 +12,7 @@ class NewsManager {
         this.newsPerPage = 12;
         this.additionalNewsPerLoad = 9;
         this.isLoading = false;
-        this.fullArticlesContent = this.getFullArticlesContent();
+        this.categories = {};
         
         this.init();
     }
@@ -22,6 +22,7 @@ class NewsManager {
             await this.loadNewsData();
             this.setupEventListeners();
             this.displayNews();
+            this.handleUrlParameters();
         } catch (error) {
             console.error('Error initializing news manager:', error);
             this.showError('Errore nel caricamento delle notizie');
@@ -34,51 +35,47 @@ class NewsManager {
             const categoriesResponse = await fetch('/FEDERCOMTUR/api/news-data.php?action=categories');
             const categoriesData = await categoriesResponse.json();
             
-            if (!categoriesData.success) {
-                throw new Error(categoriesData.error || 'Errore nel caricamento categorie');
+            if (categoriesData.success) {
+                // Converte le categorie nel formato atteso dal frontend
+                this.categories = {};
+                categoriesData.data.forEach(cat => {
+                    this.categories[cat.name] = {
+                        label: cat.label,
+                        color: cat.color,
+                        description: cat.description
+                    };
+                });
             }
-            
-            // Converte le categorie nel formato atteso dal frontend
-            this.categories = {};
-            categoriesData.data.forEach(cat => {
-                this.categories[cat.name] = {
-                    label: cat.label,
-                    color: cat.color,
-                    description: cat.description
-                };
-            });
             
             // Carica tutte le notizie dall'API
             const newsResponse = await fetch('/FEDERCOMTUR/api/news-data.php?limit=100');
             const newsData = await newsResponse.json();
             
-            if (!newsData.success) {
+            if (newsData.success) {
+                // Converte i dati nel formato atteso dal frontend
+                this.newsData = newsData.data.map(item => ({
+                    id: item.id,
+                    title: item.title,
+                    category: item.category.name,
+                    date: item.date_formatted.split(' ').reverse().join('-'),
+                    dateFormatted: item.date_formatted,
+                    excerpt: item.excerpt,
+                    readTime: item.read_time,
+                    author: item.author,
+                    featured: item.featured,
+                    tags: item.tags || [],
+                    views: item.views,
+                    deadline: item.special_date_label === 'Scadenza' ? item.special_date : null,
+                    eventDate: item.special_date_label === 'Data evento' ? item.special_date : null,
+                    location: item.location,
+                    eventType: item.event_type
+                }));
+                
+                this.filteredNews = [...this.newsData];
+                console.log('✅ Dati caricati dall\'API:', this.newsData.length, 'notizie');
+            } else {
                 throw new Error(newsData.error || 'Errore nel caricamento notizie');
             }
-            else{
-                console.log('GODO');
-            }
-            
-            // Converte i dati nel formato atteso dal frontend
-            this.newsData = newsData.data.map(item => ({
-                id: item.id,
-                title: item.title,
-                category: item.category.name,
-                date: item.date_formatted.split(' ').reverse().join('-'), // Converte formato data
-                dateFormatted: item.date_formatted,
-                excerpt: item.excerpt,
-                readTime: item.read_time,
-                author: item.author,
-                featured: item.featured,
-                tags: item.tags || [],
-                views: item.views,
-                deadline: item.special_date_label === 'Scadenza' ? item.special_date : null,
-                eventDate: item.special_date_label === 'Data evento' ? item.special_date : null,
-                location: item.location,
-                eventType: item.event_type
-            }));
-            
-            this.filteredNews = [...this.newsData];
             
         } catch (error) {
             console.error('Error loading news data from API:', error);
@@ -91,7 +88,7 @@ class NewsManager {
                 this.newsData = data.news;
                 this.categories = data.categories;
                 this.filteredNews = [...this.newsData];
-                console.log('Dati caricati da file JSON di fallback');
+                console.log('✅ Dati caricati da file JSON di fallback');
             } catch (fallbackError) {
                 console.error('Errore anche nel fallback:', fallbackError);
                 throw error;
@@ -118,11 +115,17 @@ class NewsManager {
             });
         }
         
-        // Handle URL parameters for single news view
-        this.handleUrlParameters();
-        
-        // Article modal event listeners
+        // Modal event listeners
         this.setupModalEventListeners();
+        
+        // Read more buttons (delegated event)
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('read-more-btn')) {
+                e.preventDefault();
+                const newsId = parseInt(e.target.getAttribute('data-news-id'));
+                this.openArticleModal(newsId);
+            }
+        });
     }
     
     setupModalEventListeners() {
@@ -152,15 +155,6 @@ class NewsManager {
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 this.closeArticleModal();
-            }
-        });
-        
-        // Read more buttons (delegated event)
-        document.addEventListener('click', (e) => {
-            if (e.target.classList.contains('read-more-btn')) {
-                e.preventDefault();
-                const newsId = parseInt(e.target.getAttribute('data-news-id'));
-                this.openArticleModal(newsId);
             }
         });
     }
@@ -246,7 +240,7 @@ class NewsManager {
         // Aggiungi animazione scaglionata
         setTimeout(() => {
             card.classList.add('animate-in');
-        }, 100 + (index * 50)); // Ritardo progressivo di 50ms per ogni card
+        }, 100 + (index * 50));
         
         // Get category info
         const categoryInfo = this.categories[news.category] || {
@@ -380,313 +374,6 @@ class NewsManager {
         loadMoreSection.style.display = 'block';
     }
     
-    async displaySingleNews(newsId) {
-        // Metodo deprecato - ora usiamo openArticleModal per aprire il modal a pagina intera
-        console.log('displaySingleNews chiamato ma ignorato, usando openArticleModal');
-        return;
-    }
-            
-            let news;
-            
-            if (data.success) {
-                // Converte i dati dall'API nel formato atteso
-                news = {
-                    id: data.data.id,
-                    title: data.data.title,
-                    category: data.data.category.name,
-                    dateFormatted: data.data.date_formatted,
-                    excerpt: data.data.excerpt,
-                    content: data.data.content,
-                    readTime: data.data.read_time,
-                    author: data.data.author,
-                    featured: data.data.featured,
-                    tags: data.data.tags || [],
-                    views: data.data.views,
-                    deadline: data.data.deadline,
-                    eventDate: data.data.event_date,
-                    location: data.data.location,
-                    eventType: data.data.event_type
-                };
-            } else {
-                // Fallback: cerca nei dati già caricati
-                news = this.newsData.find(n => n.id === newsId);
-                
-                if (!news) {
-                    this.showError(data.error || 'Notizia non trovata');
-                    return;
-                }
-            }
-            
-        } catch (error) {
-            console.error('Error loading single news from API:', error);
-            
-            // Fallback: cerca nei dati già caricati
-            const news = this.newsData.find(n => n.id === newsId);
-            
-            if (!news) {
-                this.showError('Notizia non trovata');
-                return;
-            }
-        }
-        
-        // Hide filters and load more section
-        document.querySelector('.news-filters').style.display = 'none';
-        document.getElementById('load-more-section').style.display = 'none';
-        
-        // Create single news view
-        const newsGrid = document.getElementById('news-grid');
-        newsGrid.style.gridTemplateColumns = '1fr';
-        newsGrid.style.maxWidth = '800px';
-        newsGrid.style.margin = '0 auto';
-        
-        const categoryInfo = this.categories[news.category] || {
-            label: news.category,
-            color: '#6b7280'
-        };
-        
-        newsGrid.innerHTML = `
-            <article class="single-news-article">
-                <div class="single-news-header">
-                    <div class="breadcrumb">
-                        <a href="notizie.html">← Torna alle notizie</a>
-                    </div>
-                    <div class="single-news-category ${news.category}">
-                        ${categoryInfo.label}
-                    </div>
-                    <h1 class="single-news-title">${news.title}</h1>
-                    <div class="single-news-meta">
-                        <div class="meta-item">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-                                <line x1="16" y1="2" x2="16" y2="6"/>
-                                <line x1="8" y1="2" x2="8" y2="6"/>
-                                <line x1="3" y1="10" x2="21" y2="10"/>
-                            </svg>
-                            ${news.dateFormatted}
-                        </div>
-                        <div class="meta-item">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <circle cx="12" cy="12" r="10"/>
-                                <polyline points="12,6 12,12 16,14"/>
-                            </svg>
-                            ${news.readTime}
-                        </div>
-                        <div class="meta-item">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                                <circle cx="12" cy="7" r="4"/>
-                            </svg>
-                            ${news.author}
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="single-news-content">
-                    <div class="single-news-excerpt">${news.excerpt}</div>
-                    <div class="single-news-body">${news.content}</div>
-                    
-                    ${news.tags ? `
-                        <div class="single-news-tags">
-                            <h4>Tag:</h4>
-                            <div class="tags-list">
-                                ${news.tags.map(tag => `<span class="tag">#${tag}</span>`).join('')}
-                            </div>
-                        </div>
-                    ` : ''}
-                    
-                    ${news.deadline ? `
-                        <div class="single-news-deadline">
-                            <h4>⏰ Scadenza importante:</h4>
-                            <p>${new Date(news.deadline).toLocaleDateString('it-IT', { 
-                                year: 'numeric', 
-                                month: 'long', 
-                                day: 'numeric' 
-                            })}</p>
-                        </div>
-                    ` : ''}
-                    
-                    ${news.eventDate ? `
-                        <div class="single-news-event">
-                            <h4>📅 Data evento:</h4>
-                            <p>${new Date(news.eventDate).toLocaleDateString('it-IT', { 
-                                year: 'numeric', 
-                                month: 'long', 
-                                day: 'numeric' 
-                            })}${news.location ? ` - ${news.location}` : ''}</p>
-                        </div>
-                    ` : ''}
-                </div>
-            </article>
-        `;
-        
-        // Add single news styles
-        this.addSingleNewsStyles();
-        
-        // Update page title
-        document.title = `${news.title} - FederComTur`;
-    }
-    
-    addSingleNewsStyles() {
-        const style = document.createElement('style');
-        style.textContent = `
-            .single-news-article {
-                background: white;
-                border-radius: var(--radius-xl);
-                padding: 40px;
-                box-shadow: var(--shadow-lg);
-                margin-bottom: 40px;
-            }
-            
-            .breadcrumb {
-                margin-bottom: 20px;
-            }
-            
-            .breadcrumb a {
-                color: var(--primary-navy);
-                text-decoration: none;
-                font-weight: 500;
-            }
-            
-            .breadcrumb a:hover {
-                text-decoration: underline;
-            }
-            
-            .single-news-category {
-                display: inline-block;
-                padding: 8px 16px;
-                border-radius: var(--radius-full);
-                font-size: 0.875rem;
-                font-weight: 600;
-                color: white;
-                text-transform: uppercase;
-                letter-spacing: 0.5px;
-                margin-bottom: 20px;
-            }
-            
-            .single-news-title {
-                font-size: 2.5rem;
-                font-weight: 800;
-                line-height: 1.2;
-                margin-bottom: 24px;
-                color: var(--text-primary);
-            }
-            
-            .single-news-meta {
-                display: flex;
-                gap: 24px;
-                margin-bottom: 32px;
-                padding-bottom: 24px;
-                border-bottom: 1px solid var(--neutral-200);
-                flex-wrap: wrap;
-            }
-            
-            .meta-item {
-                display: flex;
-                align-items: center;
-                gap: 8px;
-                color: var(--text-muted);
-                font-size: 0.9rem;
-            }
-            
-            .single-news-excerpt {
-                font-size: 1.25rem;
-                line-height: 1.7;
-                color: var(--text-secondary);
-                margin-bottom: 32px;
-                font-weight: 500;
-                padding: 24px;
-                background: var(--neutral-50);
-                border-radius: var(--radius-lg);
-                border-left: 4px solid var(--primary-navy);
-            }
-            
-            .single-news-body {
-                font-size: 1.1rem;
-                line-height: 1.8;
-                color: var(--text-primary);
-                margin-bottom: 32px;
-            }
-            
-            .single-news-tags {
-                margin-bottom: 24px;
-            }
-            
-            .single-news-tags h4 {
-                margin-bottom: 12px;
-                color: var(--text-primary);
-            }
-            
-            .tags-list {
-                display: flex;
-                gap: 8px;
-                flex-wrap: wrap;
-            }
-            
-            .tag {
-                background: var(--neutral-100);
-                color: var(--text-primary);
-                padding: 4px 12px;
-                border-radius: var(--radius-full);
-                font-size: 0.875rem;
-                font-weight: 500;
-            }
-            
-            .single-news-deadline,
-            .single-news-event {
-                background: #fef3c7;
-                border: 1px solid #fbbf24;
-                border-radius: var(--radius-lg);
-                padding: 20px;
-                margin-bottom: 20px;
-            }
-            
-            .single-news-deadline h4,
-            .single-news-event h4 {
-                margin-bottom: 8px;
-                color: #92400e;
-            }
-            
-            .single-news-deadline p,
-            .single-news-event p {
-                margin: 0;
-                color: #92400e;
-                font-weight: 500;
-            }
-            
-            @media (max-width: 768px) {
-                .single-news-article {
-                    padding: 24px;
-                }
-                
-                .single-news-title {
-                    font-size: 2rem;
-                }
-                
-                .single-news-meta {
-                    flex-direction: column;
-                    gap: 12px;
-                }
-            }
-        `;
-        document.head.appendChild(style);
-    }
-    
-    showError(message) {
-        const newsGrid = document.getElementById('news-grid');
-        if (newsGrid) {
-            newsGrid.innerHTML = `
-                <div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px;">
-                    <h3 style="color: #ef4444; font-size: 1.5rem; margin-bottom: 16px;">
-                        ${message}
-                    </h3>
-                    <p style="color: var(--text-muted);">
-                        Si è verificato un errore. Riprova più tardi.
-                    </p>
-                </div>
-            `;
-        }
-    }
-    
     openArticleModal(newsId) {
         const news = this.newsData.find(item => item.id === newsId);
         if (!news) {
@@ -710,9 +397,7 @@ class NewsManager {
         };
         
         // Set category badge
-        categoryBadge.innerHTML = `
-            <span style="background: ${categoryInfo.color}">${categoryInfo.label}</span>
-        `;
+        categoryBadge.innerHTML = `<span>${categoryInfo.label}</span>`;
         categoryBadge.style.backgroundColor = categoryInfo.color;
         
         // Set header icon
@@ -754,20 +439,13 @@ class NewsManager {
         `;
         
         // Set content
-        const fullContent = this.fullArticlesContent[newsId];
-        if (fullContent) {
-            content.innerHTML = `
-                <p style="font-size: 1.2rem; font-weight: 500; margin-bottom: 24px; color: var(--text-primary);">
-                    ${news.excerpt}
-                </p>
-                ${fullContent.content}
-            `;
-        } else {
-            content.innerHTML = `
-                <p>${news.excerpt}</p>
-                <p><em>Contenuto completo in fase di aggiornamento...</em></p>
-            `;
-        }
+        const fullContent = this.getFullArticleContent(newsId);
+        content.innerHTML = `
+            <p style="font-size: 1.2rem; font-weight: 500; margin-bottom: 24px; color: var(--text-primary);">
+                ${news.excerpt}
+            </p>
+            ${fullContent}
+        `;
         
         // Set tags
         if (news.tags && news.tags.length > 0) {
@@ -783,13 +461,13 @@ class NewsManager {
         modal.style.display = 'block';
         document.body.style.overflow = 'hidden';
         
-        // Trigger reflow to ensure display:block is applied
+        // Trigger reflow
         modal.offsetHeight;
         
         // Add active class for slide animation
         modal.classList.add('active');
         
-        // Scroll to top of modal
+        // Scroll to top
         modal.scrollTop = 0;
     }
     
@@ -806,62 +484,74 @@ class NewsManager {
         }, 300);
     }
     
-    getFullArticlesContent() {
-        return {
-            1: {
-                content: `
-                    <h3>Dettagli del Decreto</h3>
-                    <p>Il Ministero del Turismo, in collaborazione con l'Agenzia delle Entrate, ha finalmente definito le modalità operative per accedere al credito d'imposta destinato alle PMI del settore turistico. Questo importante strumento di sostegno rappresenta un'opportunità concreta per modernizzare e rendere più sostenibili le attività ricettive e di servizio.</p>
-                    
-                    <h3>Come Funziona il Credito d'Imposta</h3>
-                    <p>Il credito d'imposta copre fino al 65% delle spese sostenute per:</p>
-                    <ul>
-                        <li><strong>Digitalizzazione:</strong> Sistemi di prenotazione online, app mobili, sistemi di gestione clienti (CRM), soluzioni di pagamento digitale</li>
-                        <li><strong>Efficientamento energetico:</strong> Impianti fotovoltaici, sistemi di riscaldamento/raffreddamento ad alta efficienza, illuminazione LED</li>
-                        <li><strong>Sostenibilità ambientale:</strong> Sistemi di raccolta differenziata, riduzione sprechi alimentari, mobilità elettrica</li>
-                    </ul>
-                    
-                    <h3>Requisiti e Scadenze</h3>
-                    <p>Possono accedere al beneficio le imprese turistiche con fatturato annuo non superiore a 5 milioni di euro. Il credito massimo ottenibile è di 150.000 euro per impresa. Le domande devono essere presentate entro il 31 marzo 2025 attraverso la piattaforma online del Ministero del Turismo.</p>
-                `
-            },
-            2: {
-                content: `
-                    <h3>Obiettivi del Bando PNRR</h3>
-                    <p>Il nuovo bando rappresenta una delle iniziative più ambiziose del Piano Nazionale di Ripresa e Resilienza per sostenere la competitività delle piccole e medie imprese italiane. Con una dotazione di 850 milioni di euro, l'iniziativa punta a modernizzare il tessuto imprenditoriale nazionale attraverso innovazione tecnologica e sostenibilità.</p>
-                    
-                    <h3>Settori Ammissibili</h3>
-                    <p>Il bando si rivolge principalmente a:</p>
-                    <ul>
-                        <li><strong>Commercio al dettaglio:</strong> Modernizzazione punti vendita, e-commerce, omnicanalità</li>
-                        <li><strong>Servizi alle imprese:</strong> Consulenza, marketing digitale, servizi IT</li>
-                        <li><strong>Turismo e ristorazione:</strong> Digitalizzazione processi, sostenibilità ambientale</li>
-                        <li><strong>Artigianato:</strong> Automazione produttiva, design digitale</li>
-                    </ul>
-                    
-                    <h3>Procedura di Presentazione</h3>
-                    <p>Le domande devono essere presentate esclusivamente online tramite la piattaforma dedicata del MiSE. È richiesta la presentazione di un business plan dettagliato che dimostri la sostenibilità economica e l'impatto innovativo del progetto.</p>
-                `
-            },
-            3: {
-                content: `
-                    <h3>Il Programma dell'Evento</h3>
-                    <p>Il Forum Nazionale PMI 2025 si articola in due giornate intense di confronto e networking. La prima giornata sarà dedicata alle tendenze macroeconomiche e alle opportunità di crescita per le PMI italiane, mentre la seconda giornata si concentrerà su workshop pratici e sessioni di networking settoriali.</p>
-                    
-                    <h3>Relatori di Prestigio</h3>
-                    <p>Tra i relatori confermati:</p>
-                    <ul>
-                        <li><strong>Prof. Mario Draghi:</strong> "L'Europa e il futuro delle PMI"</li>
-                        <li><strong>Dott.ssa Christine Lagarde:</strong> Keynote sulla politica monetaria europea</li>
-                        <li><strong>CEO di Intesa Sanpaolo:</strong> "Finanza e innovazione per le PMI"</li>
-                        <li><strong>Ministro delle Imprese:</strong> "Le nuove politiche industriali italiane"</li>
-                    </ul>
-                    
-                    <h3>Workshop Tematici</h3>
-                    <p>Sono previsti 12 workshop paralleli su transizione digitale, sostenibilità ambientale, internazionalizzazione, accesso al credito, innovazione e competenze digitali.</p>
-                `
-            }
+    getFullArticleContent(newsId) {
+        const fullArticles = {
+            1: `
+                <h3>Dettagli del Decreto</h3>
+                <p>Il Ministero del Turismo, in collaborazione con l'Agenzia delle Entrate, ha finalmente definito le modalità operative per accedere al credito d'imposta destinato alle PMI del settore turistico. Questo importante strumento di sostegno rappresenta un'opportunità concreta per modernizzare e rendere più sostenibili le attività ricettive e di servizio.</p>
+                
+                <h3>Come Funziona il Credito d'Imposta</h3>
+                <p>Il credito d'imposta copre fino al 65% delle spese sostenute per:</p>
+                <ul>
+                    <li><strong>Digitalizzazione:</strong> Sistemi di prenotazione online, app mobili, sistemi di gestione clienti (CRM), soluzioni di pagamento digitale</li>
+                    <li><strong>Efficientamento energetico:</strong> Impianti fotovoltaici, sistemi di riscaldamento/raffreddamento ad alta efficienza, illuminazione LED</li>
+                    <li><strong>Sostenibilità ambientale:</strong> Sistemi di raccolta differenziata, riduzione sprechi alimentari, mobilità elettrica</li>
+                </ul>
+                
+                <h3>Requisiti e Scadenze</h3>
+                <p>Possono accedere al beneficio le imprese turistiche con fatturato annuo non superiore a 5 milioni di euro. Il credito massimo ottenibile è di 150.000 euro per impresa. Le domande devono essere presentate entro il 31 marzo 2025 attraverso la piattaforma online del Ministero del Turismo.</p>
+            `,
+            2: `
+                <h3>Obiettivi del Bando PNRR</h3>
+                <p>Il nuovo bando rappresenta una delle iniziative più ambiziose del Piano Nazionale di Ripresa e Resilienza per sostenere la competitività delle piccole e medie imprese italiane. Con una dotazione di 850 milioni di euro, l'iniziativa punta a modernizzare il tessuto imprenditoriale nazionale attraverso innovazione tecnologica e sostenibilità.</p>
+                
+                <h3>Settori Ammissibili</h3>
+                <p>Il bando si rivolge principalmente a:</p>
+                <ul>
+                    <li><strong>Commercio al dettaglio:</strong> Modernizzazione punti vendita, e-commerce, omnicanalità</li>
+                    <li><strong>Servizi alle imprese:</strong> Consulenza, marketing digitale, servizi IT</li>
+                    <li><strong>Turismo e ristorazione:</strong> Digitalizzazione processi, sostenibilità ambientale</li>
+                    <li><strong>Artigianato:</strong> Automazione produttiva, design digitale</li>
+                </ul>
+                
+                <h3>Procedura di Presentazione</h3>
+                <p>Le domande devono essere presentate esclusivamente online tramite la piattaforma dedicata del MiSE. È richiesta la presentazione di un business plan dettagliato che dimostri la sostenibilità economica e l'impatto innovativo del progetto.</p>
+            `,
+            3: `
+                <h3>Il Programma dell'Evento</h3>
+                <p>Il Forum Nazionale PMI 2025 si articola in due giornate intense di confronto e networking. La prima giornata sarà dedicata alle tendenze macroeconomiche e alle opportunità di crescita per le PMI italiane, mentre la seconda giornata si concentrerà su workshop pratici e sessioni di networking settoriali.</p>
+                
+                <h3>Relatori di Prestigio</h3>
+                <p>Tra i relatori confermati:</p>
+                <ul>
+                    <li><strong>Prof. Mario Draghi:</strong> "L'Europa e il futuro delle PMI"</li>
+                    <li><strong>Dott.ssa Christine Lagarde:</strong> Keynote sulla politica monetaria europea</li>
+                    <li><strong>CEO di Intesa Sanpaolo:</strong> "Finanza e innovazione per le PMI"</li>
+                    <li><strong>Ministro delle Imprese:</strong> "Le nuove politiche industriali italiane"</li>
+                </ul>
+                
+                <h3>Workshop Tematici</h3>
+                <p>Sono previsti 12 workshop paralleli su transizione digitale, sostenibilità ambientale, internazionalizzazione, accesso al credito, innovazione e competenze digitali.</p>
+            `
         };
+        
+        return fullArticles[newsId] || '<p><em>Contenuto completo in fase di aggiornamento...</em></p>';
+    }
+    
+    showError(message) {
+        const newsGrid = document.getElementById('news-grid');
+        if (newsGrid) {
+            newsGrid.innerHTML = `
+                <div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px;">
+                    <h3 style="color: #ef4444; font-size: 1.5rem; margin-bottom: 16px;">
+                        ${message}
+                    </h3>
+                    <p style="color: var(--text-muted);">
+                        Si è verificato un errore. Riprova più tardi.
+                    </p>
+                </div>
+            `;
+        }
     }
 }
 
@@ -870,7 +560,7 @@ document.addEventListener('DOMContentLoaded', () => {
     new NewsManager();
 });
 
-// Handle mobile menu (reuse from main.js if needed)
+// Handle mobile menu
 document.addEventListener('DOMContentLoaded', function() {
     const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
     const navbarMenu = document.querySelector('.navbar-menu');
