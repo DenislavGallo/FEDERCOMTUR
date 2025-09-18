@@ -170,7 +170,10 @@ class NewsManager {
         const newsId = urlParams.get('id');
         
         if (newsId) {
-            this.displaySingleNews(parseInt(newsId));
+            // Aspetta che i dati siano caricati prima di aprire il modal
+            setTimeout(() => {
+                this.openArticleModal(parseInt(newsId));
+            }, 500);
         }
     }
     
@@ -378,10 +381,10 @@ class NewsManager {
     }
     
     async displaySingleNews(newsId) {
-        try {
-            // Prova prima a caricare dall'API
-            const response = await fetch(`http://localhost:8000/api/news-data.php?id=${newsId}`);
-            const data = await response.json();
+        // Metodo deprecato - ora usiamo openArticleModal per aprire il modal a pagina intera
+        console.log('displaySingleNews chiamato ma ignorato, usando openArticleModal');
+        return;
+    }
             
             let news;
             
