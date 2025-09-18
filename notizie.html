@@ -200,7 +200,7 @@
         .news-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 32px;
+            gap: 24px; /* Ridotto da 32px a 24px (-25%) */
             margin-bottom: 60px;
         }
         
@@ -216,13 +216,13 @@
         }
         
         .news-card:hover {
-            transform: translateY(-8px);
-            box-shadow: var(--shadow-xl);
+            transform: translateY(-4px); /* Ridotto da -8px a -4px */
+            box-shadow: var(--shadow-lg); /* Ridotto da shadow-xl a shadow-lg */
         }
         
         .news-card-header {
             position: relative;
-            height: 200px;
+            height: 120px; /* Ridotto da 200px a 120px (-40%) */
             background: linear-gradient(135deg, var(--neutral-100) 0%, var(--neutral-200) 100%);
             display: flex;
             align-items: center;
@@ -266,14 +266,14 @@
         }
         
         .news-card-content {
-            padding: 24px;
+            padding: 18px; /* Ridotto da 24px a 18px (-25%) */
         }
         
         .news-card-meta {
             display: flex;
             align-items: center;
-            gap: 16px;
-            margin-bottom: 16px;
+            gap: 12px; /* Ridotto da 16px a 12px */
+            margin-bottom: 12px; /* Ridotto da 16px a 12px */
             font-size: 0.875rem;
             color: var(--text-muted);
         }
@@ -291,17 +291,17 @@
         }
         
         .news-card-title {
-            font-size: 1.25rem;
+            font-size: 1.1rem; /* Ridotto da 1.25rem a 1.1rem */
             font-weight: 700;
             line-height: 1.4;
-            margin-bottom: 12px;
+            margin-bottom: 8px; /* Ridotto da 12px a 8px */
             color: var(--text-primary);
         }
         
         .news-card-excerpt {
             color: var(--text-secondary);
             line-height: 1.6;
-            margin-bottom: 20px;
+            margin-bottom: 14px; /* Ridotto da 20px a 14px */
             display: -webkit-box;
             -webkit-line-clamp: 3;
             -webkit-box-orient: vertical;
