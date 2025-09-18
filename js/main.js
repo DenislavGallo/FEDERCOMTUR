@@ -252,8 +252,42 @@ const FederComTur = {
     },
     
     // Load news data (mock for now)
-    loadNewsData() {
-        // Mock news data - più realistico per una federazione
+    async loadNewsData() {
+        try {
+            // Carica le notizie in evidenza dall'API
+            const response = await fetch('http://localhost:8000/api/news-data.php?featured=true&limit=6');
+            const data = await response.json();
+            
+            if (data.success && data.data.length > 0) {
+                // Converte i dati dall'API nel formato atteso
+                const newsData = data.data.map(item => ({
+                    id: item.id,
+                    title: item.title,
+                    category: item.category.name,
+                    date: item.date_formatted.split(' ').reverse().join('-'),
+                    dateFormatted: item.date_formatted,
+                    excerpt: item.excerpt,
+                    readTime: item.read_time
+                }));
+                
+                this.renderNewsCards(newsData);
+                console.log('Notizie caricate dall\'API:', newsData.length);
+                
+            } else {
+                // Fallback con dati mock se l'API non restituisce notizie
+                console.log('API non disponibile o nessuna notizia, uso dati mock');
+                this.loadMockNewsData();
+            }
+            
+        } catch (error) {
+            console.error('Error loading news from API:', error);
+            console.log('Fallback: caricamento dati mock');
+            this.loadMockNewsData();
+        }
+    },
+    
+    // Dati mock come fallback
+    loadMockNewsData() {
         const mockNews = [
             {
                 id: 1,
@@ -311,7 +345,7 @@ const FederComTur = {
             }
         ];
         
-        this.renderNewsCards(mockNews.slice(0, 6)); // Mostra le prime 6 notizie
+        this.renderNewsCards(mockNews.slice(0, 6));
     },
     
     // Render news cards
@@ -329,7 +363,7 @@ const FederComTur = {
                 <p class="news-excerpt">${news.excerpt}</p>
                 
                 <div class="news-footer">
-                    <a href="#" class="news-link" aria-label="Leggi l'articolo: ${news.title}">
+                    <a href="notizie.html?id=${news.id}" class="news-link" aria-label="Leggi l'articolo: ${news.title}">
                         <span>Leggi tutto</span>
                         <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="m9 18 6-6-6-6"/>
@@ -557,10 +591,119 @@ const FederComTur = {
         }
     },
     
-    // Services Carousel functionality - Spazio riservato per nuovo carousel
+    // Services Grid functionality
     initServicesCarousel() {
-        // Spazio riservato per nuovo carousel
-        console.log('Spazio riservato per nuovo carousel');
+        this.loadServicesData();
+    },
+
+    // Load services data and render grid
+    loadServicesData() {
+        const servicesData = [
+            {
+                id: 1,
+                title: "Consulenza Fiscale",
+                description: "Supporto completo per la gestione fiscale delle PMI con consulenti specializzati nel settore commercio, turismo e servizi.",
+                icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                </svg>`,
+                link: "#consulenza-fiscale"
+            },
+            {
+                id: 2,
+                title: "Formazione Professionale",
+                description: "Corsi di aggiornamento e specializzazione per imprenditori e dipendenti del settore, con certificazioni riconosciute.",
+                icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+                    <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+                </svg>`,
+                link: "#formazione"
+            },
+            {
+                id: 3,
+                title: "Rappresentanza Sindacale",
+                description: "Tutela degli interessi delle imprese associate presso istituzioni nazionali ed europee con attività di lobbying mirata.",
+                icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 21h18"/>
+                    <path d="M5 21V7l8-4v18"/>
+                    <path d="M19 21V11l-6-4"/>
+                </svg>`,
+                link: "#rappresentanza"
+            },
+            {
+                id: 4,
+                title: "Networking Business",
+                description: "Eventi, incontri e opportunità di networking per favorire partnership e collaborazioni tra imprese associate.",
+                icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                    <circle cx="9" cy="7" r="4"/>
+                    <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                </svg>`,
+                link: "#networking"
+            }
+        ];
+
+        this.renderServicesGrid(servicesData);
+    },
+
+    // Render services grid
+    renderServicesGrid(servicesData) {
+        const servicesGrid = document.getElementById('services-grid');
+        if (!servicesGrid || !servicesData) return;
+
+        const backgroundImages = [
+            'img/scrollstack1.png',
+            'img/scrollstack2.png', 
+            'img/scrollstack3.png',
+            'img/scrollstack4.png'
+        ];
+
+        const serviceTitles = [
+            "Consulenza Fiscale",
+            "Formazione Professionale", 
+            "Rappresentanza Sindacale",
+            "Networking Business"
+        ];
+
+        const serviceDescriptions = [
+            "Supporto fiscale completo per PMI del settore commercio, turismo e servizi",
+            "Corsi di aggiornamento e certificazioni per imprenditori e dipendenti",
+            "Tutela interessi presso istituzioni nazionali ed europee",
+            "Eventi e networking per partnership e collaborazioni business"
+        ];
+
+        const cardsHTML = servicesData.map((service, index) => `
+            <div class="service-card" style="animation-delay: ${index * 0.1}s; background-image: url('${backgroundImages[index]}');">
+                <div class="service-section service-section-1">
+                    <div class="service-header">
+                        <h3 class="service-title">${serviceTitles[index]}</h3>
+                        <div class="service-arrow">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="m7 17 10-10"/>
+                                <path d="M7 7h10v10"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="service-section service-section-2"></div>
+                <div class="service-section service-section-3">
+                    <div class="service-inner-div">
+                        <p class="service-description">${serviceDescriptions[index]}</p>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+
+        servicesGrid.innerHTML = cardsHTML;
+
+        // Animate cards in after a short delay
+        setTimeout(() => {
+            const cards = servicesGrid.querySelectorAll('.service-card');
+            cards.forEach(card => {
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            });
+        }, 100);
     },
 
     // Utility: Debounce function
