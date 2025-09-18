@@ -12,6 +12,7 @@ class NewsManager {
         this.newsPerPage = 12;
         this.additionalNewsPerLoad = 9;
         this.isLoading = false;
+        this.fullArticlesContent = this.getFullArticlesContent();
         
         this.init();
     }
@@ -119,6 +120,43 @@ class NewsManager {
         
         // Handle URL parameters for single news view
         this.handleUrlParameters();
+        
+        // Article modal event listeners
+        this.setupModalEventListeners();
+    }
+    
+    setupModalEventListeners() {
+        // Close modal button
+        const closeBtn = document.getElementById('article-modal-close');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', () => this.closeArticleModal());
+        }
+        
+        // Close modal when clicking outside
+        const modal = document.getElementById('article-modal');
+        if (modal) {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    this.closeArticleModal();
+                }
+            });
+        }
+        
+        // Escape key to close modal
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                this.closeArticleModal();
+            }
+        });
+        
+        // Read more buttons (delegated event)
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('read-more-btn')) {
+                e.preventDefault();
+                const newsId = parseInt(e.target.getAttribute('data-news-id'));
+                this.openArticleModal(newsId);
+            }
+        });
     }
     
     handleUrlParameters() {
@@ -242,9 +280,9 @@ class NewsManager {
                 <p class="news-card-excerpt">${news.excerpt}</p>
                 <div class="news-card-footer">
                     <span class="news-card-author">${news.author}</span>
-                    <a href="notizie.html?id=${news.id}" class="read-more-btn">
+                    <button class="read-more-btn" data-news-id="${news.id}">
                         Leggi tutto
-                    </a>
+                    </button>
                 </div>
             </div>
         `;
@@ -638,6 +676,170 @@ class NewsManager {
                 </div>
             `;
         }
+    }
+    
+    openArticleModal(newsId) {
+        const news = this.newsData.find(item => item.id === newsId);
+        if (!news) {
+            console.error('Notizia non trovata:', newsId);
+            return;
+        }
+        
+        const modal = document.getElementById('article-modal');
+        const categoryBadge = document.getElementById('article-category-badge');
+        const title = document.getElementById('article-title');
+        const meta = document.getElementById('article-meta');
+        const content = document.getElementById('article-content');
+        const headerIcon = document.getElementById('article-header-icon');
+        const tags = document.getElementById('article-tags');
+        const tagsList = document.getElementById('article-tags-list');
+        
+        // Get category info
+        const categoryInfo = this.categories[news.category] || {
+            label: news.category,
+            color: '#6b7280'
+        };
+        
+        // Set category badge
+        categoryBadge.innerHTML = `
+            <span style="background: ${categoryInfo.color}">${categoryInfo.label}</span>
+        `;
+        categoryBadge.style.backgroundColor = categoryInfo.color;
+        
+        // Set header icon
+        const categoryIcon = this.getCategoryIcon(news.category);
+        headerIcon.innerHTML = `
+            <div style="width: 120px; height: 120px; color: rgba(255,255,255,0.8);">
+                ${categoryIcon}
+            </div>
+        `;
+        
+        // Set title
+        title.textContent = news.title;
+        
+        // Set meta information
+        meta.innerHTML = `
+            <div class="article-meta-item">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                    <line x1="16" y1="2" x2="16" y2="6"/>
+                    <line x1="8" y1="2" x2="8" y2="6"/>
+                    <line x1="3" y1="10" x2="21" y2="10"/>
+                </svg>
+                ${news.dateFormatted}
+            </div>
+            <div class="article-meta-item">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <polyline points="12,6 12,12 16,14"/>
+                </svg>
+                ${news.readTime}
+            </div>
+            <div class="article-meta-item">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                </svg>
+                ${news.author}
+            </div>
+        `;
+        
+        // Set content
+        const fullContent = this.fullArticlesContent[newsId];
+        if (fullContent) {
+            content.innerHTML = `
+                <p style="font-size: 1.2rem; font-weight: 500; margin-bottom: 24px; color: var(--text-primary);">
+                    ${news.excerpt}
+                </p>
+                ${fullContent.content}
+            `;
+        } else {
+            content.innerHTML = `
+                <p>${news.excerpt}</p>
+                <p><em>Contenuto completo in fase di aggiornamento...</em></p>
+            `;
+        }
+        
+        // Set tags
+        if (news.tags && news.tags.length > 0) {
+            tagsList.innerHTML = news.tags.map(tag => 
+                `<span class="article-tag">${tag}</span>`
+            ).join('');
+            tags.style.display = 'block';
+        } else {
+            tags.style.display = 'none';
+        }
+        
+        // Show modal
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        
+        // Scroll to top of modal
+        modal.scrollTop = 0;
+    }
+    
+    closeArticleModal() {
+        const modal = document.getElementById('article-modal');
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+    
+    getFullArticlesContent() {
+        return {
+            1: {
+                content: `
+                    <h3>Dettagli del Decreto</h3>
+                    <p>Il Ministero del Turismo, in collaborazione con l'Agenzia delle Entrate, ha finalmente definito le modalità operative per accedere al credito d'imposta destinato alle PMI del settore turistico. Questo importante strumento di sostegno rappresenta un'opportunità concreta per modernizzare e rendere più sostenibili le attività ricettive e di servizio.</p>
+                    
+                    <h3>Come Funziona il Credito d'Imposta</h3>
+                    <p>Il credito d'imposta copre fino al 65% delle spese sostenute per:</p>
+                    <ul>
+                        <li><strong>Digitalizzazione:</strong> Sistemi di prenotazione online, app mobili, sistemi di gestione clienti (CRM), soluzioni di pagamento digitale</li>
+                        <li><strong>Efficientamento energetico:</strong> Impianti fotovoltaici, sistemi di riscaldamento/raffreddamento ad alta efficienza, illuminazione LED</li>
+                        <li><strong>Sostenibilità ambientale:</strong> Sistemi di raccolta differenziata, riduzione sprechi alimentari, mobilità elettrica</li>
+                    </ul>
+                    
+                    <h3>Requisiti e Scadenze</h3>
+                    <p>Possono accedere al beneficio le imprese turistiche con fatturato annuo non superiore a 5 milioni di euro. Il credito massimo ottenibile è di 150.000 euro per impresa. Le domande devono essere presentate entro il 31 marzo 2025 attraverso la piattaforma online del Ministero del Turismo.</p>
+                `
+            },
+            2: {
+                content: `
+                    <h3>Obiettivi del Bando PNRR</h3>
+                    <p>Il nuovo bando rappresenta una delle iniziative più ambiziose del Piano Nazionale di Ripresa e Resilienza per sostenere la competitività delle piccole e medie imprese italiane. Con una dotazione di 850 milioni di euro, l'iniziativa punta a modernizzare il tessuto imprenditoriale nazionale attraverso innovazione tecnologica e sostenibilità.</p>
+                    
+                    <h3>Settori Ammissibili</h3>
+                    <p>Il bando si rivolge principalmente a:</p>
+                    <ul>
+                        <li><strong>Commercio al dettaglio:</strong> Modernizzazione punti vendita, e-commerce, omnicanalità</li>
+                        <li><strong>Servizi alle imprese:</strong> Consulenza, marketing digitale, servizi IT</li>
+                        <li><strong>Turismo e ristorazione:</strong> Digitalizzazione processi, sostenibilità ambientale</li>
+                        <li><strong>Artigianato:</strong> Automazione produttiva, design digitale</li>
+                    </ul>
+                    
+                    <h3>Procedura di Presentazione</h3>
+                    <p>Le domande devono essere presentate esclusivamente online tramite la piattaforma dedicata del MiSE. È richiesta la presentazione di un business plan dettagliato che dimostri la sostenibilità economica e l'impatto innovativo del progetto.</p>
+                `
+            },
+            3: {
+                content: `
+                    <h3>Il Programma dell'Evento</h3>
+                    <p>Il Forum Nazionale PMI 2025 si articola in due giornate intense di confronto e networking. La prima giornata sarà dedicata alle tendenze macroeconomiche e alle opportunità di crescita per le PMI italiane, mentre la seconda giornata si concentrerà su workshop pratici e sessioni di networking settoriali.</p>
+                    
+                    <h3>Relatori di Prestigio</h3>
+                    <p>Tra i relatori confermati:</p>
+                    <ul>
+                        <li><strong>Prof. Mario Draghi:</strong> "L'Europa e il futuro delle PMI"</li>
+                        <li><strong>Dott.ssa Christine Lagarde:</strong> Keynote sulla politica monetaria europea</li>
+                        <li><strong>CEO di Intesa Sanpaolo:</strong> "Finanza e innovazione per le PMI"</li>
+                        <li><strong>Ministro delle Imprese:</strong> "Le nuove politiche industriali italiane"</li>
+                    </ul>
+                    
+                    <h3>Workshop Tematici</h3>
+                    <p>Sono previsti 12 workshop paralleli su transizione digitale, sostenibilità ambientale, internazionalizzazione, accesso al credito, innovazione e competenze digitali.</p>
+                `
+            }
+        };
     }
 }
 
