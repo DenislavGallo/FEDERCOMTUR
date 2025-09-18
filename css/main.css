@@ -798,13 +798,13 @@ body {
     }
     
     .service-card {
-        height: 240px;
-        width: 200px;
+        height: 280px; /* Aumentato da 240px a 280px */
+        width: 240px; /* Aumentato da 200px a 240px */
     }
     
     .service-card:hover {
-        height: 280px;
-        width: 240px;
+        height: 320px; /* Aumentato da 280px a 320px */
+        width: 280px; /* Aumentato da 240px a 280px */
     }
 }
 
@@ -816,13 +816,13 @@ body {
     }
     
     .service-card {
-        height: 220px;
-        width: 180px;
+        height: 260px; /* Aumentato da 220px a 260px */
+        width: 220px; /* Aumentato da 180px a 220px */
     }
     
     .service-card:hover {
-        height: 260px;
-        width: 220px;
+        height: 300px; /* Aumentato da 260px a 300px */
+        width: 260px; /* Aumentato da 220px a 260px */
     }
 }
 
@@ -834,8 +834,8 @@ body {
     border: 1px solid #E5E7EB;
     border-radius: var(--radius-lg);
     padding: 0;
-    height: 260px;
-    width: 220px;
+    height: 300px; /* Aumentato da 260px a 300px */
+    width: 280px; /* Aumentato da 220px a 280px */
     opacity: 0;
     transform: translateY(30px);
     animation: fadeInUp 0.6s ease-out forwards;
@@ -961,8 +961,8 @@ body {
 
 /* Effetto hover per ingrandire e mostrare più immagine */
 .service-card:hover {
-    height: 310px;
-    width: 270px;
+    height: 340px; /* Aumentato da 310px a 340px */
+    width: 300px; /* Aumentato da 270px a 300px */
     background-size: 120%;
     transform: translateY(-10px);
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
