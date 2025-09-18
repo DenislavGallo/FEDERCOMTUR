@@ -27,9 +27,12 @@
         .news-page-header {
             background: linear-gradient(135deg, var(--primary-navy) 0%, #0369a1 100%);
             color: white;
-            padding: 120px 0 80px;
+            padding: 120px 40px 80px; /* Aggiunto padding orizzontale di 40px */
+            margin: 20px; /* Aggiunto margine di 20px su tutti i lati */
+            border-radius: var(--radius-xl); /* Aggiunto border-radius */
             position: relative;
             overflow: hidden;
+            box-shadow: 0 20px 60px rgba(11, 20, 38, 0.3); /* Aggiunta shadow per profondità */
         }
         
         .news-page-header::before {
@@ -599,7 +602,8 @@
             }
             
             .news-page-header {
-                padding: 100px 0 60px;
+                padding: 100px 24px 60px; /* Padding orizzontale ridotto per mobile */
+                margin: 12px; /* Margine ridotto per mobile */
             }
             
             .news-header-content {
