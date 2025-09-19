@@ -1462,6 +1462,26 @@ body {
     display: block;
 }
 
+/* Mantieni sempre il testo bianco in tutti gli stati */
+.newsletter-submit,
+.newsletter-submit:hover,
+.newsletter-submit:focus,
+.newsletter-submit:active,
+.newsletter-submit.loading,
+.newsletter-submit.success,
+.newsletter-submit.error {
+    color: #ffffff !important;
+}
+
+/* Stati di successo e errore */
+.newsletter-submit.success {
+    background: #16a34a;
+}
+
+.newsletter-submit.error {
+    background: #dc2626;
+}
+
 .spinner {
     width: 20px;
     height: 20px;

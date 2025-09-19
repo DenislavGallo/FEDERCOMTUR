@@ -338,6 +338,14 @@ const FederNewsletter = {
         // Show success message
         this.showSuccess('Grazie! Ti sei iscritto con successo alla newsletter. Controlla la tua email per confermare l\'iscrizione.');
         
+        // Aggiorna stato bottone a successo
+        const submitButton = document.getElementById('newsletter-submit');
+        if (submitButton) {
+            submitButton.classList.remove('loading');
+            submitButton.classList.add('success');
+            submitButton.textContent = '✅ Iscritto!';
+        }
+        
         // Reset form
         document.getElementById('newsletter-form').reset();
         
@@ -550,6 +558,7 @@ const FederNewsletter = {
             submitButton.classList.remove('loading', 'success', 'error');
             submitButton.disabled = false;
             submitButton.removeAttribute('aria-busy');
+            submitButton.innerHTML = '<span class="btn-text">Subscribe</span><span class="btn-loading"><svg class="spinner" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none" stroke-dasharray="31.4" stroke-dashoffset="31.4"/></svg></span>';
         }
         
         // Clear any error states
