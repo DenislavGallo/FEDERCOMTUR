@@ -97,24 +97,10 @@ class Database {
             
         } catch(PDOException $exception) {
             error_log("Errore connessione database: " . $exception->getMessage());
-            http_response_code(500);
             
-            // Gestione errori basata sull'ambiente
-            if (DEBUG_MODE) {
-                echo json_encode([
-                    'error' => true,
-                    'message' => 'Errore di connessione al database',
-                    'details' => $exception->getMessage(),
-                    'dsn' => "mysql:host=" . $this->host . ";dbname=" . $this->db_name,
-                    'environment' => ENVIRONMENT
-                ], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
-            } else {
-                echo json_encode([
-                    'error' => true,
-                    'message' => 'Errore interno del server'
-                ], JSON_UNESCAPED_UNICODE);
-            }
-            exit();
+            // Lancia un'eccezione invece di terminare con exit()
+            // Questo permette al codice chiamante di gestire il fallback
+            throw new Exception("Database connection failed: " . $exception->getMessage());
         }
         
         return $this->conn;

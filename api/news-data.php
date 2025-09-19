@@ -413,12 +413,127 @@ class NewsDataManager {
     }
 }
 
+/**
+ * Classe Fallback per caricare dati da JSON quando database non disponibile
+ */
+class JsonDataFallback {
+    private $jsonFile;
+    
+    public function __construct() {
+        $this->jsonFile = __DIR__ . '/../data/news-database.json';
+    }
+    
+    public function getNewsData($params = []) {
+        try {
+            if (!file_exists($this->jsonFile)) {
+                return [
+                    'success' => false,
+                    'error' => 'File dati non trovato'
+                ];
+            }
+            
+            $jsonData = file_get_contents($this->jsonFile);
+            $data = json_decode($jsonData, true);
+            
+            if (!$data || !isset($data['news'])) {
+                return [
+                    'success' => false,
+                    'error' => 'Dati non validi'
+                ];
+            }
+            
+            $action = $params['action'] ?? null;
+            
+            if ($action === 'categories') {
+                return [
+                    'success' => true,
+                    'data' => $this->formatCategoriesFromJson($data['categories'])
+                ];
+            }
+            
+            // Formatta le news per compatibilità con l'API
+            $formattedNews = [];
+            foreach ($data['news'] as $news) {
+                $formattedNews[] = [
+                    'id' => $news['id'],
+                    'title' => $news['title'],
+                    'excerpt' => $news['excerpt'],
+                    'author' => $news['author'],
+                    'date_formatted' => $news['dateFormatted'],
+                    'read_time' => $news['readTime'],
+                    'featured' => $news['featured'],
+                    'tags' => $news['tags'],
+                    'views' => $news['views'] ?? 0,
+                    'category' => [
+                        'name' => $news['category'],
+                        'label' => $data['categories'][$news['category']]['label'] ?? $news['category'],
+                        'color' => $data['categories'][$news['category']]['color'] ?? '#6b7280'
+                    ],
+                    'special_date' => $news['deadline'] ?? $news['eventDate'] ?? null,
+                    'special_date_label' => isset($news['deadline']) ? 'Scadenza' : (isset($news['eventDate']) ? 'Data evento' : null),
+                    'location' => $news['location'] ?? null,
+                    'event_type' => $news['eventType'] ?? null
+                ];
+            }
+            
+            // Applica filtri
+            $limit = isset($params['limit']) ? (int)$params['limit'] : 12;
+            $featured = isset($params['featured']) ? filter_var($params['featured'], FILTER_VALIDATE_BOOLEAN) : false;
+            
+            if ($featured) {
+                $formattedNews = array_filter($formattedNews, function($news) {
+                    return $news['featured'];
+                });
+            }
+            
+            // Limita risultati
+            $formattedNews = array_slice($formattedNews, 0, $limit);
+            
+            return [
+                'success' => true,
+                'data' => $formattedNews,
+                'source' => 'json_fallback'
+            ];
+            
+        } catch (Exception $e) {
+            return [
+                'success' => false,
+                'error' => 'Errore nel caricamento dati: ' . $e->getMessage()
+            ];
+        }
+    }
+    
+    private function formatCategoriesFromJson($categories) {
+        $formatted = [];
+        foreach ($categories as $name => $info) {
+            $formatted[] = [
+                'name' => $name,
+                'label' => $info['label'],
+                'color' => $info['color'],
+                'description' => $info['description']
+            ];
+        }
+        return $formatted;
+    }
+}
+
 // =============================================
 // GESTIONE RICHIESTE HTTP
 // =============================================
 
 try {
-    $newsManager = new NewsDataManager();
+    // Prova a creare il NewsDataManager, se fallisce usa fallback JSON
+    try {
+        $newsManager = new NewsDataManager();
+    } catch (Exception $dbError) {
+        // Fallback: carica dati da JSON se database non disponibile
+        error_log("Database non disponibile, uso fallback JSON: " . $dbError->getMessage());
+        $jsonFallback = new JsonDataFallback();
+        $result = $jsonFallback->getNewsData($_GET ?? []);
+        sendJsonResponse($result);
+        exit();
+    }
+    
     $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
     $query_params = $_GET ?? [];
     
