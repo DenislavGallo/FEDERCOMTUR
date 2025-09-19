@@ -349,6 +349,11 @@ const FederNewsletter = {
         // Track conversion (Google Analytics, etc.)
         this.trackConversion(email);
         
+        // Reset form after 5 seconds
+        setTimeout(() => {
+            this.resetFormToInitialState();
+        }, 5000);
+        
         console.log('✅ Newsletter subscription successful for:', email);
     },
     
@@ -527,6 +532,37 @@ const FederNewsletter = {
     // Utility functions
     sleep(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
+    },
+    
+    // Reset form to initial state
+    resetFormToInitialState() {
+        // Reset form status
+        const formStatus = document.getElementById('form-status');
+        if (formStatus) {
+            formStatus.style.display = 'none';
+            formStatus.className = 'form-status';
+            formStatus.textContent = '';
+        }
+        
+        // Reset button state
+        const submitButton = document.getElementById('newsletter-submit');
+        if (submitButton) {
+            submitButton.classList.remove('loading', 'success', 'error');
+            submitButton.disabled = false;
+            submitButton.removeAttribute('aria-busy');
+        }
+        
+        // Clear any error states
+        const emailInput = document.getElementById('email');
+        if (emailInput) {
+            emailInput.classList.remove('error');
+        }
+        
+        // Reset internal state
+        this.state.isSubmitting = false;
+        this.state.retryCount = 0;
+        
+        console.log('🔄 Form reset to initial state');
     },
     
     // Cleanup function
