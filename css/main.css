@@ -1663,6 +1663,180 @@ html {
     scroll-padding-top: 100px;
 }
 
+/* ========================== */
+/* NEWSLETTER POPUP MODAL */
+/* ========================== */
+
+.newsletter-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 3000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    backdrop-filter: blur(5px);
+}
+
+.newsletter-popup.active {
+    display: flex;
+    animation: fadeIn 0.3s ease-out;
+}
+
+.newsletter-popup-content {
+    background: white;
+    border-radius: var(--radius-2xl);
+    max-width: 500px;
+    width: 100%;
+    position: relative;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    transform: scale(0.9);
+    animation: popupSlideIn 0.4s ease-out forwards;
+}
+
+.newsletter-popup-header {
+    background: linear-gradient(135deg, var(--primary-navy) 0%, var(--secondary-emerald) 100%);
+    color: white;
+    padding: 40px 30px 30px;
+    text-align: center;
+    position: relative;
+}
+
+.newsletter-popup-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition-fast);
+}
+
+.newsletter-popup-close:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.1);
+}
+
+.newsletter-popup-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+    line-height: 1.2;
+}
+
+.newsletter-popup-subtitle {
+    font-size: 1rem;
+    opacity: 0.9;
+    line-height: 1.5;
+}
+
+.newsletter-popup-body {
+    padding: 30px;
+}
+
+.newsletter-popup-form {
+    margin-bottom: 20px;
+}
+
+.newsletter-popup-input {
+    width: 100%;
+    padding: 15px 20px;
+    border: 2px solid var(--neutral-200);
+    border-radius: var(--radius-xl);
+    font-size: 1rem;
+    margin-bottom: 15px;
+    transition: var(--transition-fast);
+}
+
+.newsletter-popup-input:focus {
+    outline: none;
+    border-color: var(--secondary-emerald);
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+.newsletter-popup-submit {
+    width: 100%;
+    padding: 15px;
+    background: var(--secondary-emerald);
+    color: white;
+    border: none;
+    border-radius: var(--radius-xl);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition-fast);
+}
+
+.newsletter-popup-submit:hover {
+    background: #059669;
+    transform: translateY(-1px);
+}
+
+.newsletter-popup-footer {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    text-align: center;
+    line-height: 1.4;
+}
+
+.newsletter-popup-footer a {
+    color: var(--secondary-emerald);
+    text-decoration: none;
+}
+
+.newsletter-popup-footer a:hover {
+    text-decoration: underline;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes popupSlideIn {
+    from {
+        transform: scale(0.9) translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    .newsletter-popup-content {
+        margin: 20px;
+        max-width: none;
+    }
+    
+    .newsletter-popup-header {
+        padding: 30px 20px 20px;
+    }
+    
+    .newsletter-popup-title {
+        font-size: 1.5rem;
+    }
+    
+    .newsletter-popup-body {
+        padding: 20px;
+    }
+}
+
 /* Reduced motion preferences - figure geometriche rimosse */
 @media (prefers-reduced-motion: reduce) {
     /* Regole per figure geometriche rimosse */
@@ -1677,5 +1851,14 @@ html {
     
     html {
         scroll-behavior: auto;
+    }
+    
+    .newsletter-popup-content {
+        animation: none;
+        transform: scale(1);
+    }
+    
+    .newsletter-popup.active {
+        animation: none;
     }
 }
