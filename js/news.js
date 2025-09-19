@@ -36,15 +36,15 @@ class NewsManager {
             const categoriesData = await categoriesResponse.json();
             
             if (categoriesData.success) {
-                // Converte le categorie nel formato atteso dal frontend
-                this.categories = {};
-                categoriesData.data.forEach(cat => {
-                    this.categories[cat.name] = {
-                        label: cat.label,
-                        color: cat.color,
-                        description: cat.description
-                    };
-                });
+            // Converte le categorie nel formato atteso dal frontend
+            this.categories = {};
+            categoriesData.data.forEach(cat => {
+                this.categories[cat.name] = {
+                    label: cat.label,
+                    color: cat.color,
+                    description: cat.description
+                };
+            });
             }
             
             // Carica tutte le notizie dall'API
@@ -52,26 +52,26 @@ class NewsManager {
             const newsData = await newsResponse.json();
             
             if (newsData.success) {
-                // Converte i dati nel formato atteso dal frontend
-                this.newsData = newsData.data.map(item => ({
-                    id: item.id,
-                    title: item.title,
-                    category: item.category.name,
+            // Converte i dati nel formato atteso dal frontend
+            this.newsData = newsData.data.map(item => ({
+                id: item.id,
+                title: item.title,
+                category: item.category.name,
                     date: item.date_formatted.split(' ').reverse().join('-'),
-                    dateFormatted: item.date_formatted,
-                    excerpt: item.excerpt,
-                    readTime: item.read_time,
-                    author: item.author,
-                    featured: item.featured,
-                    tags: item.tags || [],
-                    views: item.views,
-                    deadline: item.special_date_label === 'Scadenza' ? item.special_date : null,
-                    eventDate: item.special_date_label === 'Data evento' ? item.special_date : null,
-                    location: item.location,
-                    eventType: item.event_type
-                }));
-                
-                this.filteredNews = [...this.newsData];
+                dateFormatted: item.date_formatted,
+                excerpt: item.excerpt,
+                readTime: item.read_time,
+                author: item.author,
+                featured: item.featured,
+                tags: item.tags || [],
+                views: item.views,
+                deadline: item.special_date_label === 'Scadenza' ? item.special_date : null,
+                eventDate: item.special_date_label === 'Data evento' ? item.special_date : null,
+                location: item.location,
+                eventType: item.event_type
+            }));
+            
+            this.filteredNews = [...this.newsData];
                 console.log('✅ Dati caricati dall\'API:', this.newsData.length, 'notizie');
             } else {
                 throw new Error(newsData.error || 'Errore nel caricamento notizie');
@@ -182,26 +182,6 @@ class NewsManager {
         }
         
         this.displayNews();
-        
-        // Scroll automatico al top della sezione notizie
-        this.scrollToNewsSection();
-    }
-    
-    scrollToNewsSection() {
-        const newsGrid = document.getElementById('news-grid');
-        if (newsGrid) {
-            // Calcola la posizione tenendo conto della navbar fissa e dei filtri
-            const navbarHeight = 72; // Altezza navbar
-            const filtersHeight = 80; // Altezza approssimativa sezione filtri
-            const offset = navbarHeight + filtersHeight + 20; // 20px di margine aggiuntivo
-            
-            const newsGridTop = newsGrid.offsetTop - offset;
-            
-            window.scrollTo({
-                top: newsGridTop,
-                behavior: 'smooth'
-            });
-        }
     }
     
     updateActiveFilter(activeButton) {
@@ -396,9 +376,9 @@ class NewsManager {
     
     openArticleModal(newsId) {
         const news = this.newsData.find(item => item.id === newsId);
-        if (!news) {
+                if (!news) {
             console.error('Notizia non trovata:', newsId);
-            return;
+                    return;
         }
         
         const modal = document.getElementById('article-modal');
@@ -425,7 +405,7 @@ class NewsManager {
         headerIcon.innerHTML = `
             <div style="width: 120px; height: 120px; color: rgba(255,255,255,0.8);">
                 ${categoryIcon}
-            </div>
+                    </div>
         `;
         
         // Set title
@@ -434,28 +414,28 @@ class NewsManager {
         // Set meta information
         meta.innerHTML = `
             <div class="article-meta-item">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-                    <line x1="16" y1="2" x2="16" y2="6"/>
-                    <line x1="8" y1="2" x2="8" y2="6"/>
-                    <line x1="3" y1="10" x2="21" y2="10"/>
-                </svg>
-                ${news.dateFormatted}
-            </div>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                                <line x1="16" y1="2" x2="16" y2="6"/>
+                                <line x1="8" y1="2" x2="8" y2="6"/>
+                                <line x1="3" y1="10" x2="21" y2="10"/>
+                            </svg>
+                            ${news.dateFormatted}
+                        </div>
             <div class="article-meta-item">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="10"/>
-                    <polyline points="12,6 12,12 16,14"/>
-                </svg>
-                ${news.readTime}
-            </div>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <polyline points="12,6 12,12 16,14"/>
+                            </svg>
+                            ${news.readTime}
+                        </div>
             <div class="article-meta-item">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                    <circle cx="12" cy="7" r="4"/>
-                </svg>
-                ${news.author}
-            </div>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                <circle cx="12" cy="7" r="4"/>
+                            </svg>
+                            ${news.author}
+                        </div>
         `;
         
         // Set content
