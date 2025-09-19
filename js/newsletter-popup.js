@@ -183,7 +183,7 @@ class NewsletterPopup {
         
         try {
             // Chiamata API EmailOctopus
-            const response = await fetch('/FEDERCOMTUR/api/newsletter-subscribe.php', {
+            const response = await fetch('api/newsletter-subscribe.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -238,7 +238,7 @@ class NewsletterPopup {
         
         try {
             // Chiamata API EmailOctopus
-            const response = await fetch('/FEDERCOMTUR/api/newsletter-subscribe.php', {
+            const response = await fetch('api/newsletter-subscribe.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

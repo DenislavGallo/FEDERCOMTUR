@@ -9,7 +9,7 @@
 const FederNewsletter = {
     // Configuration
     config: {
-        apiEndpoint: '/FEDERCOMTUR/api/newsletter-subscribe.php',
+        apiEndpoint: 'api/newsletter-subscribe.php',
         emailOctopusApiKey: 'YOUR_API_KEY_HERE', // Replace with actual key
         listId: 'YOUR_LIST_ID_HERE', // Replace with actual list ID
         maxRetries: 3,

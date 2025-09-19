@@ -32,7 +32,7 @@ class NewsManager {
     async loadNewsData() {
         try {
             // Carica le categorie dall'API
-            const categoriesResponse = await fetch('/FEDERCOMTUR/api/news-data.php?action=categories');
+            const categoriesResponse = await fetch('api/news-data.php?action=categories');
             const categoriesData = await categoriesResponse.json();
             
             if (categoriesData.success) {
@@ -48,7 +48,7 @@ class NewsManager {
             }
             
             // Carica tutte le notizie dall'API
-            const newsResponse = await fetch('/FEDERCOMTUR/api/news-data.php?limit=100');
+            const newsResponse = await fetch('api/news-data.php?limit=100');
             const newsData = await newsResponse.json();
             
             if (newsData.success) {
