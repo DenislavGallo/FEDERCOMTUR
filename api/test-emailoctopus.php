@@ -11,7 +11,7 @@ echo "<style>body{font-family:Arial,sans-serif;max-width:800px;margin:0 auto;pad
 
 // Test 1: Verifica Configurazione
 echo "<h2>1. ✅ Verifica Configurazione</h2>";
-echo "<strong>🔑 API Key:</strong> " . (defined('EMAILOCTOPUS_API_KEY') ? 'Configurata (' . substr(EMAILOCTOPUS_API_KEY, 0, 10) . '...)' : '<span class="error">Non configurata</span>') . "<br>";
+echo "<strong>🔑 API Token:</strong> " . (defined('EMAILOCTOPUS_API_TOKEN') ? 'Configurato (' . substr(EMAILOCTOPUS_API_TOKEN, 0, 10) . '...)' : '<span class="error">Non configurato</span>') . "<br>";
 echo "<strong>🌐 API URL:</strong> " . (defined('EMAILOCTOPUS_API_URL') ? EMAILOCTOPUS_API_URL : '<span class="error">Non configurato</span>') . "<br>";
 echo "<strong>📋 List ID:</strong> " . (defined('EMAILOCTOPUS_LIST_ID') && !empty(EMAILOCTOPUS_LIST_ID) ? EMAILOCTOPUS_LIST_ID : '<span class="warning">Non configurato (normale per setup iniziale)</span>') . "<br>";
 echo "<strong>📧 Double Opt-in:</strong> " . (NEWSLETTER_DOUBLE_OPTIN ? '<span class="success">Attivo</span>' : 'Disattivo') . "<br>";

@@ -5,35 +5,35 @@
  * Gestisce la configurazione e connessione con EmailOctopus API
  */
 
-// Configurazione EmailOctopus
-define('EMAILOCTOPUS_API_KEY', 'eo_fa8d6ddc9d71ab2288c57e9aaa5cb90906fb22e17d7bea51dd75a401ad884281');
-define('EMAILOCTOPUS_API_URL', 'https://emailoctopus.com/api/1.6');
-define('EMAILOCTOPUS_LIST_ID', ''); // Sarà configurato quando avremo la lista
+// Configurazione EmailOctopus - API v2 con Bearer Authentication
+define('EMAILOCTOPUS_API_TOKEN', 'eo_fa8d6ddc9d71ab2288c57e9aaa5cb90906fb22e17d7bea51dd75a401ad884281');
+define('EMAILOCTOPUS_API_URL', 'https://api.emailoctopus.com'); // Nuovo endpoint API v2
+define('EMAILOCTOPUS_LIST_ID', '3bada182-8a8a-11f0-b920-71a7ef473c68'); // Lista "Audience"
 
 // Configurazione generale
 define('NEWSLETTER_DOUBLE_OPTIN', true); // true = PENDING, false = SUBSCRIBED
-define('NEWSLETTER_DEFAULT_TAGS', ['website', 'federcomtur']);
+define('NEWSLETTER_DEFAULT_TAGS', ['website', 'federcomtur-est-europa']);
 
 /**
  * Classe per gestire le operazioni EmailOctopus
  */
 class EmailOctopusManager {
-    private $apiKey;
+    private $apiToken;
     private $apiUrl;
     private $listId;
     private $doubleOptIn;
     private $defaultTags;
     
     public function __construct($listId = null) {
-        $this->apiKey = EMAILOCTOPUS_API_KEY;
+        $this->apiToken = EMAILOCTOPUS_API_TOKEN;
         $this->apiUrl = EMAILOCTOPUS_API_URL;
         $this->listId = $listId ?? EMAILOCTOPUS_LIST_ID;
         $this->doubleOptIn = NEWSLETTER_DOUBLE_OPTIN;
         $this->defaultTags = NEWSLETTER_DEFAULT_TAGS;
         
         // Validazione configurazione
-        if (empty($this->apiKey)) {
-            throw new Exception('EmailOctopus API key non configurata');
+        if (empty($this->apiToken)) {
+            throw new Exception('EmailOctopus API token non configurato');
         }
     }
     
@@ -58,9 +58,8 @@ class EmailOctopusManager {
                 ];
             }
             
-            // Prepara i dati
+            // Prepara i dati (senza api_key, ora usa Bearer auth)
             $postData = [
-                'api_key' => $this->apiKey,
                 'email_address' => $email,
                 'fields' => $fields,
                 'tags' => array_merge($this->defaultTags, $tags)
@@ -114,7 +113,7 @@ class EmailOctopusManager {
                 ];
             }
             
-            $url = $this->apiUrl . '/lists/' . $this->listId . '?api_key=' . $this->apiKey;
+            $url = $this->apiUrl . '/lists/' . $this->listId;
             $response = $this->makeApiCall($url, null, 'GET');
             
             return $response;
@@ -133,7 +132,7 @@ class EmailOctopusManager {
      */
     public function getLists() {
         try {
-            $url = $this->apiUrl . '/lists?api_key=' . $this->apiKey;
+            $url = $this->apiUrl . '/lists';
             $response = $this->makeApiCall($url, null, 'GET');
             
             return $response;
@@ -162,7 +161,8 @@ class EmailOctopusManager {
             CURLOPT_USERAGENT => 'FederComTur-Website/1.0',
             CURLOPT_HTTPHEADER => [
                 'Content-Type: application/json',
-                'Accept: application/json'
+                'Accept: application/json',
+                'Authorization: Bearer ' . $this->apiToken
             ]
         ];
         
@@ -233,8 +233,8 @@ class EmailOctopusManager {
     public function validateConfig() {
         $errors = [];
         
-        if (empty($this->apiKey)) {
-            $errors[] = 'API Key mancante';
+        if (empty($this->apiToken)) {
+            $errors[] = 'API Token mancante';
         }
         
         if (empty($this->listId)) {
