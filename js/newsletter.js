@@ -9,7 +9,7 @@
 const FederNewsletter = {
     // Configuration
     config: {
-        apiEndpoint: '/api/subscribe.php',
+        apiEndpoint: '/FEDERCOMTUR/api/newsletter-subscribe.php',
         emailOctopusApiKey: 'YOUR_API_KEY_HERE', // Replace with actual key
         listId: 'YOUR_LIST_ID_HERE', // Replace with actual list ID
         maxRetries: 3,
@@ -260,17 +260,26 @@ const FederNewsletter = {
     
     // Perform actual submission
     async performSubmission(email) {
-        // For now, simulate API call
-        // In production, this would call the actual EmailOctopus API or backend
+        // Chiamata API EmailOctopus reale
+        const response = await fetch(this.config.apiEndpoint, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                email: email,
+                source: 'main_form',
+                page: window.location.pathname
+            })
+        });
         
-        const response = await this.simulateApiCall(email);
+        const result = await response.json();
         
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message || 'Server error');
+        if (!result.success) {
+            throw new Error(result.error || 'Errore durante l\'iscrizione');
         }
         
-        return await response.json();
+        return result;
     },
     
     // Simulate API call (replace with actual implementation)

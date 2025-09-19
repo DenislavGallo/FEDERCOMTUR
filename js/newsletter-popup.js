@@ -111,6 +111,12 @@ class NewsletterPopup {
                 e.preventDefault();
                 this.handleSubmit();
             }
+            
+            // Footer newsletter form
+            if (e.target.id === 'footer-newsletter-form') {
+                e.preventDefault();
+                this.handleFooterSubmit(e);
+            }
         });
     }
     
@@ -176,22 +182,138 @@ class NewsletterPopup {
         submitBtn.disabled = true;
         
         try {
-            // Simula invio (sostituire con API reale)
-            await new Promise(resolve => setTimeout(resolve, 1500));
+            // Chiamata API EmailOctopus
+            const response = await fetch('/FEDERCOMTUR/api/newsletter-subscribe.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    email: email,
+                    source: 'popup',
+                    page: window.location.pathname
+                })
+            });
             
-            // Successo
-            this.showSuccess('🎉 Iscrizione completata! Controlla la tua email.');
+            const result = await response.json();
             
-            // Chiudi modal dopo successo
-            setTimeout(() => {
-                this.closeModal(true);
-            }, 2000);
+            if (result.success) {
+                // Successo
+                this.showSuccess(`🎉 ${result.message}`);
+                
+                // Chiudi modal dopo successo
+                setTimeout(() => {
+                    this.closeModal(true);
+                }, 2000);
+                
+            } else {
+                throw new Error(result.error || 'Errore sconosciuto');
+            }
             
         } catch (error) {
+            console.error('Errore iscrizione newsletter popup:', error);
             this.showError('Errore durante l\'iscrizione. Riprova più tardi.');
             submitBtn.textContent = originalText;
             submitBtn.disabled = false;
         }
+    }
+    
+    async handleFooterSubmit(e) {
+        const emailInput = e.target.querySelector('#footer-email');
+        const submitBtn = e.target.querySelector('.btn-footer');
+        
+        if (!emailInput || !submitBtn) return;
+        
+        const email = emailInput.value.trim();
+        
+        if (!this.isValidEmail(email)) {
+            this.showFooterError(emailInput, 'Inserisci un indirizzo email valido');
+            return;
+        }
+        
+        // Mostra loading
+        const originalText = submitBtn.textContent;
+        submitBtn.textContent = 'Iscrizione...';
+        submitBtn.disabled = true;
+        
+        try {
+            // Chiamata API EmailOctopus
+            const response = await fetch('/FEDERCOMTUR/api/newsletter-subscribe.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    email: email,
+                    source: 'footer',
+                    page: window.location.pathname
+                })
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                this.showFooterSuccess(emailInput, result.message);
+                e.target.reset();
+            } else {
+                throw new Error(result.error || 'Errore sconosciuto');
+            }
+            
+        } catch (error) {
+            console.error('Errore iscrizione newsletter footer:', error);
+            this.showFooterError(emailInput, 'Errore durante l\'iscrizione. Riprova più tardi.');
+        } finally {
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
+        }
+    }
+    
+    showFooterError(inputElement, message) {
+        // Rimuovi errore precedente
+        const existingError = inputElement.parentNode.querySelector('.footer-error');
+        if (existingError) {
+            existingError.remove();
+        }
+        
+        // Aggiungi nuovo errore
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'footer-error';
+        errorDiv.style.cssText = 'color: #ef4444; font-size: 0.8rem; margin-top: 8px; text-align: center;';
+        errorDiv.textContent = message;
+        
+        inputElement.parentNode.appendChild(errorDiv);
+        inputElement.style.borderColor = '#ef4444';
+        
+        // Rimuovi errore dopo 5 secondi
+        setTimeout(() => {
+            if (errorDiv.parentNode) {
+                errorDiv.remove();
+                inputElement.style.borderColor = '';
+            }
+        }, 5000);
+    }
+    
+    showFooterSuccess(inputElement, message) {
+        // Rimuovi errore precedente
+        const existingError = inputElement.parentNode.querySelector('.footer-error');
+        if (existingError) {
+            existingError.remove();
+        }
+        
+        // Aggiungi messaggio successo
+        const successDiv = document.createElement('div');
+        successDiv.className = 'footer-success';
+        successDiv.style.cssText = 'color: #16a34a; font-size: 0.8rem; margin-top: 8px; text-align: center; font-weight: 600;';
+        successDiv.textContent = '✅ ' + message;
+        
+        inputElement.parentNode.appendChild(successDiv);
+        
+        // Rimuovi messaggio dopo 5 secondi
+        setTimeout(() => {
+            if (successDiv.parentNode) {
+                successDiv.remove();
+            }
+        }, 5000);
     }
     
     showSuccess(message) {
