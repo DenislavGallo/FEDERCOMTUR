@@ -403,7 +403,7 @@ body {
     display: flex;
     align-items: center;
     position: relative;
-    margin-top: 23vh; /* Aumentato da 6vh a 8vh per più distanza dalla navbar */
+    margin-top: 8vh; /* Aumentato da 6vh a 8vh per più distanza dalla navbar */
     padding-top: var(--space-16); /* Aumentato da space-12 a space-16 */
 }
 
