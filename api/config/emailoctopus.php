@@ -65,11 +65,12 @@ class EmailOctopusManager {
                 'tags' => array_merge($this->defaultTags, $tags)
             ];
             
-            // Determina lo status
+            // Determina lo status - EmailOctopus v2 usa valori diversi
             if ($status === null) {
-                $postData['status'] = $this->doubleOptIn ? 'PENDING' : 'SUBSCRIBED';
+                // Per API v2, usa 'subscribed' (lowercase) invece di 'SUBSCRIBED'
+                $postData['status'] = $this->doubleOptIn ? 'pending' : 'subscribed';
             } else {
-                $postData['status'] = $status;
+                $postData['status'] = strtolower($status);
             }
             
             // Effettua la chiamata API
@@ -88,7 +89,9 @@ class EmailOctopusManager {
             } else {
                 return [
                     'success' => false,
-                    'error' => $response['error']
+                    'error' => $response['error'],
+                    'response' => $response['response'] ?? null,
+                    'raw_response' => $response['raw_response'] ?? null
                 ];
             }
             
@@ -166,8 +169,11 @@ class EmailOctopusManager {
             ]
         ];
         
-        // Gestione SSL per ambiente di sviluppo
-        if (defined('ENVIRONMENT') && ENVIRONMENT === 'development') {
+        // Gestione SSL - disabilita per localhost/sviluppo
+        $isLocalhost = (strpos($_SERVER['HTTP_HOST'] ?? 'localhost', 'localhost') !== false) || 
+                      (defined('ENVIRONMENT') && ENVIRONMENT === 'development');
+        
+        if ($isLocalhost) {
             $curlOptions[CURLOPT_SSL_VERIFYPEER] = false;
             $curlOptions[CURLOPT_SSL_VERIFYHOST] = false;
         } else {
@@ -222,7 +228,8 @@ class EmailOctopusManager {
                 'success' => false,
                 'error' => $errorMessage,
                 'http_code' => $httpCode,
-                'response' => $responseData
+                'response' => $responseData,
+                'raw_response' => $response
             ];
         }
     }
