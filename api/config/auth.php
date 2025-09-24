@@ -13,7 +13,8 @@ require_once __DIR__ . '/database.php';
 class AdminAuth {
     private $db;
     private $conn;
-    private $sessionLifetime = 3600; // 1 ora
+    private $sessionLifetime = 900; // 15 minuti
+    private $idleTimeout = 300;     // 5 minuti idle
     private $maxLoginAttempts = 5;
     private $lockoutDuration = 1800; // 30 minuti
     
@@ -83,7 +84,7 @@ class AdminAuth {
                 ];
             }
             
-            // Verifica password
+            // Verifica password con Argon2ID
             if (!password_verify($password, $user['password_hash'])) {
                 $this->incrementFailedAttempts($username);
                 $this->logLoginAttempt($username, false);
@@ -172,6 +173,11 @@ class AdminAuth {
         }
         
         if (!isset($_SESSION['admin_authenticated']) || !isset($_SESSION['admin_user_id'])) {
+            return false;
+        }
+        
+        // Controlla timeout idle
+        if (!$this->checkIdleTimeout()) {
             return false;
         }
         
@@ -297,7 +303,7 @@ class AdminAuth {
         $stmt->execute([$ip]);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         
-        return false; // RATE LIMITING TEMPORANEAMENTE DISABILITATO
+        return $result['attempts'] >= 10; // Soglia: 10 tentativi in 15 minuti
     }
     
     private function incrementFailedAttempts($username) {
@@ -427,13 +433,18 @@ class AdminAuth {
                 return ['success' => false, 'error' => 'Password corrente non corretta'];
             }
             
-            // Validazione nuova password
-            if (strlen($newPassword) < 8) {
-                return ['success' => false, 'error' => 'La password deve essere di almeno 8 caratteri'];
+            // Validazione password robusta
+            $passwordValidation = $this->validatePassword($newPassword);
+            if (!$passwordValidation['valid']) {
+                return ['success' => false, 'error' => $passwordValidation['error']];
             }
             
-            // Hash nuova password
-            $newHash = password_hash($newPassword, PASSWORD_DEFAULT);
+            // Hash password con Argon2ID
+            $newHash = password_hash($newPassword, PASSWORD_ARGON2ID, [
+                'memory_cost' => 65536, // 64 MB
+                'time_cost' => 4,       // 4 iterazioni
+                'threads' => 3          // 3 thread
+            ]);
             
             $stmt = $this->conn->prepare("
                 UPDATE admin_users 
@@ -448,6 +459,52 @@ class AdminAuth {
             error_log("Change password error: " . $e->getMessage());
             return ['success' => false, 'error' => 'Errore interno del server'];
         }
+    }
+    
+    /**
+     * Validazione password robusta
+     */
+    private function validatePassword($password) {
+        $errors = [];
+        
+        if (strlen($password) < 12) {
+            $errors[] = 'La password deve essere di almeno 12 caratteri';
+        }
+        
+        if (!preg_match('/[A-Z]/', $password)) {
+            $errors[] = 'La password deve contenere almeno una lettera maiuscola';
+        }
+        
+        if (!preg_match('/[a-z]/', $password)) {
+            $errors[] = 'La password deve contenere almeno una lettera minuscola';
+        }
+        
+        if (!preg_match('/[0-9]/', $password)) {
+            $errors[] = 'La password deve contenere almeno un numero';
+        }
+        
+        if (!preg_match('/[^A-Za-z0-9]/', $password)) {
+            $errors[] = 'La password deve contenere almeno un carattere speciale';
+        }
+        
+        return [
+            'valid' => empty($errors),
+            'error' => implode('. ', $errors)
+        ];
+    }
+    
+    /**
+     * Controlla timeout idle sessione
+     */
+    private function checkIdleTimeout() {
+        if (isset($_SESSION['admin_login_time'])) {
+            $idleTime = time() - $_SESSION['admin_login_time'];
+            if ($idleTime > $this->idleTimeout) {
+                $this->logout();
+                return false;
+            }
+        }
+        return true;
     }
     
     /**

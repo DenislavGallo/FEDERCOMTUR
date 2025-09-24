@@ -8,10 +8,16 @@
 // Avvia output buffering per catturare eventuali output indesiderati
 ob_start();
 
-// Enable error display per debug (temporaneo)
-ini_set('display_errors', 1);
-ini_set('log_errors', 1);
-error_reporting(E_ALL);
+// Debug solo in sviluppo (disabilitare in produzione)
+if (isset($_SERVER['HTTP_HOST']) && strpos($_SERVER['HTTP_HOST'], 'localhost') !== false) {
+    ini_set('display_errors', 1);
+    ini_set('log_errors', 1);
+    error_reporting(E_ALL);
+} else {
+    ini_set('display_errors', 0);
+    ini_set('log_errors', 1);
+    error_reporting(E_ERROR | E_WARNING | E_PARSE);
+}
 
 require_once __DIR__ . '/config/database.php';
 require_once __DIR__ . '/config/auth.php';
@@ -22,6 +28,18 @@ ob_clean();
 // Headers per API
 header('Content-Type: application/json; charset=utf-8');
 header('Access-Control-Allow-Credentials: true');
+
+// Security Headers
+header('X-Content-Type-Options: nosniff');
+header('X-Frame-Options: DENY');
+header('X-XSS-Protection: 1; mode=block');
+header('Referrer-Policy: strict-origin-when-cross-origin');
+header('Permissions-Policy: geolocation=(), microphone=(), camera=()');
+
+// Cache Control per API
+header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+header('Pragma: no-cache');
+header('Expires: Thu, 01 Jan 1970 00:00:00 GMT');
 
 // Gestione CORS per admin
 $allowedOrigins = [
