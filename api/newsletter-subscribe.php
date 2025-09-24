@@ -16,8 +16,8 @@ class NewsletterSubscriptionManager {
     private $listId;
     
     public function __construct() {
-        // Per ora usiamo una lista di test, poi configureremo quella reale
-        $this->listId = ''; // Sarà configurato quando avremo la lista
+        // Usa List ID da configurazione EmailOctopus
+        $this->listId = EMAILOCTOPUS_LIST_ID;
         $this->emailOctopus = getEmailOctopusManager($this->listId);
     }
     
@@ -42,11 +42,20 @@ class NewsletterSubscriptionManager {
                 ];
             }
             
+            // Controllo duplicati intelligente
+            if ($this->isDuplicateEmail($email)) {
+                return [
+                    'success' => false,
+                    'error' => 'Email già registrata',
+                    'already_subscribed' => true
+                ];
+            }
+            
             // Sanitizza dati aggiuntivi
             $cleanData = sanitizeEmailOctopusData($additionalData);
             
-            // Prepara campi per EmailOctopus
-            $fields = formatEmailOctopusFields($cleanData);
+            // Prepara campi per EmailOctopus con auto-estrazione nome da email
+            $fields = formatEmailOctopusFields($cleanData, $email);
             
             // Prepara tag
             $tags = ['website', 'federcomtur-est-europa'];
@@ -70,17 +79,28 @@ class NewsletterSubscriptionManager {
                     'success' => true,
                     'message' => $result['message'],
                     'provider' => 'emailoctopus',
-                    'status' => $result['status']
+                    'status' => $result['status'],
+                    'contact_id' => $result['contact_id'] ?? null
                 ];
             } else {
-                // Se EmailOctopus fallisce, salva localmente
+                // Gestione intelligente errori EmailOctopus
+                if (isset($result['http_code']) && $result['http_code'] === 409) {
+                    return [
+                        'success' => false,
+                        'error' => 'Email già registrata su EmailOctopus',
+                        'already_subscribed' => true
+                    ];
+                }
+                
+                // Se altri errori EmailOctopus, salva localmente
                 $localResult = $this->saveLocalSubscription($email, $fields, $tags, 'local_fallback');
                 
                 return [
                     'success' => true,
                     'message' => 'Iscrizione registrata. Verrai contattato presto!',
                     'provider' => 'local_fallback',
-                    'warning' => 'EmailOctopus temporaneamente non disponibile'
+                    'warning' => 'EmailOctopus temporaneamente non disponibile',
+                    'original_error' => $result['error']
                 ];
             }
             
@@ -98,6 +118,42 @@ class NewsletterSubscriptionManager {
         }
     }
     
+    /**
+     * Controlla se email già esistente (CSV locale)
+     */
+    private function isDuplicateEmail($email) {
+        $csvFile = __DIR__ . '/../data/newsletter_subscriptions.csv';
+        
+        if (!file_exists($csvFile)) {
+            return false; // File non esiste, nessun duplicato
+        }
+        
+        try {
+            $handle = fopen($csvFile, 'r');
+            if (!$handle) {
+                return false; // Errore lettura, permetti iscrizione
+            }
+            
+            // Salta header
+            fgetcsv($handle);
+            
+            // Controlla ogni riga
+            while (($data = fgetcsv($handle)) !== FALSE) {
+                if (isset($data[1]) && trim(strtolower($data[1])) === strtolower($email)) {
+                    fclose($handle);
+                    return true; // Duplicato trovato
+                }
+            }
+            
+            fclose($handle);
+            return false; // Nessun duplicato
+            
+        } catch (Exception $e) {
+            error_log('Errore controllo duplicati: ' . $e->getMessage());
+            return false; // In caso di errore, permetti iscrizione
+        }
+    }
+
     /**
      * Salva iscrizione localmente (backup o fallback)
      */
@@ -117,6 +173,14 @@ class NewsletterSubscriptionManager {
                 $_SERVER['REMOTE_ADDR'] ?? 'unknown',
                 $_SERVER['HTTP_USER_AGENT'] ?? 'unknown'
             ];
+            
+            // Controlla duplicato prima di salvare
+            if ($this->isDuplicateEmail($email)) {
+                return [
+                    'success' => false,
+                    'error' => 'Email già presente nel backup locale'
+                ];
+            }
             
             // Apri file in append mode
             $file = fopen($csvFile, 'a');
@@ -167,6 +231,62 @@ class NewsletterSubscriptionManager {
         return $this->emailOctopus->testConnection();
     }
     
+    /**
+     * Cleanup duplicati dal CSV esistente
+     */
+    public function cleanupDuplicates() {
+        $csvFile = __DIR__ . '/../data/newsletter_subscriptions.csv';
+        
+        if (!file_exists($csvFile)) {
+            return [
+                'success' => true,
+                'message' => 'Nessun file da pulire',
+                'removed' => 0
+            ];
+        }
+        
+        try {
+            $lines = file($csvFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+            $header = array_shift($lines); // Rimuovi header
+            
+            $uniqueEmails = [];
+            $cleanLines = [$header]; // Mantieni header
+            $removedCount = 0;
+            
+            foreach ($lines as $line) {
+                $data = str_getcsv($line);
+                if (isset($data[1]) && !empty($data[1])) {
+                    $email = strtolower(trim($data[1]));
+                    
+                    if (!in_array($email, $uniqueEmails)) {
+                        $uniqueEmails[] = $email;
+                        $cleanLines[] = $line;
+                    } else {
+                        $removedCount++;
+                        error_log("Duplicato rimosso: $email");
+                    }
+                }
+            }
+            
+            // Riscrivi file pulito
+            file_put_contents($csvFile, implode('', $cleanLines));
+            
+            return [
+                'success' => true,
+                'message' => "Rimossi $removedCount duplicati",
+                'removed' => $removedCount,
+                'unique_emails' => count($uniqueEmails)
+            ];
+            
+        } catch (Exception $e) {
+            error_log('Errore cleanup duplicati: ' . $e->getMessage());
+            return [
+                'success' => false,
+                'error' => 'Errore durante cleanup'
+            ];
+        }
+    }
+
     /**
      * Ottiene statistiche iscrizioni locali
      */
@@ -254,6 +374,10 @@ try {
                     
                 case 'stats':
                     $result = $subscriptionManager->getLocalStats();
+                    break;
+                    
+                case 'cleanup':
+                    $result = $subscriptionManager->cleanupDuplicates();
                     break;
                     
                 default:

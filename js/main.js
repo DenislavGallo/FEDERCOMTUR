@@ -89,10 +89,10 @@ const FederComTur = {
         // Resize events
         window.addEventListener('resize', this.throttle(this.handleResize.bind(this), 250));
         
-        // Form submission
-        if (this.elements.newsletterForm) {
-            this.elements.newsletterForm.addEventListener('submit', this.handleNewsletterSubmit.bind(this));
-        }
+        // Form submission - Gestito da newsletter.js (rimuovo duplicato)
+        // if (this.elements.newsletterForm) {
+        //     this.elements.newsletterForm.addEventListener('submit', this.handleNewsletterSubmit.bind(this));
+        // }
         
         // Keyboard navigation
         document.addEventListener('keydown', this.handleKeyboard.bind(this));
@@ -397,118 +397,17 @@ const FederComTur = {
         return labels[category] || category;
     },
     
-    // Handle newsletter form submission
-    handleNewsletterSubmit(e) {
-        e.preventDefault();
-        
-        const formData = new FormData(e.target);
-        const email = formData.get('email');
-        const consent = formData.get('consent');
-        const honeypot = formData.get('website');
-        
-        // Basic validation
-        if (!this.validateNewsletterForm(email, consent, honeypot)) {
-            return;
-        }
-        
-        this.submitNewsletter(email);
-    },
+    // DEPRECATED: Newsletter form handling spostato in newsletter.js
+    // handleNewsletterSubmit() - RIMOSSO per evitare conflitti
     
-    // Validate newsletter form
-    validateNewsletterForm(email, consent, honeypot) {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        let isValid = true;
-        
-        // Clear previous errors
-        this.clearFormErrors();
-        
-        // Honeypot check (spam protection)
-        if (honeypot) {
-            console.warn('Spam attempt detected');
-            return false;
-        }
-        
-        // Email validation
-        if (!email || !emailRegex.test(email)) {
-            this.showFieldError('email', 'Inserisci un indirizzo email valido');
-            isValid = false;
-        }
-        
-        // Consent validation
-        if (!consent) {
-            this.showFormError('Devi accettare la privacy policy per continuare');
-            isValid = false;
-        }
-        
-        return isValid;
-    },
+    // DEPRECATED: Newsletter validation spostato in newsletter.js
+    // validateNewsletterForm() - RIMOSSO per evitare conflitti
     
-    // Submit newsletter subscription
-    async submitNewsletter(email) {
-        const submitButton = document.getElementById('newsletter-submit');
-        const formStatus = document.getElementById('form-status');
-        
-        // Show loading state
-        submitButton.classList.add('loading');
-        submitButton.disabled = true;
-        
-        try {
-            // Simulate API call (replace with actual endpoint)
-            await new Promise(resolve => setTimeout(resolve, 2000));
-            
-            // Success
-            this.showFormSuccess('Grazie! Ti sei iscritto con successo alla newsletter.');
-            this.elements.newsletterForm.reset();
-            
-        } catch (error) {
-            console.error('Newsletter subscription error:', error);
-            this.showFormError('Si è verificato un errore. Riprova più tardi.');
-        } finally {
-            // Remove loading state
-            submitButton.classList.remove('loading');
-            submitButton.disabled = false;
-        }
-    },
+    // DEPRECATED: Newsletter submission spostato in newsletter.js  
+    // submitNewsletter() - RIMOSSO per evitare conflitti
     
-    // Form error/success handlers
-    clearFormErrors() {
-        document.querySelectorAll('.error-message').forEach(el => {
-            el.classList.remove('show');
-            el.textContent = '';
-        });
-        
-        const formStatus = document.getElementById('form-status');
-        if (formStatus) {
-            formStatus.className = 'form-status';
-            formStatus.style.display = 'none';
-        }
-    },
-    
-    showFieldError(fieldName, message) {
-        const errorEl = document.getElementById(`${fieldName}-error`);
-        if (errorEl) {
-            errorEl.textContent = message;
-            errorEl.classList.add('show');
-        }
-    },
-    
-    showFormError(message) {
-        const formStatus = document.getElementById('form-status');
-        if (formStatus) {
-            formStatus.className = 'form-status error';
-            formStatus.textContent = message;
-            formStatus.style.display = 'block';
-        }
-    },
-    
-    showFormSuccess(message) {
-        const formStatus = document.getElementById('form-status');
-        if (formStatus) {
-            formStatus.className = 'form-status success';
-            formStatus.textContent = message;
-            formStatus.style.display = 'block';
-        }
-    },
+    // DEPRECATED: Form error/success handlers spostati in newsletter.js
+    // clearFormErrors(), showFieldError(), showFormError(), showFormSuccess() - RIMOSSI
     
     // Handle resize events
     handleResize() {

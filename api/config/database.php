@@ -19,14 +19,14 @@ define('CHARSET', 'utf8mb4');
 define('ENVIRONMENT', 'development'); // development|production
 define('DEBUG_MODE', ENVIRONMENT === 'development');
 
-// Headers CORS per permettere richieste dal frontend
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type, Authorization');
-header('Content-Type: application/json; charset=utf-8');
+// Note: Headers CORS e Content-Type vengono gestiti dai singoli endpoint API
+// Non impostare headers globalmente da database.php per evitare conflitti
 
-// Gestione preflight requests (solo per richieste HTTP)
-if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+// Gestione preflight requests (solo se chiamato direttamente)
+if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'OPTIONS' && basename($_SERVER['SCRIPT_NAME']) === 'database.php') {
+    header('Access-Control-Allow-Origin: *');
+    header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
+    header('Access-Control-Allow-Headers: Content-Type, Authorization');
     http_response_code(200);
     exit();
 }

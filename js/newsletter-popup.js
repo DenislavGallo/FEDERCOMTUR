@@ -62,6 +62,7 @@ class NewsletterPopup {
                         <button type="submit" class="newsletter-popup-submit">
                             Iscriviti Gratuitamente
                         </button>
+                        <div class="popup-error-container" id="popup-error-container"></div>
                     </form>
                     <div class="newsletter-popup-footer">
                         Accettando, riceverai aggiornamenti settimanali da FederComTur.<br>
@@ -207,12 +208,26 @@ class NewsletterPopup {
                 }, 2000);
                 
             } else {
-                throw new Error(result.error || 'Errore sconosciuto');
+                const error = new Error(result.error || 'Errore sconosciuto');
+                error.apiResult = result;
+                throw error;
             }
             
         } catch (error) {
             console.error('Errore iscrizione newsletter popup:', error);
-            this.showError('Errore durante l\'iscrizione. Riprova più tardi.');
+            
+            // Gestione errori specifici per popup
+            let errorMessage = 'Errore durante l\'iscrizione. Riprova più tardi.';
+            
+            if (error.apiResult && error.apiResult.already_subscribed) {
+                errorMessage = 'Questa email è già registrata alla newsletter.';
+            } else if (error.message.includes('già registrata') || error.message.includes('duplicate')) {
+                errorMessage = 'Questa email è già registrata alla newsletter.';
+            } else if (error.message.includes('invalid') || error.message.includes('non valido')) {
+                errorMessage = 'Inserisci un indirizzo email valido.';
+            }
+            
+            this.showError(errorMessage);
             submitBtn.textContent = originalText;
             submitBtn.disabled = false;
         }
@@ -256,12 +271,26 @@ class NewsletterPopup {
                 this.showFooterSuccess(emailInput, result.message);
                 e.target.reset();
             } else {
-                throw new Error(result.error || 'Errore sconosciuto');
+                const error = new Error(result.error || 'Errore sconosciuto');
+                error.apiResult = result;
+                throw error;
             }
             
         } catch (error) {
             console.error('Errore iscrizione newsletter footer:', error);
-            this.showFooterError(emailInput, 'Errore durante l\'iscrizione. Riprova più tardi.');
+            
+            // Gestione errori specifici per footer
+            let errorMessage = 'Errore durante l\'iscrizione. Riprova più tardi.';
+            
+            if (error.apiResult && error.apiResult.already_subscribed) {
+                errorMessage = 'Questa email è già registrata alla newsletter.';
+            } else if (error.message.includes('già registrata') || error.message.includes('duplicate')) {
+                errorMessage = 'Questa email è già registrata alla newsletter.';
+            } else if (error.message.includes('invalid') || error.message.includes('non valido')) {
+                errorMessage = 'Inserisci un indirizzo email valido.';
+            }
+            
+            this.showFooterError(emailInput, errorMessage);
         } finally {
             submitBtn.textContent = originalText;
             submitBtn.disabled = false;
@@ -269,51 +298,61 @@ class NewsletterPopup {
     }
     
     showFooterError(inputElement, message) {
-        // Rimuovi errore precedente
-        const existingError = inputElement.parentNode.querySelector('.footer-error');
-        if (existingError) {
-            existingError.remove();
+        // Trova il contenitore errori dedicato
+        const errorContainer = document.getElementById('footer-error-container');
+        if (!errorContainer) {
+            console.error('Footer error container not found');
+            return;
         }
         
-        // Aggiungi nuovo errore
+        // Pulisci errori precedenti
+        errorContainer.innerHTML = '';
+        
+        // Aggiungi nuovo errore nel contenitore dedicato
         const errorDiv = document.createElement('div');
-        errorDiv.className = 'footer-error';
-        errorDiv.style.cssText = 'color: #ef4444; font-size: 0.8rem; margin-top: 8px; text-align: center;';
+        errorDiv.className = 'footer-error-message';
+        errorDiv.style.cssText = 'color: #ef4444; font-size: 0.85rem; margin-top: 12px; text-align: center; padding: 8px; background: rgba(239, 68, 68, 0.1); border-radius: 8px; border: 1px solid rgba(239, 68, 68, 0.2);';
         errorDiv.textContent = message;
         
-        inputElement.parentNode.appendChild(errorDiv);
+        errorContainer.appendChild(errorDiv);
         inputElement.style.borderColor = '#ef4444';
         
-        // Rimuovi errore dopo 5 secondi
+        // Rimuovi errore dopo 8 secondi
         setTimeout(() => {
             if (errorDiv.parentNode) {
                 errorDiv.remove();
                 inputElement.style.borderColor = '';
             }
-        }, 5000);
+        }, 8000);
     }
     
     showFooterSuccess(inputElement, message) {
-        // Rimuovi errore precedente
-        const existingError = inputElement.parentNode.querySelector('.footer-error');
-        if (existingError) {
-            existingError.remove();
+        // Trova il contenitore errori (riutilizziamo per successi)
+        const errorContainer = document.getElementById('footer-error-container');
+        if (!errorContainer) {
+            console.error('Footer error container not found');
+            return;
         }
         
-        // Aggiungi messaggio successo
+        // Pulisci contenuto precedente
+        errorContainer.innerHTML = '';
+        
+        // Aggiungi messaggio successo nel contenitore dedicato
         const successDiv = document.createElement('div');
-        successDiv.className = 'footer-success';
-        successDiv.style.cssText = 'color: #16a34a; font-size: 0.8rem; margin-top: 8px; text-align: center; font-weight: 600;';
+        successDiv.className = 'footer-success-message';
+        successDiv.style.cssText = 'color: #16a34a; font-size: 0.85rem; margin-top: 12px; text-align: center; font-weight: 600; padding: 8px; background: rgba(22, 163, 74, 0.1); border-radius: 8px; border: 1px solid rgba(22, 163, 74, 0.2);';
         successDiv.textContent = '✅ ' + message;
         
-        inputElement.parentNode.appendChild(successDiv);
+        errorContainer.appendChild(successDiv);
+        inputElement.style.borderColor = '#16a34a';
         
-        // Rimuovi messaggio dopo 5 secondi
+        // Rimuovi messaggio dopo 6 secondi
         setTimeout(() => {
             if (successDiv.parentNode) {
                 successDiv.remove();
+                inputElement.style.borderColor = '';
             }
-        }, 5000);
+        }, 6000);
     }
     
     showSuccess(message) {
@@ -327,29 +366,32 @@ class NewsletterPopup {
     
     showError(message) {
         const emailInput = document.getElementById('newsletter-popup-email');
+        const errorContainer = document.getElementById('popup-error-container');
         
-        // Rimuovi errore precedente
-        const existingError = document.querySelector('.popup-error-message');
-        if (existingError) {
-            existingError.remove();
+        if (!errorContainer) {
+            console.error('Popup error container not found');
+            return;
         }
         
-        // Aggiungi nuovo errore
+        // Pulisci errori precedenti
+        errorContainer.innerHTML = '';
+        
+        // Aggiungi nuovo errore nel contenitore dedicato
         const errorDiv = document.createElement('div');
         errorDiv.className = 'popup-error-message';
-        errorDiv.style.cssText = 'color: #ef4444; font-size: 0.85rem; margin-top: 8px; text-align: center;';
+        errorDiv.style.cssText = 'color: #ef4444; font-size: 0.85rem; margin-top: 12px; text-align: center; padding: 8px; background: rgba(239, 68, 68, 0.1); border-radius: 8px; border: 1px solid rgba(239, 68, 68, 0.2);';
         errorDiv.textContent = message;
         
-        emailInput.parentNode.appendChild(errorDiv);
+        errorContainer.appendChild(errorDiv);
         emailInput.style.borderColor = '#ef4444';
         
-        // Rimuovi errore dopo 5 secondi
+        // Rimuovi errore dopo 8 secondi
         setTimeout(() => {
             if (errorDiv.parentNode) {
                 errorDiv.remove();
                 emailInput.style.borderColor = '';
             }
-        }, 5000);
+        }, 8000);
     }
     
     isValidEmail(email) {

@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Admin - FederComTur</title>
+    <meta name="description" content="Area riservata amministratori FederComTur">
+    <meta name="robots" content="noindex, nofollow">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/components.css">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Stili specifici per login admin */
+        body {
+            background: linear-gradient(135deg, var(--primary-navy) 0%, #0369a1 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Figtree', sans-serif;
+        }
+        
+        .admin-login-container {
+            background: white;
+            border-radius: var(--radius-xl);
+            box-shadow: 0 25px 50px rgba(11, 20, 38, 0.3);
+            padding: 3rem;
+            width: 100%;
+            max-width: 450px;
+            margin: 2rem;
+        }
+        
+        .admin-login-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .admin-login-logo {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary-navy) 0%, var(--secondary-emerald) 100%);
+            border-radius: 50%;
+            color: white;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        .admin-login-title {
+            font-size: 1.875rem;
+            font-weight: 700;
+            color: var(--primary-navy);
+            margin-bottom: 0.5rem;
+        }
+        
+        .admin-login-subtitle {
+            color: var(--gray-600);
+            font-size: 0.95rem;
+        }
+        
+        .admin-login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .form-label {
+            font-weight: 600;
+            color: var(--gray-800);
+            font-size: 0.9rem;
+        }
+        
+        .form-input {
+            padding: 0.875rem 1rem;
+            border: 2px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            background: white;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--secondary-emerald);
+            box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
+        }
+        
+        .form-input.error {
+            border-color: #ef4444;
+            background: #fef2f2;
+        }
+        
+        .form-checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .form-checkbox {
+            width: 1.2rem;
+            height: 1.2rem;
+            border: 2px solid var(--gray-300);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+        }
+        
+        .form-checkbox:checked {
+            background: var(--secondary-emerald);
+            border-color: var(--secondary-emerald);
+        }
+        
+        .checkbox-label {
+            font-size: 0.9rem;
+            color: var(--gray-700);
+            cursor: pointer;
+        }
+        
+        .login-button {
+            background: linear-gradient(135deg, var(--primary-navy) 0%, var(--secondary-emerald) 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: var(--radius-lg);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .login-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(11, 20, 38, 0.3);
+        }
+        
+        .login-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .login-button.loading {
+            color: transparent;
+        }
+        
+        .login-button .spinner {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            display: none;
+        }
+        
+        .login-button.loading .spinner {
+            display: block;
+        }
+        
+        @keyframes spin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+        
+        .error-message {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #dc2626;
+            padding: 0.875rem;
+            border-radius: var(--radius-lg);
+            font-size: 0.9rem;
+            display: none;
+        }
+        
+        .error-message.show {
+            display: block;
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .admin-login-footer {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--gray-200);
+        }
+        
+        .back-to-site {
+            color: var(--gray-600);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s ease;
+        }
+        
+        .back-to-site:hover {
+            color: var(--secondary-emerald);
+        }
+        
+        /* Responsive */
+        @media (max-width: 480px) {
+            .admin-login-container {
+                padding: 2rem 1.5rem;
+                margin: 1rem;
+            }
+            
+            .admin-login-title {
+                font-size: 1.5rem;
+            }
+        }
+        
+        /* Security indicators */
+        .security-indicators {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+            font-size: 0.8rem;
+            color: var(--gray-500);
+        }
+        
+        .security-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        
+        .security-icon {
+            width: 12px;
+            height: 12px;
+            color: var(--secondary-emerald);
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-login-container">
+        <div class="admin-login-header">
+            <div class="admin-login-logo">FC</div>
+            <h1 class="admin-login-title">Area Admin</h1>
+            <p class="admin-login-subtitle">
+                Accesso riservato agli amministratori FederComTur
+            </p>
+        </div>
+        
+        <form class="admin-login-form" id="admin-login-form">
+            <div class="error-message" id="error-message"></div>
+            
+            <div class="form-group">
+                <label for="username" class="form-label">Username o Email</label>
+                <input 
+                    type="text" 
+                    id="username" 
+                    name="username" 
+                    class="form-input" 
+                    required 
+                    autocomplete="username"
+                    placeholder="admin@federcomtur.it"
+                >
+            </div>
+            
+            <div class="form-group">
+                <label for="password" class="form-label">Password</label>
+                <input 
+                    type="password" 
+                    id="password" 
+                    name="password" 
+                    class="form-input" 
+                    required 
+                    autocomplete="current-password"
+                    placeholder="••••••••"
+                >
+            </div>
+            
+            <div class="form-checkbox-group">
+                <input type="checkbox" id="remember-me" name="remember_me" class="form-checkbox">
+                <label for="remember-me" class="checkbox-label">Ricordami per 30 giorni</label>
+            </div>
+            
+            <button type="submit" class="login-button" id="login-button">
+                <span class="button-text">Accedi</span>
+                <div class="spinner"></div>
+            </button>
+        </form>
+        
+        <div class="security-indicators">
+            <div class="security-indicator">
+                <svg class="security-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                    <circle cx="12" cy="16" r="1"/>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+                <span>Connessione sicura</span>
+            </div>
+            <div class="security-indicator">
+                <svg class="security-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M9 12l2 2 4-4"/>
+                    <path d="M21 12c-1 0-3-1-3-3s2-3 3-3 3 1 3 3-2 3-3 3"/>
+                    <path d="M3 12c1 0 3-1 3-3s-2-3-3-3-3 1-3 3 2 3 3 3"/>
+                    <path d="M3 12h6m6 0h6"/>
+                </svg>
+                <span>Autenticazione 2FA</span>
+            </div>
+        </div>
+        
+        <div class="admin-login-footer">
+            <a href="index.html" class="back-to-site">
+                ← Torna al sito pubblico
+            </a>
+        </div>
+    </div>
+
+    <script>
+        class AdminLogin {
+            constructor() {
+                this.form = document.getElementById('admin-login-form');
+                this.errorMessage = document.getElementById('error-message');
+                this.loginButton = document.getElementById('login-button');
+                this.usernameInput = document.getElementById('username');
+                this.passwordInput = document.getElementById('password');
+                
+                this.init();
+            }
+            
+            init() {
+                this.form.addEventListener('submit', (e) => this.handleSubmit(e));
+                
+                // Reset errori quando l'utente modifica i campi
+                [this.usernameInput, this.passwordInput].forEach(input => {
+                    input.addEventListener('input', () => this.clearErrors());
+                });
+                
+                // Verifica se già autenticato
+                this.checkExistingAuth();
+            }
+            
+            async checkExistingAuth() {
+                try {
+                    // Bypass redirect automatico se presente ?force=1
+                    const url = new URL(window.location.href);
+                    if (url.searchParams.get('force') === '1') {
+                        return;
+                    }
+
+                    const response = await fetch('api/admin-auth.php?action=check', {
+                        credentials: 'include'
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (data.success && data.data.authenticated) {
+                        // Già autenticato, reindirizza
+                        window.location.href = 'admin-dashboard.php';
+                    }
+                } catch (error) {
+                    console.log('Auth check failed:', error);
+                }
+            }
+            
+            async handleSubmit(e) {
+                e.preventDefault();
+                
+                const formData = new FormData(this.form);
+                const credentials = {
+                    username: formData.get('username').trim(),
+                    password: formData.get('password'),
+                    remember_me: formData.get('remember_me') === 'on'
+                };
+                
+                // Validazione client-side
+                if (!this.validateForm(credentials)) {
+                    return;
+                }
+                
+                this.setLoading(true);
+                
+                try {
+                    const response = await fetch('api/admin-auth.php?action=login', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        credentials: 'include',
+                        body: JSON.stringify(credentials)
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        // Login successful
+                        this.showSuccess('Login effettuato con successo!');
+                        
+                        // Reindirizza dopo breve delay
+                        setTimeout(() => {
+                            window.location.href = 'admin-dashboard.php';
+                        }, 1000);
+                        
+                    } else {
+                        this.showError(data.error || 'Errore durante il login');
+                    }
+                    
+                } catch (error) {
+                    console.error('Login error:', error);
+                    this.showError('Errore di connessione. Riprova più tardi.');
+                } finally {
+                    this.setLoading(false);
+                }
+            }
+            
+            validateForm(credentials) {
+                this.clearErrors();
+                
+                if (!credentials.username) {
+                    this.showError('Username o email richiesto');
+                    this.usernameInput.focus();
+                    return false;
+                }
+                
+                if (!credentials.password) {
+                    this.showError('Password richiesta');
+                    this.passwordInput.focus();
+                    return false;
+                }
+                
+                if (credentials.password.length < 6) {
+                    this.showError('Password troppo corta');
+                    this.passwordInput.focus();
+                    return false;
+                }
+                
+                return true;
+            }
+            
+            showError(message) {
+                this.errorMessage.textContent = message;
+                this.errorMessage.classList.add('show');
+                
+                // Evidenzia campi con errore
+                [this.usernameInput, this.passwordInput].forEach(input => {
+                    input.classList.add('error');
+                });
+            }
+            
+            showSuccess(message) {
+                this.errorMessage.style.background = '#f0fdf4';
+                this.errorMessage.style.borderColor = '#bbf7d0';
+                this.errorMessage.style.color = '#166534';
+                this.errorMessage.textContent = message;
+                this.errorMessage.classList.add('show');
+            }
+            
+            clearErrors() {
+                this.errorMessage.classList.remove('show');
+                this.errorMessage.style.background = '';
+                this.errorMessage.style.borderColor = '';
+                this.errorMessage.style.color = '';
+                
+                [this.usernameInput, this.passwordInput].forEach(input => {
+                    input.classList.remove('error');
+                });
+            }
+            
+            setLoading(loading) {
+                this.loginButton.disabled = loading;
+                
+                if (loading) {
+                    this.loginButton.classList.add('loading');
+                } else {
+                    this.loginButton.classList.remove('loading');
+                }
+            }
+        }
+        
+        // Inizializza quando il DOM è pronto
+        document.addEventListener('DOMContentLoaded', () => {
+            new AdminLogin();
+        });
+        
+        // Prevenire back button dopo logout
+        if (performance.navigation.type === 2) {
+            location.reload();
+        }
+    </script>
+</body>
+</html>

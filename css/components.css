@@ -172,7 +172,7 @@
 }
 
 .footer-container {
-    max-width: 1200px;
+    max-width: 1500px;
     margin: 0 auto;
     padding: 0 var(--space-6);
 }
@@ -180,7 +180,7 @@
 .footer-grid {
     display: grid;
     grid-template-columns: 2fr 1fr 1fr 1.5fr;
-    gap: var(--space-20);
+    gap: var(--space-24);
     margin-bottom: var(--space-12);
 }
 
@@ -270,13 +270,19 @@
 }
 
 .footer-newsletter .input-wrapper {
-    max-width: 400px;
+    max-width: 600px;
     margin: 0;
 }
 
-.footer-newsletter .form-input {
+.footer-newsletter .input-wrapper .form-input {
     height: 44px;
     font-size: var(--text-sm);
+    background: transparent !important;
+    border: none;
+    box-shadow: none;
+    transition: none;
+    position: relative;
+    z-index: 1;
 }
 
 .footer-newsletter .btn-footer {

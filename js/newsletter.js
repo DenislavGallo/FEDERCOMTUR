@@ -233,7 +233,9 @@ const FederNewsletter = {
             
         } catch (error) {
             console.error('❌ Newsletter subscription error:', error);
-            this.handleFailedSubmission(error);
+            // Estrai apiResult se disponibile nell'error object
+            const apiResult = error.apiResult || null;
+            this.handleFailedSubmission(error, apiResult);
         } finally {
             this.endSubmission();
         }
@@ -276,7 +278,9 @@ const FederNewsletter = {
         const result = await response.json();
         
         if (!result.success) {
-            throw new Error(result.error || 'Errore durante l\'iscrizione');
+            const error = new Error(result.error || 'Errore durante l\'iscrizione');
+            error.apiResult = result; // Passa il result per analisi errore
+            throw error;
         }
         
         return result;
@@ -366,19 +370,37 @@ const FederNewsletter = {
     },
     
     // Handle failed submission
-    handleFailedSubmission(error) {
+    handleFailedSubmission(error, result = null) {
         let errorMessage = 'Si è verificato un errore durante l\'iscrizione. Riprova più tardi.';
         
-        // Customize error messages
-        if (error.message.includes('duplicate') || error.message.includes('già iscritto')) {
-            errorMessage = 'Questo indirizzo email è già iscritto alla newsletter.';
-        } else if (error.message.includes('invalid')) {
+        // Controlla response API per errore specifico
+        if (result && result.already_subscribed) {
+            errorMessage = 'Questa email è già registrata alla newsletter.';
+        } else if (error.message.includes('già registrata') || error.message.includes('duplicate') || error.message.includes('già iscritto')) {
+            errorMessage = 'Questa email è già registrata alla newsletter.';
+        } else if (error.message.includes('invalid') || error.message.includes('non valido')) {
             errorMessage = 'L\'indirizzo email non è valido.';
         } else if (error.message.includes('network') || error.message.includes('failed to fetch')) {
             errorMessage = 'Problema di connessione. Verifica la tua connessione internet e riprova.';
         }
         
-        this.showError(errorMessage);
+        this.showFieldError('email', errorMessage);
+        
+        // Gestione stato visuale bottone errore
+        const submitButton = document.getElementById('newsletter-submit');
+        if (submitButton) {
+            submitButton.classList.remove('loading', 'success');
+            submitButton.classList.add('error');
+            submitButton.innerHTML = '<span class="btn-text" style="color: #ffffff !important;">Riprova</span>';
+            
+            // Reset bottone dopo 4 secondi
+            setTimeout(() => {
+                if (submitButton.classList.contains('error')) {
+                    submitButton.classList.remove('error');
+                    submitButton.innerHTML = '<span class="btn-text">Subscribe</span><span class="btn-loading"><svg class="spinner" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none" stroke-dasharray="31.4" stroke-dashoffset="31.4"/></svg></span>';
+                }
+            }, 4000);
+        }
         
         // Animate error if GSAP is available
         if (typeof FederAnimations !== 'undefined') {
@@ -412,6 +434,8 @@ const FederNewsletter = {
         const submitButton = document.getElementById('newsletter-submit');
         
         if (submitButton) {
+            // Non rimuovere classi success/error in endSubmission
+            // Vengono gestite dai rispettivi handler o reset automatico
             submitButton.classList.remove('loading');
             submitButton.disabled = false;
             submitButton.removeAttribute('aria-busy');

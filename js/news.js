@@ -101,9 +101,17 @@ class NewsManager {
         const filterButtons = document.querySelectorAll('.filter-btn');
         filterButtons.forEach(btn => {
             btn.addEventListener('click', (e) => {
-                const category = e.target.dataset.category;
-                this.filterNews(category);
-                this.updateActiveFilter(e.target);
+                // Fix bug pallini colorati: usa currentTarget invece di target
+                // currentTarget = bottone cliccato, target = elemento specifico (pallino o testo)
+                const button = e.currentTarget;
+                const category = button.dataset.category;
+                
+                if (category) {
+                    this.filterNews(category);
+                    this.updateActiveFilter(button);
+                } else {
+                    console.error('❌ No category found for filter button');
+                }
             });
         });
         
@@ -175,6 +183,9 @@ class NewsManager {
         this.currentFilter = category;
         this.currentPage = 1;
         
+        // Feedback visivo filtro in corso
+        this.showFilteringFeedback();
+        
         if (category === 'all') {
             this.filteredNews = [...this.newsData];
         } else {
@@ -182,6 +193,97 @@ class NewsManager {
         }
         
         this.displayNews();
+        
+        // Scroll automatico al top della sezione notizie
+        this.scrollToNewsSection();
+    }
+    
+    /**
+     * Feedback visivo durante filtrazione
+     */
+    showFilteringFeedback() {
+        const newsGrid = document.getElementById('news-grid');
+        if (newsGrid) {
+            newsGrid.style.opacity = '0.7';
+            newsGrid.style.transform = 'translateY(10px)';
+            
+            // Reset feedback dopo scroll
+            setTimeout(() => {
+                newsGrid.style.opacity = '1';
+                newsGrid.style.transform = 'translateY(0)';
+            }, 400);
+        }
+    }
+    
+    /**
+     * Scroll automatico alla sezione notizie
+     */
+    scrollToNewsSection() {
+        // Piccolo delay per permettere al DOM di aggiornarsi dopo il filtro
+        setTimeout(() => {
+            const newsSection = document.querySelector('.news-content');
+            
+            if (newsSection) {
+                // Calcola offset per compensare elementi sticky
+                const navbar = document.querySelector('.navbar');
+                const filtersSection = document.querySelector('.news-filters');
+                
+                let totalOffset = 0; // Inizia da 0
+                
+                // Aggiungi altezza navbar se presente
+                if (navbar) {
+                    const navbarRect = navbar.getBoundingClientRect();
+                    totalOffset += navbarRect.height;
+                }
+                
+                // Aggiungi altezza filtri (sticky)
+                if (filtersSection) {
+                    const filtersRect = filtersSection.getBoundingClientRect();
+                    totalOffset += filtersRect.height;
+                }
+                
+                // Padding extra per visibilità migliore
+                totalOffset += 20;
+                
+                const targetPosition = newsSection.offsetTop - totalOffset;
+                const clampedPosition = Math.max(0, targetPosition);
+                
+                // Smooth scroll
+                window.scrollTo({
+                    top: clampedPosition,
+                    behavior: 'smooth'
+                });
+            } else {
+                console.warn('⚠️ News section not found for auto-scroll');
+            }
+        }, 100); // 100ms delay per stabilità
+    }
+    
+    /**
+     * Smooth scroll fallback per browser senza supporto nativo
+     */
+    smoothScrollTo(targetY, duration) {
+        const startY = window.pageYOffset;
+        const distance = targetY - startY;
+        const startTime = performance.now();
+        
+        const easeInOutCubic = (t) => {
+            return t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1;
+        };
+        
+        const animateScroll = (currentTime) => {
+            const timeElapsed = currentTime - startTime;
+            const progress = Math.min(timeElapsed / duration, 1);
+            const easedProgress = easeInOutCubic(progress);
+            
+            window.scrollTo(0, startY + distance * easedProgress);
+            
+            if (progress < 1) {
+                requestAnimationFrame(animateScroll);
+            }
+        };
+        
+        requestAnimationFrame(animateScroll);
     }
     
     updateActiveFilter(activeButton) {

@@ -150,9 +150,9 @@ class EmailOctopusManager {
     }
     
     /**
-     * Effettua chiamata API con cURL
+     * Effettua chiamata API con cURL e retry logic
      */
-    private function makeApiCall($url, $data = null, $method = 'POST') {
+    private function makeApiCall($url, $data = null, $method = 'POST', $retryCount = 0) {
         $curl = curl_init();
         
         // Configurazione base cURL
@@ -192,6 +192,7 @@ class EmailOctopusManager {
         $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
         $error = curl_error($curl);
         
+        
         curl_close($curl);
         
         // Gestione errori cURL
@@ -205,7 +206,7 @@ class EmailOctopusManager {
         // Decodifica risposta
         $responseData = json_decode($response, true);
         
-        // Gestione codici HTTP
+        // Gestione codici HTTP con retry logic
         if ($httpCode >= 200 && $httpCode < 300) {
             return [
                 'success' => true,
@@ -213,6 +214,14 @@ class EmailOctopusManager {
                 'http_code' => $httpCode
             ];
         } else {
+            // Gestione retry per errori temporanei
+            if ($this->shouldRetry($httpCode, $retryCount)) {
+                $waitTime = $this->calculateBackoff($retryCount);
+                error_log("EmailOctopus retry #" . ($retryCount + 1) . " after {$waitTime}s for HTTP $httpCode");
+                sleep($waitTime);
+                return $this->makeApiCall($url, $data, $method, $retryCount + 1);
+            }
+            
             $errorMessage = 'Errore HTTP ' . $httpCode;
             
             // Estrai messaggio di errore da EmailOctopus se disponibile
@@ -229,7 +238,8 @@ class EmailOctopusManager {
                 'error' => $errorMessage,
                 'http_code' => $httpCode,
                 'response' => $responseData,
-                'raw_response' => $response
+                'raw_response' => $response,
+                'retry_attempted' => $retryCount > 0
             ];
         }
     }
@@ -254,6 +264,36 @@ class EmailOctopusManager {
         ];
     }
     
+    /**
+     * Determina se un errore HTTP deve essere ritentato
+     */
+    private function shouldRetry($httpCode, $retryCount) {
+        $maxRetries = 3;
+        
+        if ($retryCount >= $maxRetries) {
+            return false;
+        }
+        
+        // Retry per errori temporanei
+        $retryableErrors = [
+            429, // Rate limit
+            500, // Server error
+            502, // Bad gateway
+            503, // Service unavailable
+            504  // Gateway timeout
+        ];
+        
+        return in_array($httpCode, $retryableErrors);
+    }
+    
+    /**
+     * Calcola tempo attesa exponential backoff
+     */
+    private function calculateBackoff($retryCount) {
+        // Exponential backoff: 1s, 2s, 4s
+        return min(pow(2, $retryCount), 8);
+    }
+
     /**
      * Test connessione EmailOctopus
      */
@@ -317,22 +357,124 @@ function sanitizeEmailOctopusData($data) {
 }
 
 /**
- * Formatta campi per EmailOctopus
+ * Estrae nome e cognome dall'indirizzo email
  */
-function formatEmailOctopusFields($data) {
+function extractNameFromEmail($email) {
+    $email = strtolower(trim($email));
+    $localPart = explode('@', $email)[0];
+    
+    // Pattern comuni per nomi negli email italiani/europei
+    $patterns = [
+        // mario.rossi, giovanni.verdi
+        '/^([a-z]+)\.([a-z]+)$/',
+        // mario_rossi, giovanni_verdi  
+        '/^([a-z]+)_([a-z]+)$/',
+        // mariorossi (difficile da separare, prova con vocali)
+        '/^([a-z]{3,})([a-z]{3,})$/',
+        // m.rossi, g.verdi
+        '/^([a-z])\.([a-z]+)$/',
+        // mario.r, giovanni.v
+        '/^([a-z]+)\.([a-z])$/',
+        // mario123, giovanni456 (rimuovi numeri)
+        '/^([a-z]+)\d*$/'
+    ];
+    
+    foreach ($patterns as $pattern) {
+        if (preg_match($pattern, $localPart, $matches)) {
+            switch ($pattern) {
+                case '/^([a-z]+)\.([a-z]+)$/':
+                case '/^([a-z]+)_([a-z]+)$/':
+                    return [
+                        'first_name' => ucfirst($matches[1]),
+                        'last_name' => ucfirst($matches[2]),
+                        'confidence' => 'high'
+                    ];
+                    
+                case '/^([a-z])\.([a-z]+)$/':
+                    return [
+                        'first_name' => strtoupper($matches[1]),
+                        'last_name' => ucfirst($matches[2]),
+                        'confidence' => 'medium'
+                    ];
+                    
+                case '/^([a-z]+)\.([a-z])$/':
+                    return [
+                        'first_name' => ucfirst($matches[1]),
+                        'last_name' => strtoupper($matches[2]),
+                        'confidence' => 'medium'
+                    ];
+                    
+                case '/^([a-z]+)\d*$/':
+                    return [
+                        'first_name' => ucfirst($matches[1]),
+                        'last_name' => '',
+                        'confidence' => 'low'
+                    ];
+            }
+        }
+    }
+    
+    // Nomi composti più comuni in Italia
+    $commonNames = [
+        'mariateresa' => ['Maria', 'Teresa'],
+        'mariagrazia' => ['Maria', 'Grazia'],
+        'giuseppina' => ['Giuseppina', ''],
+        'francesco' => ['Francesco', ''],
+        'alessandro' => ['Alessandro', ''],
+        'antonietta' => ['Antonietta', '']
+    ];
+    
+    if (isset($commonNames[$localPart])) {
+        return [
+            'first_name' => $commonNames[$localPart][0],
+            'last_name' => $commonNames[$localPart][1],
+            'confidence' => 'medium'
+        ];
+    }
+    
+    return [
+        'first_name' => '',
+        'last_name' => '',
+        'confidence' => 'none'
+    ];
+}
+
+/**
+ * Formatta campi per EmailOctopus con auto-estrazione da email
+ */
+function formatEmailOctopusFields($data, $email = null) {
     $fields = [];
     
-    // Mappa campi comuni
-    if (isset($data['first_name'])) {
+    // Usa dati forniti se disponibili
+    if (isset($data['first_name']) && !empty($data['first_name'])) {
         $fields['FirstName'] = $data['first_name'];
     }
     
-    if (isset($data['last_name'])) {
+    if (isset($data['last_name']) && !empty($data['last_name'])) {
         $fields['LastName'] = $data['last_name'];
     }
     
-    if (isset($data['company'])) {
+    if (isset($data['company']) && !empty($data['company'])) {
         $fields['Company'] = $data['company'];
+    }
+    
+    // Se nome/cognome mancanti e email disponibile, prova estrazione
+    if ($email && (empty($fields['FirstName']) || empty($fields['LastName']))) {
+        $extracted = extractNameFromEmail($email);
+        
+        if ($extracted['confidence'] !== 'none') {
+            if (empty($fields['FirstName']) && !empty($extracted['first_name'])) {
+                $fields['FirstName'] = $extracted['first_name'];
+                $fields['_ExtractedFirstName'] = true; // Debug info
+            }
+            
+            if (empty($fields['LastName']) && !empty($extracted['last_name'])) {
+                $fields['LastName'] = $extracted['last_name'];
+                $fields['_ExtractedLastName'] = true; // Debug info
+            }
+            
+            $fields['_ExtractionConfidence'] = $extracted['confidence'];
+        }
     }
     
     return $fields;
