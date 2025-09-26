@@ -91,7 +91,7 @@ class ServicesPage {
                     </svg>
                 </button>
                 <div class="carousel-progress" id="carousel-progress">
-                    <div class="carousel-progress-bar">
+                    <div class="carousel-progress-bar" id="carousel-progress-bar">
                         <div class="carousel-progress-fill" id="carousel-progress-fill"></div>
                     </div>
                 </div>
@@ -162,6 +162,7 @@ class ServicesPage {
                 progressBar: !!progressBar,
                 progressFill: !!progressFill
             });
+            console.log('Tutti gli elementi con ID carousel:', document.querySelectorAll('[id*="carousel"]'));
             return;
         }
 
