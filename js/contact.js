@@ -244,7 +244,7 @@ class ContactFormHandler {
     }
     
     async submitToBackend(formData) {
-        const response = await fetch('api/simple-contact-form.php', {
+        const response = await fetch('api/real-email-contact.php', {
             method: 'POST',
             body: formData,
             headers: {
