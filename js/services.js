@@ -186,7 +186,7 @@ class ServicesPage {
             
             // Update progress bean position
             const progressPercentage = (currentIndex / maxIndex) * 100;
-            const beanPosition = (progressPercentage / 100) * (progressBar.offsetWidth - 12); // 12px = bean width
+            const beanPosition = (progressPercentage / 100) * (progressBar.offsetWidth - 20); // 20px = bean width
             progressBean.style.left = `${beanPosition}px`;
         };
 
