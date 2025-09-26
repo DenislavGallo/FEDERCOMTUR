@@ -205,6 +205,21 @@ class ServicesPage {
             updateCarousel();
         };
 
+        const snapToNearestCard = () => {
+            // Calcola la posizione attuale del track
+            const currentTransform = track.style.transform;
+            const currentTranslateX = parseFloat(currentTransform.match(/-?\d+/) || 0);
+            
+            // Calcola l'indice più vicino
+            const nearestIndex = Math.round(-currentTranslateX / cardWidth);
+            
+            // Limita l'indice ai bounds
+            const clampedIndex = Math.max(0, Math.min(nearestIndex, maxIndex));
+            
+            currentIndex = clampedIndex;
+            updateCarousel();
+        };
+
         // Event listeners
         nextBtn.addEventListener('click', nextSlide);
         prevBtn.addEventListener('click', prevSlide);
@@ -245,18 +260,8 @@ class ServicesPage {
             track.style.cursor = 'grab';
             track.style.transition = 'transform 0.3s ease';
             
-            const diffX = currentX - startX;
-            const threshold = cardWidth / 3;
-            
-            if (Math.abs(diffX) > threshold) {
-                if (diffX > 0) {
-                    prevSlide();
-                } else {
-                    nextSlide();
-                }
-            } else {
-                updateCarousel();
-            }
+            // Snap alla card più vicina senza scroll infinito
+            snapToNearestCard();
         });
 
         track.addEventListener('mouseleave', () => {
@@ -264,7 +269,7 @@ class ServicesPage {
                 isDragging = false;
                 track.style.cursor = 'grab';
                 track.style.transition = 'transform 0.3s ease';
-                updateCarousel();
+                snapToNearestCard();
             }
         });
 
@@ -292,18 +297,8 @@ class ServicesPage {
             isDragging = false;
             track.style.transition = 'transform 0.3s ease';
             
-            const diffX = currentX - startX;
-            const threshold = cardWidth / 3;
-            
-            if (Math.abs(diffX) > threshold) {
-                if (diffX > 0) {
-                    prevSlide();
-                } else {
-                    nextSlide();
-                }
-            } else {
-                updateCarousel();
-            }
+            // Snap alla card più vicina senza scroll infinito
+            snapToNearestCard();
         });
 
         // Keyboard navigation
