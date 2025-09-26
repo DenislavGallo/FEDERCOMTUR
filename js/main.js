@@ -31,8 +31,13 @@ const FederComTur = {
         this.cacheElements();
         this.bindEvents();
         this.initComponents();
-        this.loadNewsData();
-        this.initServicesCarousel(); // Riabilitato per homepage
+        
+        // Load news data solo se non siamo nella pagina servizi
+        const isServicesPage = window.location.pathname.includes('servizi.html');
+        if (!isServicesPage) {
+            this.loadNewsData();
+            this.initServicesCarousel(); // Riabilitato per homepage
+        }
         
         // Initialize smooth scroll (replaces old initSmoothScrolling)
         this.initSmoothScroll();
@@ -111,6 +116,12 @@ const FederComTur = {
         this.initNewsletterSection();
         // initSmoothScrolling() rimosso - sostituito da initSmoothScroll() in init()
         this.initAccessibility();
+        
+        // Initialize news (solo se non siamo nella pagina servizi)
+        const isServicesPage = window.location.pathname.includes('servizi.html');
+        if (!isServicesPage && typeof NewsPage !== 'undefined') {
+            new NewsPage();
+        }
     },
     
     // Toggle mobile menu
@@ -350,6 +361,13 @@ const FederComTur = {
     
     // Render news cards
     renderNewsCards(newsData) {
+        // Controlla se siamo nella pagina servizi.html (non ha newsCards)
+        const isServicesPage = window.location.pathname.includes('servizi.html');
+        if (isServicesPage) {
+            console.log('Pagina servizi: newsCards non necessarie');
+            return;
+        }
+        
         if (!this.elements.newsCards || !newsData) {
             console.warn('newsCards container mancante o newsData vuoto', this.elements.newsCards, newsData);
             return;
