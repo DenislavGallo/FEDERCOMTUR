@@ -201,12 +201,8 @@ class ContactFormHandler {
         $message = $this->buildEmailMessage();
         $headers = $this->buildEmailHeaders();
         
-        // Prova invio con PHPMailer se disponibile, altrimenti mail() nativo
-        if (class_exists('PHPMailer\PHPMailer\PHPMailer')) {
-            return $this->sendWithPHPMailer($subject, $message);
-        } else {
-            return $this->sendWithNativeMail($subject, $message, $headers);
-        }
+        // Per ora usa solo mail() nativo con configurazione SMTP
+        return $this->sendWithNativeMail($subject, $message, $headers);
     }
     
     private function buildEmailMessage() {
@@ -305,7 +301,20 @@ class ContactFormHandler {
     }
     
     private function sendWithNativeMail($subject, $message, $headers) {
-        return mail(TO_EMAIL, $subject, $message, $headers);
+        // Configura SMTP per mail() nativo
+        ini_set('SMTP', SMTP_HOST);
+        ini_set('smtp_port', SMTP_PORT);
+        ini_set('sendmail_from', FROM_EMAIL);
+        
+        // Prova invio email
+        $result = mail(TO_EMAIL, $subject, $message, $headers);
+        
+        // Reset configurazione
+        ini_restore('SMTP');
+        ini_restore('smtp_port');
+        ini_restore('sendmail_from');
+        
+        return $result;
     }
     
     private function sendWithPHPMailer($subject, $message) {

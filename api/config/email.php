@@ -18,7 +18,7 @@ return [
         'host' => 'smtp.gmail.com',
         'port' => 587,
         'username' => 'denislavgallo2005@gmail.com',
-        'password' => 'your_app_password_here', // Password app Gmail
+        'password' => 'zggq tiyu iwta ldnw', // Password app Gmail
         'encryption' => 'tls',
         'auth' => true
     ],
