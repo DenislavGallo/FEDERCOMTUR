@@ -270,6 +270,7 @@ const FederNewsletter = {
             },
             body: JSON.stringify({
                 email: email,
+                website: form.querySelector('.honeypot')?.value || '',
                 source: 'main_form',
                 page: window.location.pathname
             })

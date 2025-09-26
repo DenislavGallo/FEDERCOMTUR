@@ -137,19 +137,13 @@ class NewsManager {
     }
     
     setupModalEventListeners() {
-        // Close modal button
-        const closeBtn = document.getElementById('article-modal-close');
-        if (closeBtn) {
-            closeBtn.addEventListener('click', () => this.closeArticleModal());
-        }
-        
-        // Back button
-        const backBtn = document.getElementById('article-back-btn');
+        // Back button (return to news page)
+        const backBtn = document.getElementById('article-back-button');
         if (backBtn) {
             backBtn.addEventListener('click', () => this.closeArticleModal());
         }
         
-        // Close modal when clicking outside
+        // Close modal when clicking outside or on header
         const modal = document.getElementById('article-modal');
         if (modal) {
             modal.addEventListener('click', (e) => {
@@ -157,14 +151,24 @@ class NewsManager {
                     this.closeArticleModal();
                 }
             });
+            
+            // Close modal when clicking on header
+            const header = modal.querySelector('.article-modal-header');
+            if (header) {
+                header.addEventListener('click', () => this.closeArticleModal());
+            }
         }
         
-        // Escape key to close modal
+        // Close modal with ESC key
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
-                this.closeArticleModal();
+                const modal = document.getElementById('article-modal');
+                if (modal && modal.classList.contains('active')) {
+                    this.closeArticleModal();
+                }
             }
         });
+        
     }
     
     handleUrlParameters() {

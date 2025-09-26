@@ -191,6 +191,7 @@ class NewsletterPopup {
                 },
                 body: JSON.stringify({
                     email: email,
+                    website: form.querySelector('.honeypot')?.value || '',
                     source: 'popup',
                     page: window.location.pathname
                 })
@@ -260,6 +261,7 @@ class NewsletterPopup {
                 },
                 body: JSON.stringify({
                     email: email,
+                    website: form.querySelector('.honeypot')?.value || '',
                     source: 'footer',
                     page: window.location.pathname
                 })

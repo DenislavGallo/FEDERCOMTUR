@@ -79,10 +79,6 @@
   - Search bar nel header
   - Ricerca full-text notizie
   - Filtri avanzati (data, categoria, autore)
-  - Suggerimenti in tempo reale
-  - Paginazione risultati
-
-#### 5. 📱 **PWA e Mobile Optimization**
 **Priorità**: Alta | **Complessità**: Media
 - **Problema**: Non è una Progressive Web App
 - **Necessario**:

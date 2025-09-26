@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Servizi - FederComTur</title>
+    <meta name="description" content="Servizi professionali per PMI: consulenza fiscale, formazione, bandi e finanziamenti, supporto operativo.">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/servizi.css">
+    <script defer src="js/services.js"></script>
+    <script defer src="js/newsletter-popup.js"></script>
+    <script defer src="js/animations.js"></script>
+    <script defer src="js/main.js"></script>
+    <script defer src="js/news.js"></script>
+    <script>
+        // FAQ Interattiva
+        function toggleFaq(element) {
+            const isActive = element.classList.contains('active');
+            
+            // Chiudi tutte le FAQ
+            document.querySelectorAll('.faq-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Apri solo quella cliccata se non era già aperta
+            if (!isActive) {
+                element.classList.add('active');
+            }
+        }
+        
+        // Animazioni al scroll
+        function animateOnScroll() {
+            const elements = document.querySelectorAll('.stat-item, .service-card, .why-item, .faq-item');
+            
+            elements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const elementVisible = 150;
+                
+                if (elementTop < window.innerHeight - elementVisible) {
+                    element.style.opacity = '1';
+                    element.style.transform = 'translateY(0)';
+                }
+            });
+        }
+        
+        // Inizializza animazioni
+        document.addEventListener('DOMContentLoaded', () => {
+            // Imposta stato iniziale per animazioni
+            document.querySelectorAll('.stat-item, .service-card, .why-item, .faq-item').forEach(element => {
+                element.style.opacity = '0';
+                element.style.transform = 'translateY(30px)';
+                element.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            });
+            
+            // Trigger iniziale
+            setTimeout(animateOnScroll, 100);
+            
+            // Ascolta scroll
+            window.addEventListener('scroll', animateOnScroll);
+        });
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <meta property="og:title" content="Servizi - FederComTur">
+    <meta property="og:description" content="Consulenza fiscale, formazione, bandi e finanziamenti per PMI.">
+    <meta property="og:type" content="website">
+    <script type="application/ld+json">
+    { "@context":"https://schema.org", "@type":"CollectionPage", "name":"Servizi - FederComTur" }
+    </script>
+</head>
+<body>
+    <nav class="navbar" id="navbar" role="navigation" aria-label="Menu principale">
+        <div class="navbar-container">
+            <div class="navbar-logo">
+                <a href="index.html" aria-label="Torna alla homepage FederComTur">
+                    <div class="logo-icon">FC</div>
+                    <span class="logo-text">FederComTur - Est Europa</span>
+                </a>
+            </div>
+            <ul class="navbar-menu" role="menubar">
+                <li role="menuitem"><a href="servizi.html" class="active">Servizi</a></li>
+                <li role="menuitem"><a href="notizie.html">Notizie</a></li>
+                <li role="menuitem"><a href="index.html#newsletter">Newsletter</a></li>
+                <li role="menuitem"><a href="index.html#chi-siamo">Chi Siamo</a></li>
+                <li role="menuitem"><a href="contattaci.html">Contatti</a></li>
+            </ul>
+            <button class="mobile-menu-toggle" aria-label="Apri menu mobile" aria-expanded="false">
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+            </button>
+        </div>
+    </nav>
+    <!-- Header Moderno -->
+    <section class="services-page-header">
+        <div class="container">
+            <h1>I Nostri Servizi</h1>
+            <p>Soluzioni complete e innovative per far crescere la tua impresa</p>
+        </div>
+    </section>
+
+    <!-- Hero Section con Statistiche -->
+    <section class="services-hero">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h2>Esperienza e Competenza al Tuo Servizio</h2>
+                <p>Da oltre 30 anni accompagniamo le PMI italiane nel loro percorso di crescita con servizi personalizzati e soluzioni innovative.</p>
+                <a href="contattaci.html" class="btn btn-primary btn-lg">Scopri come possiamo aiutarti</a>
+            </div>
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <div class="stat-number">500+</div>
+                    <div class="stat-label">PMI Associate</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">30+</div>
+                    <div class="stat-label">Anni di Esperienza</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">95%</div>
+                    <div class="stat-label">Soddisfazione Clienti</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="services-section">
+        <h2 class="section-title">Cosa Offriamo</h2>
+        <p class="section-subtitle">Una gamma completa di servizi progettati per supportare ogni aspetto della tua impresa</p>
+        <div class="services-grid" id="services-grid">
+            <!-- Cards popolate via JS -->
+        </div>
+    </section>
+
+    <section class="why-section">
+        <div class="why-content">
+            <h2 class="section-title">Perché scegliere FederComTur</h2>
+            <p class="section-subtitle">I nostri punti di forza che fanno la differenza per la tua impresa</p>
+            <div class="why-grid">
+                <div class="why-item">
+                    <div class="why-icon">
+                        <svg viewBox="0 0 24 24" fill="currentColor" width="28" height="28">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                        </svg>
+                    </div>
+                    <h4>Esperienza Consolidata</h4>
+                    <p>Oltre 30 anni al fianco delle PMI italiane con soluzioni concrete e risultati verificati.</p>
+                </div>
+                <div class="why-item">
+                    <div class="why-icon">
+                        <svg viewBox="0 0 24 24" fill="currentColor" width="28" height="28">
+                            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                    <h4>Affidabilità Garantita</h4>
+                    <p>Metodologie certificate e processi tracciabili per la massima trasparenza operativa.</p>
+                </div>
+                <div class="why-item">
+                    <div class="why-icon">
+                        <svg viewBox="0 0 24 24" fill="currentColor" width="28" height="28">
+                            <path d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                        </svg>
+                    </div>
+                    <h4>Rete Estesa</h4>
+                    <p>Partner qualificati e connessioni istituzionali su tutto il territorio nazionale ed europeo.</p>
+                </div>
+                <div class="why-item">
+                    <div class="why-icon">
+                        <svg viewBox="0 0 24 24" fill="currentColor" width="28" height="28">
+                            <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                        </svg>
+                    </div>
+                    <h4>Risultati Misurabili</h4>
+                    <p>Focus su ROI tangibile e KPI verificabili per il successo della tua impresa.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="faq-section">
+        <h2 class="section-title">Domande Frequenti</h2>
+        <p class="section-subtitle">Le risposte alle domande più comuni sui nostri servizi</p>
+        <div class="faq-item" onclick="toggleFaq(this)">
+            <div class="faq-question">
+                <span>Posso personalizzare i servizi in base alle mie esigenze?</span>
+                <svg class="faq-icon" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                    <path d="M19 9l-7 7-7-7"/>
+                </svg>
+            </div>
+            <div class="faq-answer">
+                <p>Assolutamente sì. Ogni servizio viene personalizzato in base alle specifiche esigenze della tua impresa. I nostri consulenti effettuano un'analisi preliminare per identificare le tue necessità e proporre soluzioni su misura.</p>
+            </div>
+        </div>
+        <div class="faq-item" onclick="toggleFaq(this)">
+            <div class="faq-question">
+                <span>Offrite supporto continuativo dopo l'implementazione?</span>
+                <svg class="faq-icon" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                    <path d="M19 9l-7 7-7-7"/>
+                </svg>
+            </div>
+            <div class="faq-answer">
+                <p>Sì, offriamo piani di assistenza continuativa per garantire il successo a lungo termine. Include monitoraggio, aggiornamenti normativi, consulenza mensile e supporto prioritario.</p>
+            </div>
+        </div>
+        <div class="faq-item" onclick="toggleFaq(this)">
+            <div class="faq-question">
+                <span>Quali sono i tempi di implementazione dei servizi?</span>
+                <svg class="faq-icon" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                    <path d="M19 9l-7 7-7-7"/>
+                </svg>
+            </div>
+            <div class="faq-answer">
+                <p>I tempi variano in base alla complessità del progetto. Servizi di consulenza: 1-2 settimane. Implementazioni complete: 4-8 settimane. Ti forniremo una timeline dettagliata durante la fase di analisi.</p>
+            </div>
+        </div>
+        <div class="faq-item" onclick="toggleFaq(this)">
+            <div class="faq-question">
+                <span>Supportate anche aziende di piccole dimensioni?</span>
+                <svg class="faq-icon" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                    <path d="M19 9l-7 7-7-7"/>
+                </svg>
+            </div>
+            <div class="faq-answer">
+                <p>Certamente! Siamo specializzati nel supporto alle PMI. Offriamo pacchetti scalabili e soluzioni cost-effective specificamente progettate per piccole e medie imprese.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="cta-content">
+            <h2>Pronto a Far Crescere la Tua Impresa?</h2>
+            <p>Contattaci oggi per una consulenza gratuita e scopri come i nostri servizi possono trasformare il tuo business.</p>
+            <div class="cta-buttons">
+                <a href="contattaci.html" class="btn btn-primary btn-lg">Richiedi Consulenza Gratuita</a>
+                <a href="tel:+39123456789" class="btn btn-outline2 btn-lg">Chiamaci Ora</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer (riuso da index) -->
+    <footer class="footer" role="contentinfo">
+        <div class="footer-container">
+            <div class="footer-grid">
+                <div class="footer-column">
+                    <h3 class="footer-title">FederComTur</h3>
+                    <p class="footer-description">Federazione Nazionale Commercio, Turismo e Servizi. Dal 1985 al fianco delle PMI italiane.</p>
+                </div>
+                <div class="footer-column">
+                    <h4 class="footer-heading">Servizi</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Consulenza Fiscale</a></li>
+                        <li><a href="#">Formazione Professionale</a></li>
+                        <li><a href="#">Bandi e Finanziamenti</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4 class="footer-heading">Risorse</h4>
+                    <ul class="footer-links">
+                        <li><a href="notizie.html">Notizie</a></li>
+                        <li><a href="#">Normative</a></li>
+                        <li><a href="#">Eventi</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4 class="footer-heading">Newsletter</h4>
+                    <p class="footer-text">Iscriviti per ricevere aggiornamenti settimanali</p>
+                    <form class="footer-newsletter" id="footer-newsletter-form">
+                        <input type="text" name="website" class="honeypot" tabindex="-1" autocomplete="off">
+                        <div class="input-wrapper">
+                            <input type="email" placeholder="La tua email" class="form-input" id="footer-email" required>
+                            <button type="submit" class="btn-footer">Iscriviti</button>
+                        </div>
+                        <div class="footer-error-container" id="footer-error-container"></div>
+                    </form>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="footer-legal">
+                    <p>&copy; 2024 FederComTur. Tutti i diritti riservati.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
+

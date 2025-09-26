@@ -109,6 +109,28 @@
 html {
     scroll-behavior: smooth;
     font-size: 16px;
+    scroll-padding-top: 100px;
+}
+
+/* Enhanced smooth scrolling with hardware acceleration */
+@media (prefers-reduced-motion: no-preference) {
+    html {
+        scroll-behavior: smooth;
+    }
+    
+    body {
+        will-change: scroll-position;
+    }
+}
+
+/* Optional: Scroll snap for section-based scrolling */
+.section-scroll-snap {
+    scroll-snap-type: y mandatory;
+}
+
+.section-scroll-snap > section {
+    scroll-snap-align: start;
+    scroll-snap-stop: normal;
 }
 
 body {
@@ -278,13 +300,14 @@ body {
 /* ========================== */
 
 .main-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 var(--space-6);
+    max-width: 1600px;
+    margin: 0 auto; /* mantiene tutto centrato */
+    padding: 0 var(--space-2); /* margine orizzontale molto corto */
+    height: 100%;
 }
 
 .section {
-    padding: var(--space-20) 0;
+    /*padding: var(--space-20) 0;*/
     background: #ffffff;
 }
 
@@ -410,7 +433,7 @@ body {
 .hero-content {
     position: relative;
     z-index: 2;
-    max-width: 1200px;
+    max-width: 1600px;
     margin: 0 auto;
     padding: 0 var(--space-6);
     display: grid;
@@ -628,6 +651,12 @@ body {
     border: 2px solid var(--secondary-emerald);
 }
 
+.btn-outline2 {
+    background: transparent;
+    color: #Ffffff;
+    border: 2px solid var(--secondary-emerald);
+}
+
 .btn-outline:hover {
     background: var(--secondary-emerald);
     color: #ffffff;
@@ -753,13 +782,13 @@ body {
 
 .services-section {
     background: #ffffff;
-    padding: var(--space-16) 0; /* Ridotto da space-20 */
+    /*padding: var(--space-16) 0; /* Ridotto da space-20 */
 }
 
 .services-header {
     text-align: center;
     margin-bottom: var(--space-8);
-    max-width: 800px;
+    max-width: 810px;
     margin-left: auto;
     margin-right: auto;
 }
@@ -777,9 +806,15 @@ body {
     grid-template-columns: repeat(4, 1fr);
     gap: var(--space-6); /* Aumentato da space-2 a space-6 per più respiro */
     margin-top: var(--space-12);
-    max-width: 1440px; /* Allineato al grid system principale */
+    max-width: 2000px; /* corregge typo e mantiene centrato */
     margin-left: auto;
     margin-right: auto;
+    justify-items: center; /* Centra le card all'interno del grid */
+}
+
+.services-footer {
+    text-align: center;
+    margin-top: var(--space-12);
 }
 
 @media (max-width: 1024px) {
@@ -787,6 +822,7 @@ body {
         grid-template-columns: repeat(2, 1fr);
         gap: var(--space-6); /* Mantenuto gap consistente */
         margin-top: var(--space-16);
+        justify-items: center; /* Centra le card all'interno del grid */
     }
 }
 
@@ -795,16 +831,16 @@ body {
         grid-template-columns: repeat(2, 1fr);
         gap: var(--space-4); /* Aumentato da space-2 a space-4 */
         margin-top: var(--space-12);
+        justify-items: center; /* Centra le card all'interno del grid */
     }
     
     .service-card {
-        height: 280px; /* Aumentato da 240px a 280px */
-        width: 240px; /* Aumentato da 200px a 240px */
+        height: 350px; /* Ridotto proporzionalmente da 400px desktop */
+        width: 420px; /* Ridotto proporzionalmente da 500px desktop */
     }
     
     .service-card:hover {
-        height: 320px; /* Aumentato da 280px a 320px */
-        width: 280px; /* Aumentato da 240px a 280px */
+        transform: translateY(-10px) scaleX(1.08);
     }
 }
 
@@ -813,16 +849,16 @@ body {
         grid-template-columns: 1fr;
         gap: var(--space-4); /* Aumentato da space-2 a space-4 per consistenza */
         margin-top: var(--space-10);
+        justify-items: center; /* Centra le card all'interno del grid */
     }
     
     .service-card {
-        height: 260px; /* Aumentato da 220px a 260px */
-        width: 220px; /* Aumentato da 180px a 220px */
+        height: 320px; /* Ridotto proporzionalmente da 400px desktop */
+        width: 380px; /* Ridotto proporzionalmente da 500px desktop */
     }
     
     .service-card:hover {
-        height: 300px; /* Aumentato da 260px a 300px */
-        width: 260px; /* Aumentato da 220px a 260px */
+        transform: translateY(-10px) scaleX(1.06);
     }
 }
 
@@ -834,8 +870,8 @@ body {
     border: 1px solid #E5E7EB;
     border-radius: var(--radius-lg);
     padding: 0;
-    height: 300px; /* Aumentato da 260px a 300px */
-    width: 280px; /* Aumentato da 220px a 280px */
+    height: 400px; /* Aumentato da 300px a 320px */
+    width: 350px; /* Aumentato da 300px a 340px */
     opacity: 0;
     transform: translateY(30px);
     animation: fadeInUp 0.6s ease-out forwards;
@@ -928,13 +964,13 @@ body {
 /* Titolo del servizio */
 .service-title {
     color: #ffffff;
-    font-size: var(--text-lg);
+    font-size: var(--text-xl);
     font-weight: var(--font-bold);
     line-height: 1.2;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
     margin: 0;
     z-index: 3;
-    width: 140px;
+    width: 150px;
     word-wrap: break-word;
     transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
 }
@@ -959,12 +995,10 @@ body {
     transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
-/* Effetto hover per ingrandire e mostrare più immagine */
+/* Effetto hover per allargare solo sull'asse X */
 .service-card:hover {
-    height: 340px; /* Aumentato da 310px a 340px */
-    width: 300px; /* Aumentato da 270px a 300px */
     background-size: 120%;
-    transform: translateY(-10px);
+    transform: translateY(-10px) scaleX(1.1);
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
 }
 
@@ -973,8 +1007,8 @@ body {
 }
 
 .service-card:hover .service-title {
-    font-size: var(--text-xl);
-    width: 160px;
+    font-size: var(--text-2xl);
+    width: 200px; /* Aumentato per accomodare card più larghe */
 }
 
 .service-card:hover .service-inner-div {
@@ -1026,6 +1060,8 @@ body {
 
 .news-section {
     text-align: center;
+    margin-top: var(--space-16);   /* spazio sopra la sezione notizie */
+    margin-bottom: var(--space-16);/* spazio sotto la sezione notizie */
 }
 
 .news-header {
@@ -1279,10 +1315,14 @@ body {
     background: #00071C;
     position: relative;
     border-radius: 40px;
-    margin-left: 15vh;
-    margin-right: 15vh;
+    margin: 0 auto;
     overflow: hidden;
     border: 2px solid var(--primary-navy);
+    max-width: 1600px;
+    height: 500px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .newsletter-content {
@@ -1291,6 +1331,12 @@ body {
     text-align: center;
     max-width: 800px;
     margin: 0 auto;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 /* Advanced Dot Grid Styles */
@@ -1771,10 +1817,7 @@ body {
     perspective: 1000;
 }
 
-/* Smooth scrolling for anchor links */
-html {
-    scroll-padding-top: 100px;
-}
+/* Smooth scrolling for anchor links - moved to html selector above */
 
 /* ========================== */
 /* NEWSLETTER POPUP MODAL */

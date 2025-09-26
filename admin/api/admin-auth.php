@@ -35,6 +35,12 @@ header('X-Frame-Options: DENY');
 header('X-XSS-Protection: 1; mode=block');
 header('Referrer-Policy: strict-origin-when-cross-origin');
 header('Permissions-Policy: geolocation=(), microphone=(), camera=()');
+header('Content-Security-Policy: default-src \'self\'; script-src \'self\' \'unsafe-inline\'; style-src \'self\' \'unsafe-inline\'; img-src \'self\' data:;');
+
+// HSTS Header per HTTPS enforcement
+if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') {
+    header('Strict-Transport-Security: max-age=31536000; includeSubDomains; preload');
+}
 
 // Cache Control per API
 header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
@@ -100,6 +106,15 @@ try {
 // =============================================
 
 function handlePost($auth, $action) {
+    // Protezione CSRF per tutte le operazioni POST tranne login
+    if ($action !== 'login' && $action !== 'check') {
+        $csrfToken = $_POST['csrf_token'] ?? $_SERVER['HTTP_X_CSRF_TOKEN'] ?? '';
+        if (!$auth->verifyCSRFToken($csrfToken)) {
+            sendErrorResponse('Token CSRF non valido', 403);
+            return;
+        }
+    }
+    
     // Leggi input JSON con fallback
     $rawInput = file_get_contents('php://input');
     
@@ -157,6 +172,10 @@ function handleGet($auth, $action) {
         case 'logout':
             // Permetti il logout anche via GET per compatibilità
             handleLogout($auth);
+            break;
+            
+        case 'csrf-token':
+            handleCSRFToken($auth);
             break;
 
         case 'sessions':
@@ -219,6 +238,11 @@ function handleLogout($auth) {
     } else {
         sendErrorResponse($result['error'], 500);
     }
+}
+
+function handleCSRFToken($auth) {
+    $token = $auth->generateCSRFToken();
+    sendSuccessResponse(['csrf_token' => $token]);
 }
 
 // =============================================

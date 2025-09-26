@@ -415,6 +415,12 @@
             justify-content: center;
             color: white;
             overflow: hidden;
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+        
+        .article-modal-header:hover {
+            opacity: 0.9;
         }
         
         .article-modal-close {
@@ -577,10 +583,12 @@
                 padding: 40px 24px;
             }
             
-            .article-modal-close,
-            .article-back-btn {
-                width: 45px;
-                height: 45px;
+            .article-back-button {
+                width: 50px;
+                height: 50px;
+                bottom: 20px;
+                right: 20px;
+                position: fixed;
             }
         }
             
@@ -656,7 +664,7 @@
             </div>
             
             <ul class="navbar-menu" role="menubar">
-                <li role="menuitem"><a href="index.html#servizi">Servizi</a></li>
+                <li role="menuitem"><a href="servizi.html">Servizi</a></li>
                 <li role="menuitem"><a href="notizie.html" class="active">Notizie</a></li>
                 <li role="menuitem"><a href="index.html#newsletter">Newsletter</a></li>
                 <li role="menuitem"><a href="index.html#chi-siamo">Chi Siamo</a></li>
@@ -785,6 +793,7 @@
                     <h4 class="footer-heading">Newsletter</h4>
                     <p class="footer-text">Iscriviti per ricevere aggiornamenti settimanali</p>
                     <form class="footer-newsletter" id="footer-newsletter-form">
+                        <input type="text" name="website" class="honeypot" tabindex="-1" autocomplete="off">
                         <div class="input-wrapper">
                             <input type="email" placeholder="La tua email" class="form-input" id="footer-email" required>
                             <button type="submit" class="btn-footer">Iscriviti</button>

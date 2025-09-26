@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Servizio - FederComTur</title>
+    <meta name="description" content="Dettaglio servizio FederComTur">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* Service Detail Page Styles */
+        .service-detail-header {
+            background: linear-gradient(135deg, var(--primary-navy) 0%, #0369a1 100%);
+            color: white;
+            padding: 120px 40px 80px;
+            margin: 20px;
+            border-radius: var(--radius-xl);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(11, 20, 38, 0.3);
+        }
+        
+        .service-detail-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><g fill="%23ffffff" fill-opacity="0.05"><circle cx="30" cy="30" r="2"/></g></g></svg>');
+            animation: float 20s infinite linear;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            100% { transform: translateY(-60px); }
+        }
+        
+        .service-header-content {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 0 24px;
+            position: relative;
+            z-index: 2;
+            text-align: center;
+        }
+        
+        .service-header-icon {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 20px;
+            color: white;
+        }
+        
+        .service-header-icon svg {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .service-header-content h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 24px;
+            line-height: 1.1;
+        }
+        
+        .service-header-content p {
+            font-size: 1.25rem;
+            line-height: 1.6;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .service-main-content {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 24px;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 60px;
+        }
+        
+        .service-description h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 30px;
+            color: var(--text-primary);
+        }
+        
+        .service-description p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 20px;
+            color: var(--text-secondary);
+        }
+        
+        .service-highlights {
+            background: var(--neutral-100);
+            border-radius: var(--radius-xl);
+            padding: 40px;
+            box-shadow: var(--shadow-md);
+        }
+        
+        .service-highlights h3 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 25px;
+            color: var(--text-primary);
+        }
+        
+        .service-highlights ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .service-highlights li {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+        }
+        
+        .service-highlights li svg {
+            color: var(--secondary-emerald);
+            width: 24px;
+            height: 24px;
+        }
+        
+        .service-cta-form {
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: 40px;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--neutral-200);
+            margin-top: 40px;
+        }
+        
+        .service-cta-form h3 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--text-primary);
+            text-align: center;
+        }
+        
+        .service-cta-form p {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .form-input, .form-textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--neutral-300);
+            border-radius: var(--radius-md);
+            font-size: 1rem;
+            color: var(--text-primary);
+            background-color: var(--neutral-50);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .form-input:focus, .form-textarea:focus {
+            border-color: var(--primary-navy);
+            box-shadow: 0 0 0 3px rgba(3, 105, 161, 0.1);
+            outline: none;
+        }
+        
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .privacy-consent {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 25px;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+        }
+        
+        .privacy-consent input[type="checkbox"] {
+            margin-right: 10px;
+            margin-top: 4px;
+            flex-shrink: 0;
+        }
+        
+        .privacy-consent a {
+            color: var(--secondary-emerald);
+            text-decoration: none;
+        }
+        
+        .privacy-consent a:hover {
+            text-decoration: underline;
+        }
+        
+        .btn-submit {
+            display: block;
+            width: 100%;
+            padding: 15px 25px;
+            background: var(--secondary-emerald);
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s ease, transform 0.2s ease;
+        }
+        
+        .btn-submit:hover {
+            background: #059669;
+            transform: translateY(-2px);
+        }
+        
+        .btn-submit:disabled {
+            background: var(--neutral-400);
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .form-message {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: var(--radius-md);
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        .form-message.success {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+        
+        .form-message.error {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+        
+        .breadcrumb {
+            max-width: 1440px;
+            margin: 20px auto 0;
+            padding: 0 24px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+        
+        .breadcrumb a {
+            color: var(--primary-navy);
+            text-decoration: none;
+        }
+        
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+        
+        .breadcrumb span {
+            margin: 0 5px;
+        }
+        
+        .back-to-services {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 20px;
+            color: var(--primary-navy);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+        
+        .back-to-services:hover {
+            color: var(--secondary-emerald);
+            text-decoration: underline;
+        }
+        
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .service-main-content {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            .service-header-content h1 {
+                font-size: 2.8rem;
+            }
+            .service-description h2 {
+                font-size: 2rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .service-detail-header {
+                padding: 100px 24px 60px;
+                margin: 12px;
+            }
+            .service-header-content h1 {
+                font-size: 2rem;
+            }
+            .service-header-content p {
+                font-size: 1rem;
+            }
+            .service-main-content {
+                padding: 0 16px;
+            }
+            .service-highlights, .service-cta-form {
+                padding: 30px;
+            }
+            .service-description h2 {
+                font-size: 1.8rem;
+            }
+            .service-description p, .service-highlights li, .service-cta-form p {
+                font-size: 0.95rem;
+            }
+        }
+    </style>
+    <script defer src="js/service-detail.js"></script>
+    <script defer src="js/newsletter-popup.js"></script>
+    <script defer src="js/main.js"></script>
+</head>
+<body>
+    <nav class="navbar" id="navbar" role="navigation" aria-label="Menu principale">
+        <div class="navbar-container">
+            <div class="navbar-logo">
+                <a href="index.html" aria-label="Torna alla homepage FederComTur">
+                    <div class="logo-icon">FC</div>
+                    <span class="logo-text">FederComTur - Est Europa</span>
+                </a>
+            </div>
+            <ul class="navbar-menu" role="menubar">
+                <li role="menuitem"><a href="servizi.html" class="active">Servizi</a></li>
+                <li role="menuitem"><a href="notizie.html">Notizie</a></li>
+                <li role="menuitem"><a href="index.html#newsletter">Newsletter</a></li>
+                <li role="menuitem"><a href="index.html#chi-siamo">Chi Siamo</a></li>
+                <li role="menuitem"><a href="contattaci.html">Contatti</a></li>
+            </ul>
+            <button class="mobile-menu-toggle" aria-label="Apri menu mobile" aria-expanded="false">
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+            </button>
+        </div>
+    </nav>
+    <section class="service-detail-header">
+        <div class="service-header-content">
+            <div class="service-header-icon" id="service-header-icon">
+                <!-- Service icon will be inserted here -->
+            </div>
+            <h1 id="service-title">Servizio</h1>
+            <p id="service-short-description">Dettagli e vantaggi del servizio</p>
+        </div>
+    </section>
+    
+    <div class="breadcrumb">
+        <a href="index.html">Home</a> <span>/</span> <a href="servizi.html">Servizi</a> <span>/</span> <span id="breadcrumb-service-name">Servizio</span>
+    </div>
+    
+    <section class="service-main-content">
+        <div class="service-description">
+            <h2 id="service-long-description-title">Descrizione del Servizio</h2>
+            <div id="service-long-description">
+                <p>Descrizione dettagliata del servizio...</p>
+            </div>
+            <a href="servizi.html" class="back-to-services">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="m15 18-6-6 6-6"/>
+                </svg>
+                Torna a tutti i servizi
+            </a>
+        </div>
+        
+        <div class="service-sidebar">
+            <div class="service-highlights">
+                <h3>Cosa Offriamo</h3>
+                <ul id="service-highlights-list">
+                    <!-- Highlights will be populated by JavaScript -->
+                </ul>
+            </div>
+            
+            <div class="service-cta-form">
+                <h3>Richiedi un Preventivo</h3>
+                <p>Compila il form per ricevere maggiori informazioni o un preventivo personalizzato per questo servizio.</p>
+                <form id="service-request-form">
+                    <input type="text" name="website" class="honeypot" value="" tabindex="-1" autocomplete="off">
+                    <div class="form-group">
+                        <label for="name">Nome e Cognome</label>
+                        <input type="text" id="name" name="name" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="company">Azienda (Opzionale)</label>
+                        <input type="text" id="company" name="company" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label for="service-subject">Servizio Richiesto</label>
+                        <input type="text" id="service-subject" name="service_subject" class="form-input" readonly required>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Messaggio</label>
+                        <textarea id="message" name="message" class="form-textarea" rows="5" required></textarea>
+                    </div>
+                    <div class="privacy-consent">
+                        <input type="checkbox" id="privacy-consent" name="privacy_consent" required>
+                        <label for="privacy-consent">Accetto il trattamento dei dati personali secondo la <a href="#privacy-policy">Privacy Policy</a> per la gestione della mia richiesta.</label>
+                    </div>
+                    <button type="submit" class="btn-submit" id="submit-button">Invia Richiesta</button>
+                    <div id="form-message" class="form-message" style="display: none;"></div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer" role="contentinfo">
+        <div class="footer-container">
+            <div class="footer-grid">
+                <div class="footer-column">
+                    <h3 class="footer-title">FederComTur</h3>
+                    <p class="footer-description">Federazione Nazionale Commercio, Turismo e Servizi. Dal 1985 al fianco delle PMI italiane.</p>
+                </div>
+                <div class="footer-column">
+                    <h4 class="footer-heading">Servizi</h4>
+                    <ul class="footer-links">
+                        <li><a href="servizi.html">Panoramica Servizi</a></li>
+                        <li><a href="#">Consulenza Fiscale</a></li>
+                        <li><a href="#">Bandi e Finanziamenti</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4 class="footer-heading">Risorse</h4>
+                    <ul class="footer-links">
+                        <li><a href="notizie.html">Notizie</a></li>
+                        <li><a href="#">Normative</a></li>
+                        <li><a href="#">Eventi</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4 class="footer-heading">Newsletter</h4>
+                    <p class="footer-text">Iscriviti per ricevere aggiornamenti settimanali</p>
+                    <form class="footer-newsletter" id="footer-newsletter-form">
+                        <input type="text" name="website" class="honeypot" tabindex="-1" autocomplete="off">
+                        <div class="input-wrapper">
+                            <input type="email" placeholder="La tua email" class="form-input" id="footer-email" required>
+                            <button type="submit" class="btn-footer">Iscriviti</button>
+                        </div>
+                        <div class="footer-error-container" id="footer-error-container"></div>
+                    </form>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="footer-legal">
+                    <p>&copy; 2024 FederComTur. Tutti i diritti riservati.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
+

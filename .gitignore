@@ -85,3 +85,36 @@ typings/
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# PHP specific
+*.log
+*.tmp
+*.cache
+vendor/
+composer.lock
+
+# Database files
+*.sqlite
+*.db
+
+# Configuration files with sensitive data
+config/database.php
+config/emailoctopus.php
+api/config/database.php
+api/config/emailoctopus.php
+
+# Temporary files
+temp/
+tmp/
+logs/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Backup files
+*.bak
+*.backup

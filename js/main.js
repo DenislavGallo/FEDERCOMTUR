@@ -32,7 +32,10 @@ const FederComTur = {
         this.bindEvents();
         this.initComponents();
         this.loadNewsData();
-        this.initServicesCarousel();
+        this.initServicesCarousel(); // Riabilitato per homepage
+        
+        // Initialize smooth scroll (replaces old initSmoothScrolling)
+        this.initSmoothScroll();
         
         console.log('✅ FederComTur initialized successfully');
     },
@@ -106,7 +109,7 @@ const FederComTur = {
     initComponents() {
         // Rimossa l'inizializzazione della navbar sticky
         this.initNewsletterSection();
-        this.initSmoothScrolling();
+        // initSmoothScrolling() rimosso - sostituito da initSmoothScroll() in init()
         this.initAccessibility();
     },
     
@@ -204,24 +207,7 @@ const FederComTur = {
         }
     },
     
-    // Initialize smooth scrolling for anchor links
-    initSmoothScrolling() {
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', (e) => {
-                const href = anchor.getAttribute('href');
-                if (href === '#') return;
-                
-                const target = document.querySelector(href);
-                if (target) {
-                    e.preventDefault();
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
-        });
-    },
+    // REMOVED: initSmoothScrolling() - replaced by enhanced initSmoothScroll()
     
     // Initialize magnetic button effects
     initMagneticButtons() {
@@ -254,13 +240,13 @@ const FederComTur = {
     // Load news data (mock for now)
     async loadNewsData() {
         try {
-            // Carica le notizie in evidenza dall'API
-            const response = await fetch('http://localhost:8000/api/news-data.php?featured=true&limit=6');
+            // Carica le notizie in evidenza dall'API (percorso relativo + no-cors cache busting)
+            const response = await fetch('api/news-data.php?featured=true&limit=6&_ts=' + Date.now(), { cache: 'no-cache' });
             const data = await response.json();
             
             if (data.success && data.data.length > 0) {
                 // Converte i dati dall'API nel formato atteso
-                const newsData = data.data.map(item => ({
+                let newsData = data.data.map(item => ({
                     id: item.id,
                     title: item.title,
                     category: item.category.name,
@@ -270,8 +256,18 @@ const FederComTur = {
                     readTime: item.read_time
                 }));
                 
-                this.renderNewsCards(newsData);
-                console.log('Notizie caricate dall\'API:', newsData.length);
+                // Garantisci sempre 6 card: completa con mock se mancano
+                // Sempre 6 notizie: completa con mock se necessario
+                if (newsData.length < 6) {
+                    const mock = this.getMockNewsData();
+                    const needed = 6 - newsData.length;
+                    const extra = mock.filter(m => !newsData.some(n => n.id === m.id)).slice(0, needed);
+                    newsData = newsData.concat(extra);
+                    console.log(`Completate ${needed} notizie con dati mock. Totale: ${newsData.length}`);
+                }
+                
+                this.renderNewsCards(newsData.slice(0, 6));
+                console.log('Notizie caricate dall\'API:', newsData.length, newsData.map(n => n.title));
                 
             } else {
                 // Fallback con dati mock se l'API non restituisce notizie
@@ -286,9 +282,9 @@ const FederComTur = {
         }
     },
     
-    // Dati mock come fallback
-    loadMockNewsData() {
-        const mockNews = [
+    // Ritorna i dati mock per riempimento o fallback
+    getMockNewsData() {
+        return [
             {
                 id: 1,
                 title: "Decreto Credito d'Imposta: Nuove Opportunità per PMI del Turismo",
@@ -344,15 +340,24 @@ const FederComTur = {
                 readTime: "3 min"
             }
         ];
-        
+    },
+
+    // Usa i mock come fallback completo
+    loadMockNewsData() {
+        const mockNews = this.getMockNewsData();
         this.renderNewsCards(mockNews.slice(0, 6));
     },
     
     // Render news cards
     renderNewsCards(newsData) {
-        if (!this.elements.newsCards || !newsData) return;
+        if (!this.elements.newsCards || !newsData) {
+            console.warn('newsCards container mancante o newsData vuoto', this.elements.newsCards, newsData);
+            return;
+        }
         
-        const cardsHTML = newsData.map((news, index) => `
+        const slice6 = newsData.slice(0, 6);
+        console.log('Rendering', slice6.length, 'cards');
+        const cardsHTML = slice6.map((news, index) => `
             <article class="news-card card-stagger" style="animation-delay: ${index * 0.1}s">
                 <div class="news-card-header">
                     <span class="news-badge ${news.category}">${this.getCategoryLabel(news.category)}</span>
@@ -377,6 +382,7 @@ const FederComTur = {
         `).join('');
         
         this.elements.newsCards.innerHTML = cardsHTML;
+        console.log('HTML cards length:', (this.elements.newsCards.innerHTML.match(/news-card/g) || []).length);
         
         // Animate cards in
         setTimeout(() => {
@@ -594,15 +600,17 @@ const FederComTur = {
         `).join('');
 
         servicesGrid.innerHTML = cardsHTML;
-
-        // Animate cards in after a short delay
-        setTimeout(() => {
-            const cards = servicesGrid.querySelectorAll('.service-card');
-            cards.forEach(card => {
-                card.style.opacity = '1';
-                card.style.transform = 'translateY(0)';
-            });
-        }, 100);
+    },
+    
+    // Initialize smooth scroll functionality
+    initSmoothScroll() {
+        // Load smooth scroll script if not already loaded
+        if (!document.querySelector('script[src*="smooth-scroll.js"]')) {
+            const script = document.createElement('script');
+            script.src = 'js/smooth-scroll.js';
+            script.async = true;
+            document.head.appendChild(script);
+        }
     },
 
     // Utility: Debounce function

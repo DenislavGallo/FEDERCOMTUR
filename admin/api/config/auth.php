@@ -5,7 +5,7 @@
  * Gestione sicura login, sessioni e autorizzazioni admin
  */
 
-require_once __DIR__ . '/database.php';
+require_once __DIR__ . '/../../../api/config/database.php';
 
 /**
  * Classe per gestire autenticazione admin
@@ -45,6 +45,36 @@ class AdminAuth {
     }
     
     /**
+     * Genera token CSRF
+     */
+    public function generateCSRFToken() {
+        if (session_status() !== PHP_SESSION_ACTIVE) {
+            session_start();
+        }
+        
+        if (!isset($_SESSION['csrf_token'])) {
+            $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+        }
+        
+        return $_SESSION['csrf_token'];
+    }
+    
+    /**
+     * Verifica token CSRF
+     */
+    public function verifyCSRFToken($token) {
+        if (session_status() !== PHP_SESSION_ACTIVE) {
+            session_start();
+        }
+        
+        if (!isset($_SESSION['csrf_token']) || !$token) {
+            return false;
+        }
+        
+        return hash_equals($_SESSION['csrf_token'], $token);
+    }
+    
+    /**
      * Login admin con sicurezza avanzata
      */
     public function login($username, $password, $rememberMe = false) {
@@ -62,7 +92,7 @@ class AdminAuth {
             if ($this->isRateLimited()) {
                 return [
                     'success' => false,
-                    'error' => 'Troppi tentativi di login. Riprova tra 15 minuti.'
+                    'error' => 'Credenziali non valide'
                 ];
             }
             
@@ -80,7 +110,7 @@ class AdminAuth {
             if ($this->isAccountLocked($user)) {
                 return [
                     'success' => false,
-                    'error' => 'Account temporaneamente bloccato per sicurezza'
+                    'error' => 'Credenziali non valide'
                 ];
             }
             
@@ -99,7 +129,7 @@ class AdminAuth {
                 $this->logLoginAttempt($username, false);
                 return [
                     'success' => false,
-                    'error' => 'Account non attivo'
+                    'error' => 'Credenziali non valide'
                 ];
             }
             
@@ -258,12 +288,25 @@ class AdminAuth {
     // =============================================
     
     private function getUserByUsername($username) {
+        $start = microtime(true);
+        
         $stmt = $this->conn->prepare("
             SELECT * FROM admin_users 
             WHERE username = ? OR email = ?
         ");
         $stmt->execute([$username, $username]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        // Normalizza tempo di risposta per prevenire timing attacks
+        $elapsed = microtime(true) - $start;
+        $targetTime = 0.1; // 100ms target
+        $sleepTime = max(0, $targetTime - $elapsed);
+        
+        if ($sleepTime > 0) {
+            usleep($sleepTime * 1000000);
+        }
+        
+        return $result;
     }
     
     private function getUserById($id) {
@@ -336,11 +379,15 @@ class AdminAuth {
     }
     
     private function createSession($user, $rememberMe = false) {
-        if (session_status() !== PHP_SESSION_ACTIVE) {
-            session_start();
+        // Distruggi sessione esistente completamente per prevenire session fixation
+        if (session_status() === PHP_SESSION_ACTIVE) {
+            session_destroy();
         }
         
-        // Rigenera ID sessione per sicurezza
+        // Avvia nuova sessione pulita
+        session_start();
+        
+        // Rigenera ID sessione per sicurezza (sempre true per nuova sessione)
         session_regenerate_id(true);
         
         $sessionId = session_id();

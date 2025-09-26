@@ -26,6 +26,14 @@ class NewsletterSubscriptionManager {
      */
     public function subscribe($email, $additionalData = []) {
         try {
+            // Honeypot check
+            if (isset($additionalData['website']) && !empty($additionalData['website'])) {
+                return [
+                    'success' => false,
+                    'error' => 'Richiesta sospetta rilevata'
+                ];
+            }
+            
             // Validazione input
             $email = trim($email);
             if (empty($email)) {

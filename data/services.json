@@ -1,0 +1,71 @@
+[
+  {
+    "id": 1,
+    "slug": "consulenza-fiscale",
+    "name": "Consulenza Fiscale",
+    "shortDescription": "Ottimizzazione fiscale per PMI e professionisti.",
+    "description": "Supporto completo in materia fiscale: pianificazione, adempimenti, verifiche e aggiornamenti normativi.",
+    "icon": "tax",
+    "highlights": [
+      "Pianificazione fiscale personalizzata",
+      "Gestione adempimenti e scadenze",
+      "Aggiornamenti normativi continui"
+    ],
+    "cta": {
+      "label": "Richiedi consulenza",
+      "target": "contattaci.html"
+    }
+  },
+  {
+    "id": 2,
+    "slug": "formazione-professionale",
+    "name": "Formazione Professionale",
+    "shortDescription": "Percorsi formativi su misura per il tuo team.",
+    "description": "Corsi e workshop su temi chiave: digitale, normativa, vendite, marketing e sicurezza.",
+    "icon": "training",
+    "highlights": [
+      "Programmi su misura",
+      "Docenti certificati",
+      "Attestati di partecipazione"
+    ],
+    "cta": {
+      "label": "Pianifica un corso",
+      "target": "contattaci.html"
+    }
+  },
+  {
+    "id": 3,
+    "slug": "bandi-e-finanziamenti",
+    "name": "Bandi e Finanziamenti",
+    "shortDescription": "Accesso a fondi e agevolazioni per la crescita.",
+    "description": "Individuazione bandi, preparazione domande, rendicontazione e project management.",
+    "icon": "funding",
+    "highlights": [
+      "Scouting opportunità",
+      "Preparazione pratica",
+      "Rendicontazione completa"
+    ],
+    "cta": {
+      "label": "Verifica idoneità",
+      "target": "contattaci.html"
+    }
+  },
+  {
+    "id": 4,
+    "slug": "rappresentanza-sindacale",
+    "name": "Rappresentanza Sindacale",
+    "shortDescription": "Tutela degli interessi delle imprese associate.",
+    "description": "Rappresentanza presso istituzioni nazionali ed europee, negoziazione collettiva e consulenza sindacale.",
+    "icon": "union",
+    "highlights": [
+      "Rappresentanza istituzionale",
+      "Negoziazione collettiva",
+      "Consulenza sindacale"
+    ],
+    "cta": {
+      "label": "Richiedi supporto",
+      "target": "contattaci.html"
+    }
+  }
+]
+
