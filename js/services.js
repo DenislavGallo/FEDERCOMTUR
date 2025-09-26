@@ -342,6 +342,45 @@ class ServicesPage {
                 <path d="M28 18h8v4h-8z" fill="#10b981"/>
                 <circle cx="26" cy="20" r="2" fill="white"/>
                 <circle cx="38" cy="20" r="2" fill="white"/>
+            </svg>`,
+            digital: `<svg viewBox="0 0 64 64" fill="currentColor" width="48" height="48">
+                <rect x="8" y="12" width="48" height="32" rx="4" fill="#10b981"/>
+                <rect x="12" y="16" width="40" height="24" rx="2" fill="white"/>
+                <circle cx="20" cy="20" r="2" fill="#10b981"/>
+                <circle cx="28" cy="20" r="2" fill="#10b981"/>
+                <circle cx="36" cy="20" r="2" fill="#10b981"/>
+                <rect x="12" y="26" width="40" height="2" fill="#10b981"/>
+                <rect x="12" y="32" width="32" height="2" fill="#10b981"/>
+                <rect x="12" y="38" width="24" height="2" fill="#10b981"/>
+                <path d="M32 8c-2.2 0-4 1.8-4 4v4h8v-4c0-2.2-1.8-4-4-4z" fill="#10b981"/>
+                <path d="M32 52c-2.2 0-4-1.8-4-4v-4h8v4c0 2.2-1.8 4-4 4z" fill="#10b981"/>
+            </svg>`,
+            hr: `<svg viewBox="0 0 64 64" fill="currentColor" width="48" height="48">
+                <circle cx="32" cy="16" r="8" fill="#10b981"/>
+                <path d="M16 32c0-8.8 7.2-16 16-16s16 7.2 16 16v16H16V32z" fill="#10b981"/>
+                <rect x="20" y="48" width="24" height="8" rx="2" fill="#10b981"/>
+                <rect x="24" y="52" width="16" height="2" fill="white"/>
+                <circle cx="20" cy="20" r="2" fill="white"/>
+                <circle cx="44" cy="20" r="2" fill="white"/>
+                <path d="M20 24h24v2H20z" fill="white"/>
+                <path d="M20 28h20v2H20z" fill="white"/>
+            </svg>`,
+            environment: `<svg viewBox="0 0 64 64" fill="currentColor" width="48" height="48">
+                <path d="M32 4c-8.8 0-16 7.2-16 16 0 8 6 14.5 14 15.8V56h4V35.8c8-.3 14-7.8 14-15.8 0-8.8-7.2-16-16-16z" fill="#10b981"/>
+                <circle cx="24" cy="20" r="3" fill="white"/>
+                <circle cx="40" cy="20" r="3" fill="white"/>
+                <circle cx="32" cy="28" r="2" fill="white"/>
+                <path d="M20 32c0-6.6 5.4-12 12-12s12 5.4 12 12" stroke="white" stroke-width="2" fill="none"/>
+                <path d="M16 48h32v4H16z" fill="#10b981"/>
+                <rect x="20" y="52" width="24" height="4" rx="1" fill="#10b981"/>
+            </svg>`,
+            international: `<svg viewBox="0 0 64 64" fill="currentColor" width="48" height="48">
+                <circle cx="32" cy="32" r="24" fill="#10b981"/>
+                <path d="M32 8c-13.3 0-24 10.7-24 24s10.7 24 24 24 24-10.7 24-24S45.3 8 32 8z" fill="none" stroke="white" stroke-width="2"/>
+                <path d="M8 32h48M32 8v48" stroke="white" stroke-width="1"/>
+                <path d="M20 20c8-8 16-8 24 0M20 44c8 8 16 8 24 0M44 20c-8-8-16-8-24 0M44 44c-8 8-16 8-24 0" stroke="white" stroke-width="1" fill="none"/>
+                <circle cx="32" cy="32" r="4" fill="white"/>
+                <path d="M28 28l8 8M36 28l-8 8" stroke="white" stroke-width="2"/>
             </svg>`
         };
         return map[key] || '';

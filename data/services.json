@@ -66,6 +66,74 @@
       "label": "Richiedi supporto",
       "target": "contattaci.html"
     }
+  },
+  {
+    "id": 5,
+    "slug": "consulenza-digitale",
+    "name": "Consulenza Digitale",
+    "shortDescription": "Trasformazione digitale per PMI moderne.",
+    "description": "Supporto completo per la digitalizzazione: e-commerce, social media, automazione processi e cybersecurity.",
+    "icon": "digital",
+    "highlights": [
+      "Strategia digitale personalizzata",
+      "Implementazione e-commerce",
+      "Formazione team digitale"
+    ],
+    "cta": {
+      "label": "Inizia la trasformazione",
+      "target": "contattaci.html"
+    }
+  },
+  {
+    "id": 6,
+    "slug": "consulenza-hr",
+    "name": "Consulenza HR",
+    "shortDescription": "Gestione risorse umane e sviluppo talenti.",
+    "description": "Supporto completo in materia HR: assunzioni, contratti, formazione, welfare aziendale e relazioni sindacali.",
+    "icon": "hr",
+    "highlights": [
+      "Gestione contratti e normative",
+      "Pianificazione assunzioni",
+      "Welfare aziendale"
+    ],
+    "cta": {
+      "label": "Ottimizza le risorse",
+      "target": "contattaci.html"
+    }
+  },
+  {
+    "id": 7,
+    "slug": "consulenza-ambientale",
+    "name": "Consulenza Ambientale",
+    "shortDescription": "Sostenibilità e compliance ambientale.",
+    "description": "Supporto per adempimenti ambientali, certificazioni green, economia circolare e transizione ecologica.",
+    "icon": "environment",
+    "highlights": [
+      "Certificazioni ambientali",
+      "Pianificazione sostenibile",
+      "Incentivi green"
+    ],
+    "cta": {
+      "label": "Diventa sostenibile",
+      "target": "contattaci.html"
+    }
+  },
+  {
+    "id": 8,
+    "slug": "consulenza-internazionale",
+    "name": "Consulenza Internazionale",
+    "shortDescription": "Espansione e mercati esteri.",
+    "description": "Supporto per l'internazionalizzazione: mercati target, normative estere, partnership e export management.",
+    "icon": "international",
+    "highlights": [
+      "Analisi mercati esteri",
+      "Supporto normativo",
+      "Partnership strategiche"
+    ],
+    "cta": {
+      "label": "Esplora nuovi mercati",
+      "target": "contattaci.html"
+    }
   }
 ]
 
