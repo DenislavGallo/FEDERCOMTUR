@@ -345,29 +345,22 @@
     height: 100%;
     background: var(--secondary-emerald);
     border-radius: 3px;
-    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: width 0.3s ease;
     position: relative;
-    overflow: hidden;
+    width: 0%;
 }
 
-.carousel-progress-fill::after {
-    content: '';
+.carousel-progress-bean {
     position: absolute;
-    top: 0;
+    top: 50%;
     left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-    animation: shimmer 2s infinite;
-}
-
-@keyframes shimmer {
-    0% {
-        transform: translateX(-100%);
-    }
-    100% {
-        transform: translateX(100%);
-    }
+    transform: translateY(-50%);
+    width: 12px;
+    height: 12px;
+    background: var(--secondary-emerald);
+    border-radius: 50%;
+    transition: left 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .service-card { 

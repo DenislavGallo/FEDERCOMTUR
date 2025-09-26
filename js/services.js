@@ -92,7 +92,9 @@ class ServicesPage {
                 </button>
                 <div class="carousel-progress" id="carousel-progress">
                     <div class="carousel-progress-bar" id="carousel-progress-bar">
-                        <div class="carousel-progress-fill" id="carousel-progress-fill"></div>
+                        <div class="carousel-progress-fill" id="carousel-progress-fill">
+                            <div class="carousel-progress-bean" id="carousel-progress-bean"></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -151,16 +153,18 @@ class ServicesPage {
         const nextBtn = document.getElementById('carousel-next');
         const progressBar = document.getElementById('carousel-progress-bar');
         const progressFill = document.getElementById('carousel-progress-fill');
+        const progressBean = document.getElementById('carousel-progress-bean');
 
         // Verifica che tutti gli elementi esistano
-        if (!wrapper || !track || !prevBtn || !nextBtn || !progressBar || !progressFill) {
+        if (!wrapper || !track || !prevBtn || !nextBtn || !progressBar || !progressFill || !progressBean) {
             console.error('Elementi carousel non trovati:', {
                 wrapper: !!wrapper,
                 track: !!track,
                 prevBtn: !!prevBtn,
                 nextBtn: !!nextBtn,
                 progressBar: !!progressBar,
-                progressFill: !!progressFill
+                progressFill: !!progressFill,
+                progressBean: !!progressBean
             });
             console.log('Tutti gli elementi con ID carousel:', document.querySelectorAll('[id*="carousel"]'));
             return;
@@ -180,9 +184,10 @@ class ServicesPage {
             const translateX = -currentIndex * cardWidth;
             track.style.transform = `translateX(${translateX}px)`;
             
-            // Update progress bar
+            // Update progress bean position
             const progressPercentage = (currentIndex / maxIndex) * 100;
-            progressFill.style.width = `${progressPercentage}%`;
+            const beanPosition = (progressPercentage / 100) * (progressBar.offsetWidth - 12); // 12px = bean width
+            progressBean.style.left = `${beanPosition}px`;
         };
 
         const nextSlide = () => {
