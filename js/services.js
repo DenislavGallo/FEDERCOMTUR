@@ -152,6 +152,19 @@ class ServicesPage {
         const progressBar = document.getElementById('carousel-progress-bar');
         const progressFill = document.getElementById('carousel-progress-fill');
 
+        // Verifica che tutti gli elementi esistano
+        if (!wrapper || !track || !prevBtn || !nextBtn || !progressBar || !progressFill) {
+            console.error('Elementi carousel non trovati:', {
+                wrapper: !!wrapper,
+                track: !!track,
+                prevBtn: !!prevBtn,
+                nextBtn: !!nextBtn,
+                progressBar: !!progressBar,
+                progressFill: !!progressFill
+            });
+            return;
+        }
+
         let currentIndex = 0;
         let isDragging = false;
         let startX = 0;
