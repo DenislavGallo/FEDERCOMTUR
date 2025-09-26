@@ -175,15 +175,21 @@ class ServicesPage {
         const nextSlide = () => {
             if (currentIndex < maxIndex) {
                 currentIndex++;
-                updateCarousel();
+            } else {
+                // Scroll infinito: torna alla prima
+                currentIndex = 0;
             }
+            updateCarousel();
         };
 
         const prevSlide = () => {
             if (currentIndex > 0) {
                 currentIndex--;
-                updateCarousel();
+            } else {
+                // Scroll infinito: vai all'ultima
+                currentIndex = maxIndex;
             }
+            updateCarousel();
         };
 
         // Event listeners
@@ -229,12 +235,10 @@ class ServicesPage {
             const threshold = cardWidth / 3;
             
             if (Math.abs(diffX) > threshold) {
-                if (diffX > 0 && currentIndex > 0) {
+                if (diffX > 0) {
                     prevSlide();
-                } else if (diffX < 0 && currentIndex < maxIndex) {
-                    nextSlide();
                 } else {
-                    updateCarousel();
+                    nextSlide();
                 }
             } else {
                 updateCarousel();
@@ -278,12 +282,10 @@ class ServicesPage {
             const threshold = cardWidth / 3;
             
             if (Math.abs(diffX) > threshold) {
-                if (diffX > 0 && currentIndex > 0) {
+                if (diffX > 0) {
                     prevSlide();
-                } else if (diffX < 0 && currentIndex < maxIndex) {
-                    nextSlide();
                 } else {
-                    updateCarousel();
+                    nextSlide();
                 }
             } else {
                 updateCarousel();
