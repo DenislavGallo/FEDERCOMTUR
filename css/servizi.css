@@ -247,6 +247,34 @@
     margin-bottom: 24px;
 }
 
+.service-carousel-highlights {
+    margin-bottom: 24px;
+}
+
+.service-carousel-highlights ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.service-carousel-highlights li {
+    position: relative;
+    padding-left: 20px;
+    margin-bottom: 8px;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.service-carousel-highlights li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--secondary-emerald);
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
 .carousel-nav {
     position: absolute;
     top: 50%;
@@ -377,19 +405,19 @@
     transition: all 0.3s ease;
 }
 
-.service-container:hover .service-icon-wrapper svg {
+.service-carousel-card:hover .service-icon-wrapper svg {
     color: var(--secondary-emerald);
     transform: scale(1.1);
 }
 
-.service-actions {
+.service-carousel-actions {
     display: flex;
     flex-direction: column;
     gap: 12px;
     margin-top: 24px;
 }
 
-.call-now-btn {
+.service-carousel-call-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -405,18 +433,18 @@
     box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
 }
 
-.call-now-btn:hover {
+.service-carousel-call-btn:hover {
     background: linear-gradient(135deg, #059669, #047857);
     color: white !important;
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
 }
 
-.call-now-btn svg {
+.service-carousel-call-btn svg {
     color: white;
 }
 
-.service-cta {
+.service-carousel-cta {
     display: inline-flex;
     align-items: center;
     gap: 8px;
@@ -430,7 +458,7 @@
     justify-content: center;
 }
 
-.service-cta:hover {
+.service-carousel-cta:hover {
     background: var(--primary-navy);
     color: white;
     transform: translateY(-2px);
@@ -721,12 +749,12 @@
         height: 48px;
     }
     
-    .service-actions {
+    .service-carousel-actions {
         gap: 10px;
     }
     
-    .call-now-btn,
-    .service-cta {
+    .service-carousel-call-btn,
+    .service-carousel-cta {
         padding: 10px 20px;
         font-size: 0.9rem;
     }
