@@ -172,6 +172,150 @@
     gap: 32px; 
 }
 
+/* ===== CAROUSEL SERVIZI ===== */
+.services-carousel-container {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius-xl);
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    padding: 40px 0;
+    margin: 40px 0;
+}
+
+.services-carousel-wrapper {
+    display: flex;
+    transition: transform 0.3s ease;
+    cursor: grab;
+    user-select: none;
+}
+
+.services-carousel-wrapper:active {
+    cursor: grabbing;
+}
+
+.services-carousel-track {
+    display: flex;
+    gap: 32px;
+    padding: 0 40px;
+}
+
+.service-carousel-card {
+    flex: 0 0 350px;
+    background: white;
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--neutral-200);
+    padding: 32px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.service-carousel-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--secondary-emerald), var(--primary-blue));
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.service-carousel-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+    border-color: var(--secondary-emerald);
+}
+
+.service-carousel-card:hover::before {
+    transform: scaleX(1);
+}
+
+.service-carousel-card h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--primary-navy);
+    margin-bottom: 16px;
+}
+
+.service-carousel-card p {
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 24px;
+}
+
+.carousel-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: white;
+    border: 2px solid var(--neutral-200);
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 10;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.carousel-nav:hover {
+    background: var(--secondary-emerald);
+    border-color: var(--secondary-emerald);
+    color: white;
+    transform: translateY(-50%) scale(1.1);
+}
+
+.carousel-nav.prev {
+    left: 20px;
+}
+
+.carousel-nav.next {
+    right: 20px;
+}
+
+.carousel-nav svg {
+    width: 20px;
+    height: 20px;
+    transition: color 0.3s ease;
+}
+
+.carousel-nav:hover svg {
+    color: white;
+}
+
+.carousel-dots {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 30px;
+}
+
+.carousel-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--neutral-300);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.carousel-dot.active {
+    background: var(--secondary-emerald);
+    transform: scale(1.2);
+}
+
+.carousel-dot:hover {
+    background: var(--secondary-emerald);
+    transform: scale(1.1);
+}
+
 .service-card { 
     background: white;
     border-radius: var(--radius-xl); 
@@ -490,6 +634,24 @@
         flex-direction: column;
         align-items: center;
     }
+    
+    /* Carousel responsive */
+    .service-carousel-card {
+        flex: 0 0 300px;
+    }
+    
+    .carousel-nav {
+        width: 45px;
+        height: 45px;
+    }
+    
+    .carousel-nav.prev {
+        left: 15px;
+    }
+    
+    .carousel-nav.next {
+        right: 15px;
+    }
 }
 
 @media (max-width: 768px) { 
@@ -578,5 +740,49 @@
     .why-icon svg {
         width: 32px;
         height: 32px;
+    }
+    
+    /* Carousel mobile responsive */
+    .services-carousel-container {
+        padding: 20px 0;
+        margin: 20px 0;
+    }
+    
+    .services-carousel-track {
+        padding: 0 20px;
+        gap: 20px;
+    }
+    
+    .service-carousel-card {
+        flex: 0 0 280px;
+        padding: 24px;
+    }
+    
+    .carousel-nav {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .carousel-nav.prev {
+        left: 10px;
+    }
+    
+    .carousel-nav.next {
+        right: 10px;
+    }
+    
+    .carousel-nav svg {
+        width: 16px;
+        height: 16px;
+    }
+    
+    .carousel-dots {
+        margin-top: 20px;
+        gap: 8px;
+    }
+    
+    .carousel-dot {
+        width: 10px;
+        height: 10px;
     }
 }

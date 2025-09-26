@@ -2,6 +2,7 @@ class ServicesPage {
     constructor() {
         this.grid = document.getElementById('services-grid');
         this.services = [];
+        this.carousel = null;
         this.init();
     }
 
@@ -34,97 +35,279 @@ class ServicesPage {
         ];
 
         if (isServicesPage) {
-            // Layout layered per pagina servizi.html
-            this.grid.innerHTML = this.services.map((service, index) => `
-                <div class="service-container" style="animation-delay: ${index * 0.2}s;" data-slug="${service.slug}">
-                    <div class="service-inner">
-                        <div class="service-content">
-                            <div class="service-icon-wrapper">
-                                ${this.getIcon(service.icon)}
-                            </div>
-                            <h3 class="service-title">${service.name}</h3>
-                            <p class="service-description">${service.description}</p>
-                            <div class="service-highlights">
-                                <ul>
-                                    ${service.highlights.map(highlight => `
-                                        <li>${highlight}</li>
-                                    `).join('')}
-                                </ul>
-                            </div>
-                            <div class="service-actions">
-                                <a href="servizio.html?slug=${encodeURIComponent(service.slug)}" class="service-cta">
-                                    ${service.cta.label}
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="m9 18 6-6-6-6"/>
-                                    </svg>
-                                </a>
-                                <a href="tel:+39123456789" class="call-now-btn">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
-                                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
-                                    </svg>
-                                    Chiamaci ora
-                                </a>
-                            </div>
-                        </div>
-                        <div class="service-image">
-                            <img src="${serviceImages[index % serviceImages.length]}" alt="${service.name}" loading="lazy">
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-
-            // Animate containers in after a short delay
-            setTimeout(() => {
-                const containers = this.grid.querySelectorAll('.service-container');
-                containers.forEach((container, index) => {
-                    setTimeout(() => {
-                        container.style.opacity = '1';
-                        container.style.transform = 'translateY(0)';
-                    }, index * 200);
-                });
-            }, 300);
+            // Layout carousel per pagina servizi.html
+            this.renderCarousel(serviceImages);
         } else {
             // Layout card originale per homepage
-            this.grid.innerHTML = this.services.map((s, index) => `
-                <div class="service-card" style="animation-delay: ${index * 0.1}s; background-image: url('${serviceImages[index % serviceImages.length]}');" data-slug="${s.slug}">
-                    <div class="service-section service-section-1">
-                        <div class="service-header">
-                            <h3 class="service-title">${s.name}</h3>
-                            <div class="service-arrow">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="m7 17 10-10"/>
-                                    <path d="M7 7h10v10"/>
-                                </svg>
+            this.renderGrid(serviceImages);
+        }
+    }
+
+    renderCarousel(serviceImages) {
+        this.grid.innerHTML = `
+            <div class="services-carousel-container">
+                <div class="services-carousel-wrapper" id="carousel-wrapper">
+                    <div class="services-carousel-track" id="carousel-track">
+                        ${this.services.map((service, index) => `
+                            <div class="service-carousel-card" data-slug="${service.slug}">
+                                <div class="service-icon-wrapper">
+                                    ${this.getIcon(service.icon)}
+                                </div>
+                                <h3>${service.name}</h3>
+                                <p>${service.description}</p>
+                                <div class="service-highlights">
+                                    <ul>
+                                        ${service.highlights.map(highlight => `
+                                            <li>${highlight}</li>
+                                        `).join('')}
+                                    </ul>
+                                </div>
+                                <div class="service-actions">
+                                    <a href="servizio.html?slug=${encodeURIComponent(service.slug)}" class="service-cta">
+                                        ${service.cta.label}
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="m9 18 6-6-6-6"/>
+                                        </svg>
+                                    </a>
+                                    <a href="tel:+39123456789" class="call-now-btn">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                                        </svg>
+                                        Chiamaci ora
+                                    </a>
+                                </div>
                             </div>
-                        </div>
+                        `).join('')}
                     </div>
-                    <div class="service-section service-section-2"></div>
-                    <div class="service-section service-section-3">
-                        <div class="service-inner-div">
-                            <p class="service-description">${s.shortDescription}</p>
+                </div>
+                <button class="carousel-nav prev" id="carousel-prev">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="m15 18-6-6 6-6"/>
+                    </svg>
+                </button>
+                <button class="carousel-nav next" id="carousel-next">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="m9 18 6-6-6-6"/>
+                    </svg>
+                </button>
+                <div class="carousel-dots" id="carousel-dots">
+                    ${this.services.map((_, index) => `
+                        <div class="carousel-dot ${index === 0 ? 'active' : ''}" data-index="${index}"></div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+
+        // Inizializza carousel
+        this.initCarousel();
+    }
+
+    renderGrid(serviceImages) {
+        this.grid.innerHTML = this.services.map((s, index) => `
+            <div class="service-card" style="animation-delay: ${index * 0.1}s; background-image: url('${serviceImages[index % serviceImages.length]}');" data-slug="${s.slug}">
+                <div class="service-section service-section-1">
+                    <div class="service-header">
+                        <h3 class="service-title">${s.name}</h3>
+                        <div class="service-arrow">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="m7 17 10-10"/>
+                                <path d="M7 7h10v10"/>
+                            </svg>
                         </div>
                     </div>
                 </div>
-            `).join('');
+                <div class="service-section service-section-2"></div>
+                <div class="service-section service-section-3">
+                    <div class="service-inner-div">
+                        <p class="service-description">${s.shortDescription}</p>
+                    </div>
+                </div>
+            </div>
+        `).join('');
 
-            // Link alle pagine dettaglio
-            this.grid.querySelectorAll('.service-card').forEach(card => {
-                card.addEventListener('click', () => {
-                    const slug = card.getAttribute('data-slug');
-                    window.location.href = `servizio.html?slug=${encodeURIComponent(slug)}`;
-                });
-                card.style.cursor = 'pointer';
+        // Link alle pagine dettaglio
+        this.grid.querySelectorAll('.service-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const slug = card.getAttribute('data-slug');
+                window.location.href = `servizio.html?slug=${encodeURIComponent(slug)}`;
             });
+            card.style.cursor = 'pointer';
+        });
 
-            // Animate cards in after a short delay
-            setTimeout(() => {
-                const cards = this.grid.querySelectorAll('.service-card');
-                cards.forEach(card => {
-                    card.style.opacity = '1';
-                    card.style.transform = 'translateY(0)';
-                });
-            }, 100);
-        }
+        // Animate cards in after a short delay
+        setTimeout(() => {
+            const cards = this.grid.querySelectorAll('.service-card');
+            cards.forEach(card => {
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            });
+        }, 100);
+    }
+
+    initCarousel() {
+        const wrapper = document.getElementById('carousel-wrapper');
+        const track = document.getElementById('carousel-track');
+        const prevBtn = document.getElementById('carousel-prev');
+        const nextBtn = document.getElementById('carousel-next');
+        const dots = document.getElementById('carousel-dots');
+        const dotsList = dots.querySelectorAll('.carousel-dot');
+
+        let currentIndex = 0;
+        let isDragging = false;
+        let startX = 0;
+        let currentX = 0;
+        let initialTransform = 0;
+
+        const cardWidth = 350 + 32; // card width + gap
+        const visibleCards = Math.floor(wrapper.offsetWidth / cardWidth);
+        const maxIndex = Math.max(0, this.services.length - visibleCards);
+
+        const updateCarousel = () => {
+            const translateX = -currentIndex * cardWidth;
+            track.style.transform = `translateX(${translateX}px)`;
+            
+            // Update dots
+            dotsList.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentIndex);
+            });
+        };
+
+        const nextSlide = () => {
+            if (currentIndex < maxIndex) {
+                currentIndex++;
+                updateCarousel();
+            }
+        };
+
+        const prevSlide = () => {
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateCarousel();
+            }
+        };
+
+        // Event listeners
+        nextBtn.addEventListener('click', nextSlide);
+        prevBtn.addEventListener('click', prevSlide);
+
+        // Dots navigation
+        dotsList.forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                currentIndex = index;
+                updateCarousel();
+            });
+        });
+
+        // Drag functionality
+        wrapper.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            startX = e.clientX;
+            initialTransform = -currentIndex * cardWidth;
+            wrapper.style.cursor = 'grabbing';
+            e.preventDefault();
+        });
+
+        wrapper.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            
+            currentX = e.clientX;
+            const diffX = currentX - startX;
+            const newTransform = initialTransform + diffX;
+            
+            track.style.transform = `translateX(${newTransform}px)`;
+            track.style.transition = 'none';
+        });
+
+        wrapper.addEventListener('mouseup', () => {
+            if (!isDragging) return;
+            
+            isDragging = false;
+            wrapper.style.cursor = 'grab';
+            track.style.transition = 'transform 0.3s ease';
+            
+            const diffX = currentX - startX;
+            const threshold = cardWidth / 3;
+            
+            if (Math.abs(diffX) > threshold) {
+                if (diffX > 0 && currentIndex > 0) {
+                    prevSlide();
+                } else if (diffX < 0 && currentIndex < maxIndex) {
+                    nextSlide();
+                } else {
+                    updateCarousel();
+                }
+            } else {
+                updateCarousel();
+            }
+        });
+
+        wrapper.addEventListener('mouseleave', () => {
+            if (isDragging) {
+                isDragging = false;
+                wrapper.style.cursor = 'grab';
+                track.style.transition = 'transform 0.3s ease';
+                updateCarousel();
+            }
+        });
+
+        // Touch support
+        wrapper.addEventListener('touchstart', (e) => {
+            isDragging = true;
+            startX = e.touches[0].clientX;
+            initialTransform = -currentIndex * cardWidth;
+        });
+
+        wrapper.addEventListener('touchmove', (e) => {
+            if (!isDragging) return;
+            
+            currentX = e.touches[0].clientX;
+            const diffX = currentX - startX;
+            const newTransform = initialTransform + diffX;
+            
+            track.style.transform = `translateX(${newTransform}px)`;
+            track.style.transition = 'none';
+        });
+
+        wrapper.addEventListener('touchend', () => {
+            if (!isDragging) return;
+            
+            isDragging = false;
+            track.style.transition = 'transform 0.3s ease';
+            
+            const diffX = currentX - startX;
+            const threshold = cardWidth / 3;
+            
+            if (Math.abs(diffX) > threshold) {
+                if (diffX > 0 && currentIndex > 0) {
+                    prevSlide();
+                } else if (diffX < 0 && currentIndex < maxIndex) {
+                    nextSlide();
+                } else {
+                    updateCarousel();
+                }
+            } else {
+                updateCarousel();
+            }
+        });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') {
+                prevSlide();
+            } else if (e.key === 'ArrowRight') {
+                nextSlide();
+            }
+        });
+
+        // Auto-play (opzionale)
+        // setInterval(() => {
+        //     if (currentIndex < maxIndex) {
+        //         nextSlide();
+        //     } else {
+        //         currentIndex = 0;
+        //         updateCarousel();
+        //     }
+        // }, 5000);
     }
 
     getIcon(key) {
