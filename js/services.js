@@ -219,15 +219,15 @@ class ServicesPage {
         });
 
         // Drag functionality
-        wrapper.addEventListener('mousedown', (e) => {
+        track.addEventListener('mousedown', (e) => {
             isDragging = true;
             startX = e.clientX;
             initialTransform = -currentIndex * cardWidth;
-            wrapper.style.cursor = 'grabbing';
+            track.style.cursor = 'grabbing';
             e.preventDefault();
         });
 
-        wrapper.addEventListener('mousemove', (e) => {
+        track.addEventListener('mousemove', (e) => {
             if (!isDragging) return;
             
             currentX = e.clientX;
@@ -238,11 +238,11 @@ class ServicesPage {
             track.style.transition = 'none';
         });
 
-        wrapper.addEventListener('mouseup', () => {
+        track.addEventListener('mouseup', () => {
             if (!isDragging) return;
             
             isDragging = false;
-            wrapper.style.cursor = 'grab';
+            track.style.cursor = 'grab';
             track.style.transition = 'transform 0.3s ease';
             
             const diffX = currentX - startX;
@@ -259,23 +259,23 @@ class ServicesPage {
             }
         });
 
-        wrapper.addEventListener('mouseleave', () => {
+        track.addEventListener('mouseleave', () => {
             if (isDragging) {
                 isDragging = false;
-                wrapper.style.cursor = 'grab';
+                track.style.cursor = 'grab';
                 track.style.transition = 'transform 0.3s ease';
                 updateCarousel();
             }
         });
 
         // Touch support
-        wrapper.addEventListener('touchstart', (e) => {
+        track.addEventListener('touchstart', (e) => {
             isDragging = true;
             startX = e.touches[0].clientX;
             initialTransform = -currentIndex * cardWidth;
         });
 
-        wrapper.addEventListener('touchmove', (e) => {
+        track.addEventListener('touchmove', (e) => {
             if (!isDragging) return;
             
             currentX = e.touches[0].clientX;
@@ -286,7 +286,7 @@ class ServicesPage {
             track.style.transition = 'none';
         });
 
-        wrapper.addEventListener('touchend', () => {
+        track.addEventListener('touchend', () => {
             if (!isDragging) return;
             
             isDragging = false;

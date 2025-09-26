@@ -183,20 +183,21 @@
 }
 
 .services-carousel-wrapper {
-    display: flex;
-    transition: transform 0.3s ease;
-    cursor: grab;
-    user-select: none;
-}
-
-.services-carousel-wrapper:active {
-    cursor: grabbing;
+    overflow: hidden;
+    width: 100%;
 }
 
 .services-carousel-track {
     display: flex;
     gap: 32px;
     padding: 0 40px;
+    transition: transform 0.3s ease;
+    cursor: grab;
+    user-select: none;
+}
+
+.services-carousel-track:active {
+    cursor: grabbing;
 }
 
 .service-carousel-card {
