@@ -159,7 +159,7 @@ class ServicesPage {
         let initialTransform = 0;
 
         const cardWidth = 350 + 32; // card width + gap
-        const visibleCards = Math.floor(wrapper.offsetWidth / cardWidth);
+        const visibleCards = 4; // Mostra sempre 4 servizi
         const maxIndex = Math.max(0, this.services.length - visibleCards);
 
         const updateCarousel = () => {
