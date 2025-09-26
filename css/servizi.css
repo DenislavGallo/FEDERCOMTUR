@@ -185,6 +185,8 @@
 .services-carousel-wrapper {
     overflow: hidden;
     width: 100%;
+    max-width: calc(4 * 350px + 3 * 32px + 80px); /* 4 card + 3 gap + padding */
+    margin: 0 auto;
 }
 
 .services-carousel-track {
@@ -690,6 +692,10 @@
     }
     
     /* Carousel responsive */
+    .services-carousel-wrapper {
+        max-width: calc(3 * 300px + 2 * 32px + 60px); /* 3 card + 2 gap + padding */
+    }
+    
     .service-carousel-card {
         flex: 0 0 300px;
     }
@@ -800,6 +806,10 @@
     .services-carousel-container {
         padding: 20px 0;
         margin: 20px 0;
+    }
+    
+    .services-carousel-wrapper {
+        max-width: calc(2 * 280px + 1 * 20px + 40px); /* 2 card + 1 gap + padding */
     }
     
     .services-carousel-track {
