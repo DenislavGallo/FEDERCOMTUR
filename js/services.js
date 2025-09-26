@@ -90,10 +90,10 @@ class ServicesPage {
                         <path d="m9 18 6-6-6-6"/>
                     </svg>
                 </button>
-                <div class="carousel-dots" id="carousel-dots">
-                    ${this.services.map((_, index) => `
-                        <div class="carousel-dot ${index === 0 ? 'active' : ''}" data-index="${index}"></div>
-                    `).join('')}
+                <div class="carousel-progress" id="carousel-progress">
+                    <div class="carousel-progress-bar">
+                        <div class="carousel-progress-fill" id="carousel-progress-fill"></div>
+                    </div>
                 </div>
             </div>
         `;
@@ -149,8 +149,8 @@ class ServicesPage {
         const track = document.getElementById('carousel-track');
         const prevBtn = document.getElementById('carousel-prev');
         const nextBtn = document.getElementById('carousel-next');
-        const dots = document.getElementById('carousel-dots');
-        const dotsList = dots.querySelectorAll('.carousel-dot');
+        const progressBar = document.getElementById('carousel-progress-bar');
+        const progressFill = document.getElementById('carousel-progress-fill');
 
         let currentIndex = 0;
         let isDragging = false;
@@ -166,10 +166,9 @@ class ServicesPage {
             const translateX = -currentIndex * cardWidth;
             track.style.transform = `translateX(${translateX}px)`;
             
-            // Update dots
-            dotsList.forEach((dot, index) => {
-                dot.classList.toggle('active', index === currentIndex);
-            });
+            // Update progress bar
+            const progressPercentage = (currentIndex / maxIndex) * 100;
+            progressFill.style.width = `${progressPercentage}%`;
         };
 
         const nextSlide = () => {
@@ -196,12 +195,13 @@ class ServicesPage {
         nextBtn.addEventListener('click', nextSlide);
         prevBtn.addEventListener('click', prevSlide);
 
-        // Dots navigation
-        dotsList.forEach((dot, index) => {
-            dot.addEventListener('click', () => {
-                currentIndex = index;
-                updateCarousel();
-            });
+        // Progress bar navigation
+        progressBar.addEventListener('click', (e) => {
+            const rect = progressBar.getBoundingClientRect();
+            const clickX = e.clientX - rect.left;
+            const clickPercentage = clickX / rect.width;
+            currentIndex = Math.round(clickPercentage * maxIndex);
+            updateCarousel();
         });
 
         // Drag functionality

@@ -318,30 +318,55 @@
     color: white;
 }
 
-.carousel-dots {
+.carousel-progress {
     display: flex;
     justify-content: center;
-    gap: 12px;
     margin-top: 30px;
 }
 
-.carousel-dot {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background: var(--neutral-300);
+.carousel-progress-bar {
+    width: 200px;
+    height: 6px;
+    background: var(--neutral-200);
+    border-radius: 3px;
+    position: relative;
+    overflow: hidden;
     cursor: pointer;
     transition: all 0.3s ease;
 }
 
-.carousel-dot.active {
-    background: var(--secondary-emerald);
-    transform: scale(1.2);
+.carousel-progress-bar:hover {
+    background: var(--neutral-300);
+    transform: scale(1.05);
 }
 
-.carousel-dot:hover {
+.carousel-progress-fill {
+    height: 100%;
     background: var(--secondary-emerald);
-    transform: scale(1.1);
+    border-radius: 3px;
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.carousel-progress-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(100%);
+    }
 }
 
 .service-card { 
@@ -804,13 +829,12 @@
         height: 16px;
     }
     
-    .carousel-dots {
+    .carousel-progress {
         margin-top: 20px;
-        gap: 8px;
     }
     
-    .carousel-dot {
-        width: 10px;
-        height: 10px;
+    .carousel-progress-bar {
+        width: 150px;
+        height: 5px;
     }
 }
