@@ -4,6 +4,15 @@
  * Versione semplificata per test
  */
 
+// Disabilita errori e warning per output pulito
+error_reporting(0);
+ini_set('display_errors', 0);
+
+// Pulisci buffer di output
+if (ob_get_level()) {
+    ob_clean();
+}
+
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST');
@@ -186,7 +195,7 @@ try {
     http_response_code(500);
     echo json_encode([
         'success' => false,
-        'message' => 'Errore interno del server: ' . $e->getMessage()
+        'message' => 'Errore interno del server'
     ]);
 }
 ?>
